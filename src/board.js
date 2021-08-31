@@ -8,6 +8,14 @@ class Board {
       }
     }
   }
+
+  addUnits(unit) {
+    this.grid[String(unit.coords)].units.push(unit)
+  }
+  removeUnit(unit) {
+    unit.removeSelf
+    this.grid[String(unit.coords)].units.splice(this.grid[String(unit.coords)].units.indexOf(unit))
+  }
 }
 
 class Cell {
@@ -15,7 +23,6 @@ class Cell {
     this.coord = coord;
     this.units = [];
   }
-
   sortForCombat(){
     //Need to look at rules for exact combat ordering
     function order(s1,s2){
@@ -39,5 +46,5 @@ class Cell {
 
 module.exports = Board;
 
-// var board=Board("Game")
-// print(board.grid)
+
+
