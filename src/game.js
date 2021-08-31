@@ -36,7 +36,7 @@ class Game {
             "rgb(255, 255, 100)" /* Darkish Yellow */,
             "rgb(50, 125, 5)" /* Dark Green */
         ] // CSS code for the colors in rgb codes
-        for (var i = 0; i < this.playerStrats.length(); i++) {
+        for (let i = 0; i < this.playerStrats.length(); i++) {
             this.players.append(Player(this.playerStrats[i], this.playerHomeBasePositions[i], this.boardSize, i, this.playerColors[i]));
         }
     }
@@ -46,9 +46,9 @@ class Game {
     }
 
     initializeEngines() { // All of these will probs need more args, but thats for later
-        this.movementEngine = new MovementEngine(this, this.board);
-        this.combatEngine = new CombatEngine(this, this.board);
-        this.economicEngine = new EconomicEngine(this, this.board);
+        this.movementEngine = new MovementEngine();
+        this.combatEngine = new CombatEngine();
+        this.economicEngine = new EconomicEngine();
     }
 
     play() { 
@@ -60,18 +60,18 @@ class Game {
     }
 
     completeTurn() { // Iterate through the phases
-        for (phase, value of this.phaseStats) {
+        for (let phase, value of this.phaseStats) {
             if (phase == "Movement") {
                 this.generateState(phase = "Movement");
-                this.movementEngine.completeMovements(value);
+                this.movementEngine.completeMovementPhase(this, this.board, value);
             } 
             if (phase == "Combat" && this.turn <= value) {
                 this.generateState(phase = "Combat");
-                this.combatEngine.completeCombat();
+                this.combatEngine.completeCombatPhase(this, this.board);
             } 
             if (phase == "Economic" && this.turn <= value) {
                 this.generateState(phase = "Economic");
-                this.economicEngine.completeEconomics();
+                this.economicEngine.completeEconomicPhase(this, this.board);
             }
         }
     }
