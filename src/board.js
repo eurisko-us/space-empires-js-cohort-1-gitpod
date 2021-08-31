@@ -8,6 +8,7 @@ class Board {
     }
   }
 }
+
 class Cell {
   constructor(coord){
     var coord = coord;
@@ -16,3 +17,5 @@ class Cell {
 }
 
 
+var board=Board("Game")
+print(board.grid)
