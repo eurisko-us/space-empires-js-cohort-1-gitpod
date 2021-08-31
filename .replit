@@ -1,0 +1,4 @@
+#language = "html"
+#run = "src/index.html"
+language = "js"
+run = "src/board.js"
