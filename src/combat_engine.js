@@ -1,42 +1,64 @@
 class CombatEngine {
-    constructor(game, board) {
-        this.game = game
-        this.board = board
-    }
 
-    completeCombat() {
-        possibleCombats = []
-        for (position, ships of this.board.shipDict) {
-            if (moreThanTwoPlayersInSpace(ships))
-                possibleCombats.append(position);
+    completeCombat(game) {
+        let possibleCombats = []
+        for (boardCell of Object.values(game.board.grid)) {
+            if (moreThanTwoPlayersInSpace(boardCell.units)){
+                possibleCombats.append(boardCell);
+            }
         }
 
         for (combatPosition of possibleCombats) {
-            shipsInCombat = [];
-            for (ships of this.board.shipDict[combatPosition]) {
-                for (ship of ships) {
-                    if (ship.canFight)
+            let shipsInCombat = [];
+            for (ship of combatPosition.units) {
+                if (ship.canFight){
                         shipsInCombat.append(ship);
                 }
             }
-            combatOrder = shipsInCombat.sort(/*RILEY or ELI code this im lazy*/);
+            let combatOrder = combatPosition.sortForCombat();
+            let attackingShipIndex = 0;
             while (!moreThanTwoPlayersInSpace(combatOrder)) {
-                /*
-                i
-                am
-                laaaaaaaaaaaaaa
-                zzzzyyyyyyyyy
-                */
+                let attackingShip = combatOrder[attackingShipIndex];
+                let defendingShip = attackingShip.AttackChoice(combatOrder);
+                let duelResult = duel(attackingShip, defendingShip);
+                if (duelResult == 'hit'){
+                    if (defendingShip.hp > 1){
+                        defendingShip.hp -= 1;
+                    }else{
+                        combatPosition.removeUnit(defendingShip);
+                        combatOrder.splice(combatOrder.indexOf(defendingShip), 1);
+                    }
+                }
+                attackingShipIndex += 1;
             }
         }
     }
 
-    moreThanTwoPlayersInSpace(ships) {
-        playerOne = ships[0].playerIndex;
-        for (ship of ships.slice(1)) {
-            if (ship.playerIndex != playerOne)
-                return True
+    duel(attackingShip, defendingShip){
+        let diceRoll = randInt(1,10);
+        let attackThreshold = attackingShip.attack + attackingShip.attackTech;
+        let defenseThreshold = defendingShip.defense + defendingShip.defenseTech;
+        let hitThreshold = attackThreshold - defenseThreshold;
+        if (diceRoll == 1 || hitThreshold >= diceRoll){
+            return 'hit';
+        }else{
+            return 'miss';
         }
-        return False
+    }
+
+    randInt(min, max) {
+        return Math.round(Math.random() * (max - min + 1)) + min;
+    }
+
+    moreThanTwoPlayersInSpace(ships) {
+        if (length(ships) < 2){
+            return False;
+        }
+        let shipZeroPlayer = ships[0].playerIndex;
+        for (ship of ships.slice(1)) {
+            if (ship.playerIndex != shipZeroPlayer)
+                return True;
+        }
+        return False;
     }
 }
