@@ -18,28 +18,34 @@ class Board {
   }
 }
 
-class Cell {
+class Hex {
   constructor(coord){
     this.coord = coord;
     this.units = [];
   }
   sortForCombat(){
-    //Need to look at rules for exact combat ordering
     function order(s1,s2){
-      let s1_grade = s1.technolgy['tactics'] + s1.attack_class;
-      let s2_grade = s2.technolgy['tactics'] + s2.attack_class;
-      if (s1_grade > s2_grade){
+      if (s1.tech['tactics'] > s2.tech['tactics']){
         return 1;
-      }else if(s1_grade < s2_grade){
+      }else if(s1.tech['tactics'] < s2.tech['tactics']){
         return -1;
       }else{
-        if (s1.playerIndex < s2.playerIndex){
+        if (s1.attack_class < s2.attack_class){
           return 1;
-        }else{
+        }else if(s1.attack_class > s2.attack_class){
           return -1;
+        }else{
+          if (s1.lastMoved < s2.lastMoved){
+            return 1;
+          }else if(s1.lastMoved > s2.lastMoved){
+            return -1;
+          }else{
+            return 0;
+          }
         }
       }
     }
+
     return this.units.sort(order(s1,s2));
   }
 }

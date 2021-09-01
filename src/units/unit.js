@@ -9,6 +9,7 @@ class Unit {
         this.defense = 0;
         this.canMove = true;
         this.canFight = true;
+        this.lastMoved = player.game.turn
 
     }
 
