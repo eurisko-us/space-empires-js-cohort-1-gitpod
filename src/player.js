@@ -4,7 +4,7 @@ class Player {
     this.creds = 0;
     this.boardSize = boardSize;
     this.technology = { "attack": 0, "defense": 0, "movement": 1, "shipsize": 1, "shipyard": 1, "terraform": 0, "tactics": 0, "exploration": 0 };
-    this.homeBase = Colony(position, boardSize, 0, home_base = True, turn_created = -1);
+    this.homeBase = Colony(playerIndex, position, boardSize, 0, this.technology, homeBase = True);
     this.playerIndex = playerIndex;
     this.playerColor = playerColor;
   }
