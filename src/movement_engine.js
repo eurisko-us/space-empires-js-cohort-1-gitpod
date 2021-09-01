@@ -18,8 +18,8 @@ class MovementEngine {
       // But it's repeated multiple times a movement phase
       if (Math.abs(translation["x"]) + Math.abs(translation["y"]) <= 1) {
         // ^ If moving only 1 space ^
-        ship.position["x"] += translation["x"];
-        ship.position["y"] += translation["y"];
+        ship.coords["x"] += translation["x"];
+        ship.coords["y"] += translation["y"];
       } else {
         // Else the wanted move is invalid, it throws an exception defined as such:
         throw `Player ${ship.player.playerIndex}'s ${ship.type}, ${ship.id} 

@@ -12,7 +12,7 @@ class Game {
   constructor(playerStrats, boardSize = 13, phaseStats = { "Economic": null, "Movement": 3, "Combat": null }, maxTurns = 100) {
     this.playerStrats = playerStrats;
     this.boardSize = boardSize;
-    this.turn = 1
+    this.turn = 1;
     this.maxTurns = maxTurns;
     // `phaseStats` is when we want only 
     // For example 1 economic phase for the whole game,
@@ -78,7 +78,8 @@ class Game {
   }
 
   completeTurn() { // Iterate through the phases
-    for (let phase, value of this.phaseStats) {
+    for (let phase in this.phaseStats) {
+      let value = this.phaseStats[phase];
       if (phase == "Movement") {
         this.generateState(phase = "Movement");
         this.movementEngine.completeMovementPhase(this, value);

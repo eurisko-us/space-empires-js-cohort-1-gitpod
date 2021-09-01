@@ -7,6 +7,10 @@ class Unit {
     this.turnCreated = turnCreated;
     this.canMove = true;
     this.canFight = true;
+    this.attack = 0;
+    this.defence = 0;
+    this.fightingClass = 0;
+    this.cost = 0;
   }
 
   getMovementTechnology(shipMovementLevel) {
