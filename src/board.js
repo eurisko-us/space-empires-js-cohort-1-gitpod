@@ -8,7 +8,8 @@ class Board {
   }
 
   removeUnit(unit, game) {
-    unit.destroy(game); // Unit removes itself from the player's `units` array
+    unit.destroy(game); // Remove current unit's player's refernce from the player's `units` array
+    // Remove grid's reference to the current unit
     this.grid[String(unit.coords)].units.splice(this.grid[String(unit.coords)].units.indexOf(unit)); // Removes the unit from the grid with the unit's location
   }
 }
@@ -26,10 +27,7 @@ function order (firstShip,secondShip) {
         if (firstShip.lastMoved["playerIndex"] < secondShip.lastMoved["playerIndex"])// If firstShip has a lower player index
           return 1;
         else if (firstShip.lastMoved["playerIndex"] == secondShip.lastMoved["playerIndex"]) {  // If both ships are fully tied which should be impossible
-          randomRoll = 0;
-          while (randomRoll == 0) // To make sure that it isn"t a draw
-            randomRoll = Math.round(Math.random() * (1 + 1) - 1);
-          return randomRoll;
+          return 0;
         }
       }
     }

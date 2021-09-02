@@ -6,6 +6,7 @@ class Destroyer {
     this.armor = 1
     this.fightingClass = 1;
     this.cost = 9;
+    this.maintenance = 1;
   }
 }
 

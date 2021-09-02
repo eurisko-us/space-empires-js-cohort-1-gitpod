@@ -13,6 +13,7 @@ class Unit {
     this.damage = 0;
     this.fightingClass = 0;
     this.cost = 0;
+    this.maintenance = 0;
     this.lastMoved = {'turn': -1, 'round': -1, 'playerIndex': playerIndex};
   }
 
@@ -32,7 +33,7 @@ class Unit {
     }
   }
 
-  generateState(currentPlayer, isCurrentPlayer, inCombat) {
+  generateState(currentPlayerIndex, isCurrentPlayer, inCombat) {
     if (isCurrentPlayer || inCombat) {
       return {
         'num': this.id,
@@ -40,20 +41,21 @@ class Unit {
         'type': this.type,
         'hitsLeft': this.hitsLeft,
         'technology': this.technology,
-        'playerIndex': currentPlayer.playerIndex,
+        'playerIndex': currentPlayerIndex,
         'turnCreated': this.turnCreated
       }
     } else {
       return {
         'num': this.id,
         'coords': this.position,
-        'playerIndex': currentPlayer.playerIndex,
+        'playerIndex': currentPlayerIndex,
       }
     }
   }
 
   destroy(game) {
-    delete game.players[this.playerIndex].units.indexOf(this);
+    // Remove current unit's player's refernce from the player's `units` array
+    game.players[this.playerIndex].units.splice(game.players[this.playerIndex].units.indexOf(unit));
   }
 }
 
