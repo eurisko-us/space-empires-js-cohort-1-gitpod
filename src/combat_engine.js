@@ -2,9 +2,9 @@ class CombatEngine {
 
     completeCombat(game) {
         let possibleCombats = []
-        for (boardCell of Object.values(game.board.grid)) {
-            if (moreThanTwoPlayersInSpace(boardCell.units)){
-                possibleCombats.append(boardCell);
+        for (Hex of Object.values(game.board.grid)) {
+            if (moreThanTwoPlayersInSpace(Hex.units)){
+                possibleCombats.append(Hex);
             }
         }
 
