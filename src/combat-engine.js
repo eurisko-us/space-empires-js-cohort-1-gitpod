@@ -14,16 +14,34 @@ class CombatEngine {
             shipsInCombat.append(ship);
         }
       }
-      combatOrder = shipsInCombat.sort(/*RILEY or ELI code this im lazy*/);
+
+      let combatOrder = combatPosition.sortForCombat();
+      let attackingShipIndex = 0;
+
       while (!moreThanTwoPlayersInSpace(combatOrder)) {
-        /*
-        i
-        am
-        laaaaaaaaaaaaaa
-        zzzzyyyyyyyyy
-        */
+        let attackingShip = combatOrder[attackingShipIndex];
+        // The attacking ship can decide which ship to attack
+        combatOrderGameState = []; // To pass into the strategy function
+        for (let ship of combatOrder) 
+          combatOrderGameState.append(ship.generate_state(isCombat = true));
+        let defendingShip = game.players[attackingShip.playerIndex].strategy.decide_defending_ship(combatOrderGameState);
+        if (duel(attackingShip, defendingShip)) { // If the attacker hits the defender
+          if (defendingShip.armor - defendingShip.damage - attackingShip.attack < 0) {  // If the attacker kills the defender
+            combatPosition.removeUnit(defendingShip, game);
+            attackingShipIndex = combatOrder.indexof(attackingShip);
+          }
+          else // If the attacker doesn't kill, but hits the defender
+            combatPosition.damage += 1; 
+        }
+        attackingShipIndex += 1;
       }
     }
+  }
+
+  duel(attackingShip, defendingShip) {
+    let diceRoll = Math.round(Math.random() * (10 - 1) + 1);
+    let hitThreshold = attackingShip.attack + attackingShip.technology["attack"] - defendingShip.defense + defendingShip.technology["defense"];
+    return diceRoll == 1 || diceRoll <= hitThreshold;
   }
 
   moreThanTwoPlayersInSpace(ships) {

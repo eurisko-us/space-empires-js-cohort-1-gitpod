@@ -9,8 +9,11 @@ class Unit {
     this.canFight = true;
     this.attack = 0;
     this.defence = 0;
+    this.armor = 0;
+    this.damage = 0;
     this.fightingClass = 0;
     this.cost = 0;
+    this.lastMoved = {'turn': -1, 'round': -1, 'playerIndex': playerIndex};
   }
 
   getMovementTechnology(shipMovementLevel) {
@@ -30,7 +33,7 @@ class Unit {
   }
 
   generateState(currentPlayer, isCurrentPlayer, inCombat) {
-    if (currentPlayer || inCombat) {
+    if (isCurrentPlayer || inCombat) {
       return {
         'num': this.id,
         'coords': (this.x, this.y),
@@ -47,6 +50,10 @@ class Unit {
         'playerIndex': currentPlayer.playerIndex,
       }
     }
+  }
+
+  destroy(game) {
+    delete game.players[this.playerIndex].units.indexOf(this);
   }
 }
 

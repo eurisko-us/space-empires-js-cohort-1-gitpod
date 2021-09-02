@@ -4,13 +4,13 @@ class MovementEngine {
       for (let player of game.players) {
         for (let ship of player.ships) {
           if (ship.can_move)
-            this.move(game, ship)
+            this.move(game, ship, round, player)
         }
       }
     }
   }
 
-  move(game, ship) {
+  move(game, ship, round, player) {
     for (let tech = 0; tech < ship.getMovementTechnology(ship.technology["movement"])[round]; tech++) {
       game.generateState(phase = "Movement");
       translation = ship.player.strategy.decideShipMovement(game.gameState, ship.index);
@@ -20,6 +20,7 @@ class MovementEngine {
         // ^ If moving only 1 space ^
         ship.coords["x"] += translation["x"];
         ship.coords["y"] += translation["y"];
+        ship.lastMoved = {'turn': game.turn, 'round': round, 'playerIndex': player.playerIndex};
       } else {
         // Else the wanted move is invalid, it throws an exception defined as such:
         throw `Player ${ship.player.playerIndex}'s ${ship.type}, ${ship.id} 
