@@ -9,7 +9,7 @@ class Board {
 
   removeUnit(unit, game) {
     unit.destroy(game); // Unit removes itself from the player's `units` array
-    delete this.grid[String(unit.coords)].units[this.grid[String(unit.coords)].units.indexOf(unit)]; // Removes the unit from the grid with the unit's location
+    this.grid[String(unit.coords)].units.splice(this.grid[String(unit.coords)].units.indexOf(unit)); // Removes the unit from the grid with the unit's location
   }
 }
 
