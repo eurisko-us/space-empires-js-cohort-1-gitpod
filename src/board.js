@@ -9,7 +9,7 @@ class Board {
     }
   }
 
-  addUnits(unit) {
+  addUnit(unit) {
     this.grid[String(unit.coords)].units.push(unit)
   }
   removeUnit(unit) {
