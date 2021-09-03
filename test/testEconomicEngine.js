@@ -1,0 +1,1 @@
+const EconomicEngine = require("../src/economicEngine.js");
