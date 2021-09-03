@@ -29,9 +29,9 @@ class EconomicEngine {
   buyTech(game, tech, player) {
     techData = game.gameState["technologyData"][tech];
     techCost = techData[player.technology[tech] - 1]; // Adjustment for array indexing
-    if (playerTechLevel < techData.length && techCost < player.creds) {
-      player.creds -= techCost;
-      player.technology[tech] += 1;
+    if (techCost < player.creds) {
+      player.creds -= techCost
+      player.upgrade(game, tech);
     }
   }
 
@@ -39,7 +39,7 @@ class EconomicEngine {
     unitCost = game.gameState["unitData"][unit[0]]["cost"];
     if (unitCost < player.creds) {
       player.creds -= unitCost;
-      player.buildUnit(unit[0], unit[1]); // Builds unit and adds to self in player class
+      player.build(game, unit); // Builds unit and adds to self in player class
     }
   }
 

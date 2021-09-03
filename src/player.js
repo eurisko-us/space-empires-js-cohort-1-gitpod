@@ -9,46 +9,55 @@ class Player {
     this.playerColor = playerColor;
   }
 
-  upgrade(statToUpgrade, game) {
-    if (canUpgrade(statToUpgrade, game.gameState)) {
+  build(game, unit) { // Unit is formatted as ["string of ship type", (tuple of position)]
+    unitTypes = {"Scout": Scout, "Destroyer": Destroyer,/*, more fighting ships later */ "Colony Ship": ColonyShip, "Ship Yard": ShipYard}
+    if (!getPossibleBuildPositions().includes(unit[1]))
+      throw `Player ${this.playerIndex} tried to cheat by 
+            building a ${unit[0]} in an invalid hex at ${unit[1]}`; 
+    newShip = new unitTypes[unit[0]](/* stuff */);
+    this.ships.append(newShip);
+  }
+
+  upgrade(game, tech) { // Tech is formmated as a string
+    if (canUpgrade(tech, game.gameState)) {
       // Upgrade Attack Technology
-      if (statToUpgrade == "attack" and this.technology["attack"] < 3) {
+      if (tech == "attack" and this.technology["attack"] < 3) {
         this.technology["attack"] += 1;
         if (game.print_state_obsolete)
           console.log(`Player ${this.player_number} upgraded their attack strength from ${this.technology["attack"] - 1} to ${this.technology["attack"]}`);
       }
       // Upgrade Defense Technology
-      else if (statToUpgrade == "defense" and this.technology["defense"] < 3) {
+      else if (tech == "defense" and this.technology["defense"] < 3) {
         this.technology["defense"] += 1;
         if (game.print_state_obsolete)
           console.log(`Player ${this.player_number} upgraded their defense strength from ${this.technology["defense"] - 1} to ${this.technology["defense"]}`);
       }
       // Upgrade Tactics Technology
-      else if (statToUpgrade == "tactics" and this.technology["tactics"] < 3) {
+      else if (tech == "tactics" and this.technology["tactics"] < 3) {
         this.technology["tactics"] += 1;
         if (game.print_state_obsolete)
           console.log(`Player ${this.player_number} upgraded their fighting class from ${this.technology["tactics"] - 1} to ${this.technology["tactics"]}`);
       }
       // Upgrade Movement Technology
-      else if (statToUpgrade == "movement" and this.technology["movement"] < 6) {
+      else if (tech == "movement" and this.technology["movement"] < 6) {
         this.technology["movement"] += 1;
         if (game.print_state_obsolete)
           console.log(`Player ${this.player_number} upgraded their movement speed from ${this.technology["movement"] - 1} to ${this.technology["movement"]}`);
       }
       // Upgrade Shipyard Technology
-      else if (statToUpgrade == "shipyard" and this.technology["shipyard"] < 2) {
+      else if (tech == "shipyard" and this.technology["shipyard"] < 2) {
         this.technology["shipyard"] += 0.5;
         if (game.print_state_obsolete)
           console.log(`Player ${this.player_number} upgraded their ship-yard"s building size from ${this.technology["shipyard"] - 0.5} to ${this.technology["shipyard"]}`);
       }
       // Upgrade Terraform Technology
-      else if (statToUpgrade == "terraform" and this.technology["terraform"] < 2) {
+      else if (tech == "terraform" and this.technology["terraform"] < 2) {
         this.technology["terraform"] += 1;
         if (game.print_state_obsolete)
           console.log(`Player ${this.player_number} upgraded their ablility to terraform from ${this.technology["terraform"] - 1} to ${this.technology["terraform"]}`);
       }
       // Upgrade Ship Size Technology 
-      else if (statToUpgrade == "shipsize" and this.technology["shipsize"] < 6) {
+      else if (tech == "shipsize" and this.technology["shipsize"] < 6) {
         this.technology["shipsize"] += 1;
         if (game.print_state_obsolete)
           console.log(`Player ${this.player_number} upgraded their max building size from ${this.technology["shipsize"] - 1} to ${this.technology["shipsize"]}`);

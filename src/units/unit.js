@@ -1,5 +1,5 @@
 class Unit {
-  constructor(playerIndex, initialPosition, board, id, technology, turnCreated = null) {
+  constructor(playerIndex, initialPosition                                                , id, technology, turnCreated = null) {
     this.playerIndex = playerIndex
     this.technology = technology;
     this.position = initialPosition;
