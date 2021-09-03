@@ -1,6 +1,6 @@
 class Scout {
-  constructor(playerIndex, initialPosition, board, id, technology, turnCreated = null) {
-    Unit.call(this, playerIndex, initialPosition, board, id, technology, turnCreated);
+  constructor(playerIndex, initialPosition, id, technology, turnCreated = null) {
+    Unit.call(this, playerIndex, initialPosition, id, technology, turnCreated);
     this.attack = 3;
     this.defense = 0;
     this.armor = 1;

@@ -37,14 +37,15 @@ function order (firstShip,secondShip) {
 
 class Hex {
   constructor(coord, planet = false, asteroid = false) {
+    Board.call(this, null); // A Hex is a part of the board, so it has to inherit from the board
     this.coord = coord;
     this.units = [];
     if (planet)
-      this.planet = new Planet();
+      this.planet = new Planet(this.coord);
     else
       this.planet = null;
     if (asteroid)
-      this.asteroid = new Asteroid();
+      this.asteroid = new Asteroid(this.coord);
     else
       this.asteroid = null;
   }
@@ -55,14 +56,16 @@ class Hex {
 }
 
 class Planet {
-  constructor(colony = null, barren = false) { // `barren` is for later but simple
+  constructor(coord, colony = null, barren = false) { // `barren` is for later but simple
+    this.coord = coord;
     this.colony = colony;
     this.barren = barren;
   } 
 }
 
 class Asteroid {
-  constructor(deepSpace = false) { // `deepSpace` is for later but simple
+  constructor(coord, deepSpace = false) { // `deepSpace` is for later but simple
+    this.coord = coord;
     if (deepSpace)
       this.value = 10;
     else 
