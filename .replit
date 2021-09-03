@@ -1,2 +1,10 @@
+<<<<<<< HEAD
 language = "html"
 run = ""
+=======
+#language = "html"
+#run = "src/index.html"
+#language = "js"
+#run = "src/board.js"
+node test/testBoard.js
+>>>>>>> main

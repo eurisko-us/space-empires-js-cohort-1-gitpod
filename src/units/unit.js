@@ -1,4 +1,5 @@
 class Unit {
+<<<<<<< HEAD
   constructor(playerIndex, initialPosition                                                , id, technology, turnCreated = null) {
     this.playerIndex = playerIndex
     this.technology = technology;
@@ -16,6 +17,19 @@ class Unit {
     this.maintenance = 0;
     this.lastMoved = {'turn': -1, 'round': -1, 'playerIndex': playerIndex};
   }
+=======
+    constructor(player, initialPosition, board, id, turnCreated = null) {
+        this.player = player;
+        this.position = initialPosition;
+        this.board = board;
+        this.id = id;
+        this.turnCreated = turnCreated;
+        this.attack = 0;
+        this.defense = 0;
+        this.canMove = true;
+        this.canFight = true;
+        this.lastMoved = player.game.turn
+>>>>>>> main
 
   getMovementTechnology(shipMovementLevel) {
     if (shipMovementLevel == 1) {
