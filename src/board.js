@@ -1,56 +1,73 @@
 class Board {
-  constructor(game,size=5){
-    this.game = game;
+  constructor(boardSize = 13) {
     this.grid = {};
-    for (let i = 0; i < size; i++) {
-      for (let j = 0; j < size; j++) {
-        this.grid[String([i,j])]= new Cell([i,j]);
+      for (let x = 0; x < boardSize; x++) {
+        for (let y = 0; y < boardSize; y++) 
+          this.grid[String((x,y))]= new Hex((x,y));
       }
-    }
   }
 
-  addUnit(unit) {
-    this.grid[String(unit.coords)].units.push(unit)
-  }
-  removeUnit(unit) {
-    unit.removeSelf
-    this.grid[String(unit.coords)].units.splice(this.grid[String(unit.coords)].units.indexOf(unit))
+  removeUnit(unit, game) {
+    unit.destroy(game); // Remove current unit's player's refernce from the player's `units` array
+    // Remove grid's reference to the current unit
+    this.grid[String(unit.coords)].units.splice(this.grid[String(unit.coords)].units.indexOf(unit)); // Removes the unit from the grid with the unit's location
   }
 }
 
-class Hex {
-  constructor(coord){
-    this.coord = coord;
-    this.units = [];
-  }
-  sortForCombat(){
-    function order(s1,s2){
-      if (s1.tech['tactics'] > s2.tech['tactics']){
+function order (firstShip,secondShip) {
+  if (firstShip.technology["tactics"] + firstShip.fightingClass > secondShip.technology["tactics"] + secondShip.fightingClass) // If firstShip has a tactical advantage
+    return 1;
+  else if (firstShip.technology["tactics"] + firstShip.fightingClass == secondShip.technology["tactics"] + secondShip.fightingClass) { // If both ships are tied
+    if (firstShip.lastMoved["turn"] < secondShip.lastMoved["turn"]) // If firstShip moved first, last turn
+      return 1;
+    else if (firstShip.lastMoved["turn"] == secondShip.lastMoved["turn"]) {  // If both ships are tied
+      if (firstShip.lastMoved["phase"] < secondShip.lastMoved["phase"]) // If firstShip moved first, last movement round
         return 1;
-      }else if(s1.tech['tactics'] < s2.tech['tactics']){
-        return -1;
-      }else{
-        if (s1.attack_class < s2.attack_class){
+      else if (firstShip.lastMoved["phase"] == secondShip.lastMoved["phase"]) {  // If both ships are tied
+        if (firstShip.lastMoved["playerIndex"] < secondShip.lastMoved["playerIndex"])// If firstShip has a lower player index
           return 1;
-        }else if(s1.attack_class > s2.attack_class){
-          return -1;
-        }else{
-          if (s1.lastMoved < s2.lastMoved){
-            return 1;
-          }else if(s1.lastMoved > s2.lastMoved){
-            return -1;
-          }else{
-            return 0;
-          }
+        else if (firstShip.lastMoved["playerIndex"] == secondShip.lastMoved["playerIndex"]) {  // If both ships are fully tied which should be impossible
+          return 0;
         }
       }
     }
+  }
+  return -1;
+}
 
-    return this.units.sort(order(s1,s2));
+class Hex {
+  constructor(coord, planet = false, asteroid = false) {
+    this.coord = coord;
+    this.units = [];
+    if (planet)
+      this.planet = new Planet();
+    else
+      this.planet = null;
+    if (asteroid)
+      this.asteroid = new Asteroid();
+    else
+      this.asteroid = null;
+  }
+
+  sortForCombat() {
+    return this.units.sort(order(firstShip,secondShip));
+  }
+}
+
+class Planet {
+  constructor(colony = null, barren = false) { // `barren` is for later but simple
+    this.colony = colony;
+    this.barren = barren;
+  } 
+}
+
+class Asteroid {
+  constructor(deepSpace = false) { // `deepSpace` is for later but simple
+    if (deepSpace)
+      this.value = 10;
+    else 
+      this.value = 5;
   }
 }
 
 module.exports = Board;
-
-
-

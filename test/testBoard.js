@@ -6,6 +6,8 @@ let board = new Board();
 
 console.log(board.grid);
 
+/*
+
 sacrifice = Scout(whatever the requirements are)
 
 board.addUnit(sacrifice)
@@ -18,3 +20,5 @@ board.removeUnit(sacrifice)
 
 console.log(board.grid)
 console.log(board.grid["0,1"].units)
+
+*/
