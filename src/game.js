@@ -1,10 +1,10 @@
-const MovementEngine = require("movement_engine.js");
-const CombatEngine = require("combat_engine.js");
-const EconomicEngine = require("economic_engine.js");
+const MovementEngine = require("movement-engine.js");
+const CombatEngine = require("combat-engine.js");
+const EconomicEngine = require("economic-engine.js");
 const Board = require("board.js");
 const Player = require("player.js");
 const Unit = require("units/unit.js");
-const ColonyShip = require("units/colony_ship.js");
+const ColonyShip = require("units/colony-ship.js");
 const Destroyer = require("units/destroyer.js");
 const Scout = require("units/scout.js");
 
@@ -94,6 +94,46 @@ class Game {
       }
     }
   }
-}
+
+  generateState(currentPlayer = None, phase = None, movementRound = 0) {
+    movementState = this.movementEngine.generateMovementState(movementRound)
+    gameState = {
+      "turn": this.turn,
+      "winner": null,
+      "boardSize": this.boardSize,
+      "phase": phase,
+      "round": movementState["round"],
+      "planets": [for hex in this.board.grid if(hex.planet != null) hex.position],
+      "unitData": {
+        "Battleship": { "cost": 20, "hullSize": 3, "shipsizeNeeded": 5, "tactics": 5, "attack": 5, "defense": 2, "maintenance": 3 },
+        "Battlecruiser": { "cost": 15, "hullSize": 2, "shipsizeNeeded": 4, "tactics": 4, "attack": 5, "defense": 1, "maintenance": 2 },
+        "Cruiser": { "cost": 12, "hullSize": 2, "shipsizeNeeded": 3, "tactics": 3, "attack": 4, "defense": 1, "maintenance": 2 },
+        "Destroyer": { "cost": 9, "hullSize": 1, "shipsizeNeeded": 2, "tactics": 2, "attack": 4, "defense": 0, "maintenance": 1 },
+        "Dreadnaught": { "cost": 24, "hullSize": 3, "shipsizeNeeded": 6, "tactics": 5, "attack": 6, "defense": 3, "maintenance": 3 },
+        "Scout": { "cost": 6, "hullSize": 1, "shipsizeNeeded": 1, "tactics": 1, "attack": 3, "defense": 0, "maintenance": 1 },
+        "Shipyard": { "cost": 3, "hullSize": 1, "shipsizeNeeded": 1, "tactics": 3, "attack": 3, "defense": 0, "maintenance": 0 },
+        "Decoy": { "cost": 1, "hullSize": 0, "shipsizeNeeded": 1, "tactics": 0, "attack": 0, "defense": 0, "maintenance": 0 },
+        "Colonyship": { "cost": 8, "hullSize": 1, "shipsizeNeeded": 1, "tactics": 0, "attack": 0, "defense": 0, "maintenance": 0 },
+        "Base": { "cost": 12, "hullSize": 3, "shipsizeNeeded": 2, "tactics": 5, "attack": 7, "defense": 2, "maintenance": 0 },
+      },
+      "technologyData": {
+        "shipsize": [0, 10, 15, 20, 25, 30],
+        "attack": [20, 30, 40],
+        "defense": [20, 30, 40],
+        "movement": [0, 20, 30, 40, 40, 40],
+        "shipyard": [0, 20, 30],
+        "terraform": [25],
+        "tactics": [15, 20, 30],
+        "exploration": [15]
+      }
+    }
+    if(current_player == null)
+      self.game_state["players"] = { player_number: player.generate_state(currentPlayer = True, combat = (phase == "Combat")) for player_number, player in self.players.items() }
+    else
+      self.game_state["players"] = { player_number: player.generate_state(currentPlayer = (current_player == player), combat = (phase == "Combat")) for player_number, player in self.players.items() }
+    if phase == "Combat"
+      self.game_state["combat"] = self.combat_engine.generate_combat_array()
+    }
+  }
 
 module.exports = Game;
