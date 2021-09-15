@@ -35,6 +35,27 @@ function order (firstShip,secondShip) {
   return -1;
 }
 
+function orderWithGameState(firstShip,secondShip) { // But using gameState
+  if (firstShip["technology"]["tactics"] + firstShip["fightingClass"] > secondShip["technology"]["tactics"] + secondShip["fightingClass"]) // If firstShip has a tactical advantage
+    return 1;
+  else if (firstShip["technology"]["tactics"] + firstShip["fightingClass"] == secondShip["technology"]["tactics"] + secondShip["fightingClass"]) { // If both ships are tied
+    if (firstShip["lastMoved"]["turn"] < secondShip["lastMoved"]["turn"]) // If firstShip moved first, last turn
+      return 1;
+    else if (firstShip["lastMoved"]["turn"] == secondShip["lastMoved"]["turn"]) {  // If both ships are tied
+      if (firstShip["lastMoved"]["phase"] < secondShip["lastMoved"]["phase"]) // If firstShip moved first, last movement round
+        return 1;
+      else if (firstShip["lastMoved"]["phase"] == secondShip["lastMoved"]["phase"]) {  // If both ships are tied
+        if (firstShip["lastMoved"]["playerIndex"] < secondShip["lastMoved"]["playerIndex"])// If firstShip has a lower player index
+          return 1;
+        else if (firstShip["lastMoved"]["playerIndex"] == secondShip["lastMoved"]["playerIndex"]) {  // If both ships are fully tied which should be impossible
+          return 0;
+        }
+      }
+    }
+  }
+  return -1;
+}
+
 class Hex {
   constructor(coord, planet = false, asteroid = false) {
     Board.call(this, null); // A Hex is a part of the board, so it has to inherit from the board
@@ -74,3 +95,5 @@ class Asteroid {
 }
 
 module.exports = Board;
+module.exports.order = order;
+module.exports.orderWithGameState = orderWithGameState;

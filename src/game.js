@@ -20,7 +20,8 @@ class Game {
     // We could also reduce the number of movement rounds there are in the movement phase
     // And also limit the combat similar to the econonic phase
     this.phaseStats = {};
-    for (phase, value of phaseStats) {
+    for (let phase of phaseStats) {
+      value = phaseStats[phase]
       if (value == null)
         this.phaseStats[phase] = maxTurns;
       else
@@ -78,7 +79,7 @@ class Game {
   }
 
   completeTurn() { // Iterate through the phases
-    for (let phase in this.phaseStats) {
+    for (let phase in this.phaseStats {
       let value = this.phaseStats[phase];
       if (phase == "Movement") {
         this.generateState(phase = "Movement");
@@ -97,13 +98,13 @@ class Game {
 
   generateState(currentPlayer = None, phase = None, movementRound = 0) {
     movementState = this.movementEngine.generateMovementState(movementRound)
-    gameState = {
+    this.gameState = {
       "turn": this.turn,
       "winner": null,
       "boardSize": this.boardSize,
       "phase": phase,
       "round": movementState["round"],
-      "planets": [for hex in this.board.grid if(hex.planet != null) hex.position],
+      "planets": this.board.grid.map(function (hex) { if(hex.planet != null) { return hex.position; } }),
       "unitData": {
         "Battleship": { "cost": 20, "hullSize": 3, "shipsizeNeeded": 5, "tactics": 5, "attack": 5, "defense": 2, "maintenance": 3 },
         "Battlecruiser": { "cost": 15, "hullSize": 2, "shipsizeNeeded": 4, "tactics": 4, "attack": 5, "defense": 1, "maintenance": 2 },
@@ -127,12 +128,23 @@ class Game {
         "exploration": [15]
       }
     }
-    if(current_player == null)
-      self.game_state["players"] = { player_number: player.generate_state(currentPlayer = True, combat = (phase == "Combat")) for player_number, player in self.players.items() }
-    else
-      self.game_state["players"] = { player_number: player.generate_state(currentPlayer = (current_player == player), combat = (phase == "Combat")) for player_number, player in self.players.items() }
-    if phase == "Combat"
-      self.game_state["combat"] = self.combat_engine.generate_combat_array()
+    if(current_player == null) {
+      temp = {}
+      for (player_number in this.players) {
+        player = this.players[player_number];
+        temp[player_number] = player.generate_state(currentPlayer = True, combat = (phase == "Combat"))
+      } 
+      this.game_state["players"] = temp
+    } else {
+      temp = {}
+      for (player_number in this.players) {
+        player = this.players[player_number];
+        temp[player_number] = player.generate_state(currentPlayer = (current_player == player), combat = (phase == "Combat"))
+      } 
+      this.game_state["players"] = temp
+    }
+    if (phase == "Combat")
+      this.game_state["combat"] = this.combat_engine.generate_combat_array()
     }
   }
 

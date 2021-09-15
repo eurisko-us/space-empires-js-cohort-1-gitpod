@@ -14,7 +14,7 @@ class Unit {
     this.fightingClass = 0;
     this.cost = 0;
     this.maintenance = 0;
-    this.lastMoved = {'turn': -1, 'round': -1, 'playerIndex': playerIndex};
+    this.lastMoved = {"turn": -1, "round": -1, "playerIndex": playerIndex};
   }
 
   getMovementTechnology(shipMovementLevel) {
@@ -36,19 +36,21 @@ class Unit {
   generateState(currentPlayerIndex, isCurrentPlayer, inCombat) {
     if (isCurrentPlayer || inCombat) {
       return {
-        'num': this.id,
-        'coords': (this.x, this.y),
-        'type': this.type,
-        'hitsLeft': this.hitsLeft,
-        'technology': this.technology,
-        'playerIndex': currentPlayerIndex,
-        'turnCreated': this.turnCreated
+        "num": this.id,
+        "coords": (this.x, this.y),
+        "type": this.type,
+        "hitsLeft": this.hitsLeft,
+        "technology": this.technology,
+        "playerIndex": currentPlayerIndex,
+        "turnCreated": this.turnCreated,
+        "lastMoved": this.lastMoved
       }
     } else {
       return {
-        'num': this.id,
-        'coords': this.position,
-        'playerIndex': currentPlayerIndex,
+        "num": this.id,
+        "coords": this.position,
+        "playerIndex": currentPlayerIndex,
+        "lastMoved": this.lastMoved
       }
     }
   }
