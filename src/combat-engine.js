@@ -1,7 +1,8 @@
 class CombatEngine {
   completeCombatPhase(game) {
     possibleCombats = []
-    for (let position, ships of game.board.shipDict) {
+    for (let position of game.board.shipDict) {
+      ships = game.board.shipDict[position]
       if (moreThanTwoPlayersInSpace(ships))
         possibleCombats.append(position);
     }

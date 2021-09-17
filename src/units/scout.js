@@ -1,6 +1,8 @@
-class Scout {
+const Unit = require("../units/unit.js");
+
+class Scout extends Unit {
   constructor(playerIndex, initialPosition, id, technology, turnCreated = null) {
-    Unit.call(this, playerIndex, initialPosition, id, technology, turnCreated);
+    super(playerIndex, initialPosition, id, technology, turnCreated);
     this.attack = 3;
     this.defense = 0;
     this.armor = 1;
