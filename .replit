@@ -1,10 +1,2 @@
-<<<<<<< HEAD
-#language = "html"
-#run = "src/index.html"
-#language = "js"
-#run = "src/board.js"
-node test/testBoard.js
-=======
 language = "html"
-run = ""
->>>>>>> i_hate_merges
+run = "node test/testCombat.js"

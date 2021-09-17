@@ -1,7 +1,7 @@
-const Game = include("../src/game")
-const Scout = include("../src/units/Scout")
-const Destroyer = include("../src/units/Destroyer")
-const ColonyShip = include("../src/units/ColonyShip")
+const Game = require("../src/game")
+const Scout = require("../src/units/Scout")
+const Destroyer = require("../src/units/Destroyer")
+const ColonyShip = require("../src/units/ColonyShip")
 g = Game([dumbStrat,dumbStrat])
 p0 = g.players[0]
 p1 = g.players[1]
@@ -18,7 +18,7 @@ for (p2_unit of p2_units){
 }
 
 g.combatEngine.completeCombat(g)
-print('complete')
+// print('complete')
 //2 players. Player 1 tactics 0, Player 2 tactics 1
 //(0,0) P1 1 scout, 1 destroyer, 1 colony ship; P2 2 scouts, 1 ColonyShip
 //(2,1) P1 3 scouts; P2 1 scout, 1 colony ship

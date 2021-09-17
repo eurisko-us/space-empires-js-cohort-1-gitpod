@@ -1,12 +1,12 @@
-const MovementEngine = require("movement-engine.js");
-const CombatEngine = require("combat-engine.js");
-const EconomicEngine = require("economic-engine.js");
-const Board = require("board.js");
-const Player = require("player.js");
-const Unit = require("units/unit.js");
-const ColonyShip = require("units/colony-ship.js");
-const Destroyer = require("units/destroyer.js");
-const Scout = require("units/scout.js");
+const MovementEngine = require("../src/movement-engine.js");
+const CombatEngine = require("../src/combat-engine.js");
+const EconomicEngine = require("../src/economic-engine.js");
+const Board = require("../src/board.js");
+const Player = require("../src/player.js");
+const Unit = require("../src/units/unit.js");
+const ColonyShip = require("../src/units/colony-ship.js");
+const Destroyer = require("../src/units/destroyer.js");
+const Scout = require("../src/units/scout.js");
 
 class Game {
   constructor(playerStrats, boardSize = 13, phaseStats = { "Economic": null, "Movement": 3, "Combat": null }, maxTurns = 100) {
@@ -79,7 +79,7 @@ class Game {
   }
 
   completeTurn() { // Iterate through the phases
-    for (let phase in this.phaseStats {
+    for (let phase in this.phaseStats) {
       let value = this.phaseStats[phase];
       if (phase == "Movement") {
         this.generateState(phase = "Movement");
