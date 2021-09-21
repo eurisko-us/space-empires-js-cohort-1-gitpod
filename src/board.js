@@ -1,16 +1,31 @@
 class Board {
-  constructor(boardSize = 13) {
+  generateBoard(boardSize = 13) {
     this.grid = {};
       for (let x = 0; x < boardSize; x++) {
         for (let y = 0; y < boardSize; y++) 
-          this.grid[String((x,y))]= new Hex((x,y));
+          this.grid[{"x": x, "y": y}] = new Hex({"x": x, "y": y});
       }
+    console.log(`yes ${JSON.stringify(this.grid)}`)
   }
 
   removeUnit(unit, game) {
     unit.destroy(game); // Remove current unit's player's refernce from the player's `units` array
     // Remove grid's reference to the current unit
-    this.grid[String(unit.coords)].units.splice(this.grid[String(unit.coords)].units.indexOf(unit)); // Removes the unit from the grid with the unit's location
+    this.grid[String(unit.coords)].units.splice(this.grid[String((unit.position["x"], unit.position["y"]))].units.indexOf(unit)); // Removes the unit from the grid with the unit's location
+  }
+
+  moveShip(currentUnit, translation) { // Move unit reference from one hex to another
+    console.log(`fuckyoujs0 ${JSON.stringify(this.grid)}`);
+    let currentPosition = {"x": currentUnit.position["x"] - translation["x"], "y": currentUnit.position["y"] - translation["y"]};
+    console.log(`fuckyoujs ${JSON.stringify(currentPosition)}`);
+    let currentHex = this.grid[currentPosition];
+    console.log(`fuckyoujs2 ${JSON.stringify(currentHex)}`);
+    currentHex.removeUnit(currentUnit)
+    let newPosition = {"x": currentUnit.position["x"], "y": currentUnit.position["y"]};
+    console.log(`fuckyoujs3 ${JSON.stringify(newPosition)}`);
+    let newHex = this.grid[newPosition];
+    newHex.appendUnit(currentUnit)
+    console.log(`fuckyoujs4 ${JSON.stringify(currentHex)}`);
   }
 }
 
@@ -61,12 +76,13 @@ class Hex extends Board{
     super(null); // A Hex is a part of the board, so it has to inherit from the board
     this.coord = coord;
     this.units = [];
+
     if (planet)
-      this.planet = new Planet(this.coord);
+      this.planet = new Planet(this.position);
     else
       this.planet = null;
     if (asteroid)
-      this.asteroid = new Asteroid(this.coord);
+      this.asteroid = new Asteroid(this.position);
     else
       this.asteroid = null;
   }
@@ -74,19 +90,27 @@ class Hex extends Board{
   sortForCombat() {
     return this.units.sort(order(firstShip,secondShip));
   }
+
+  appendUnit(unit) {
+    this.units.push(unit)
+  }
+
+  removeUnit(unit) {
+    this.units.splice(this.units.indexOf(unit), 1)
+  }
 }
 
 class Planet {
-  constructor(coord, colony = null, barren = false) { // `barren` is for later but simple
-    this.coord = coord;
+  constructor(position, colony = null, barren = false) { // `barren` is for later but simple
+    this.position = position;
     this.colony = colony;
     this.barren = barren;
   } 
 }
 
 class Asteroid {
-  constructor(coord, deepSpace = false) { // `deepSpace` is for later but simple
-    this.coord = coord;
+  constructor(position, deepSpace = false) { // `deepSpace` is for later but simple
+    this.position = position;
     if (deepSpace)
       this.value = 10;
     else 

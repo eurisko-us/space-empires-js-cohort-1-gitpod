@@ -1,2 +1,7 @@
-language = "html"
-run = "node test/testCombat.js"
+#language = "html"
+#run = "src/index.html"
+#language = "js"
+#run = "src/board.js"
+#node test/testBoard.js
+language = "js"
+run = "node test/testEconomicEngine.js"
