@@ -8,7 +8,7 @@ class Board {
      }
    }
  }
- 
+ //"HELP"
  removeUnit(unit, game) {
    unit.destroy(game); // Remove current unit's player's refernce from the player's `units` array
    // Remove grid's reference to the current unit
