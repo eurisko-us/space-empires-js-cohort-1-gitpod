@@ -1,19 +1,28 @@
 class Board {
  constructor(boardSize = 13) {
    this.grid = {};
-     for (let x = 0; x < boardSize; x++) {
-       for (let y = 0; y < boardSize; y++) {
-         console.log(String([x,y]));
-         this.grid[String([x,y])]= new Hex([x,y]);
+   this.boardSize = 13;
+   for (let x = 0; x < boardSize; x++) {
+     for (let y = 0; y < boardSize; y++) {
+       this.grid[String([x,y])]= new Hex([x,y]);
      }
    }
  }
- //"HELP"
- removeUnit(unit, game) {
+
+  removeUnit(unit, game) {
    unit.destroy(game); // Remove current unit's player's refernce from the player's `units` array
    // Remove grid's reference to the current unit
    this.grid[String(unit.coords)].units.splice(this.grid[String(unit.coords)].units.indexOf(unit)); // Removes the unit from the grid with the unit's location
  }
+
+  moveShip(currentUnit, translation) { // Move unit reference from one hex to another
+    let currentPosition = String([currentUnit.position["x"] - translation["x"], currentUnit.position["y"] - translation["y"]]); 
+    let currentHex = this.grid[currentPosition];
+    currentHex.removeUnitReference(currentUnit)
+    let newPosition = String([currentUnit.position["x"], currentUnit.position["y"]]);
+    let newHex = this.grid[newPosition];
+    newHex.appendUnit(currentUnit)
+  }
 }
 
 function order (firstShip,secondShip) {
@@ -63,7 +72,6 @@ class Hex extends Board{
     super(null); // A Hex is a part of the board, so it has to inherit from the board
     this.coord = coord;
     this.units = [];
-
     if (planet)
       this.planet = new Planet(this.position);
     else
@@ -75,14 +83,15 @@ class Hex extends Board{
   }
 
   sortForCombat() {
-    return this.units.sort(order(firstShip,secondShip));
+    this.units = this.units.sort(order(firstShip,secondShip));
+    return this.units
   }
 
   appendUnit(unit) {
     this.units.push(unit)
   }
 
-  removeUnit(unit) {
+  removeUnitReference(unit) {
     this.units.splice(this.units.indexOf(unit), 1)
   }
 }

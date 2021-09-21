@@ -1,6 +1,7 @@
 const DefaultStrategy = require("../strategies/default-strategy.js")
 
-class MoveRightStrategy extends DefaultStrategy {
+
+class MoveRightStrat extends DefaultStrategy {
   constructor(playerIndex) {
     super(playerIndex);
   }
@@ -10,9 +11,7 @@ class MoveRightStrategy extends DefaultStrategy {
   }
 }
 
-//===============================================
-
-class MoveDownStrategy extends DefaultStrategy {
+class MoveDownStrat extends DefaultStrategy {
   constructor(playerIndex) {
     super(playerIndex);
   }
@@ -22,9 +21,7 @@ class MoveDownStrategy extends DefaultStrategy {
   }
 }
 
-//===============================================
-
-class MoveLeftStrategy extends DefaultStrategy {
+class MoveLeftStrat extends DefaultStrategy {
   constructor(playerIndex) {
     super(playerIndex);
   }
@@ -34,9 +31,7 @@ class MoveLeftStrategy extends DefaultStrategy {
   }
 }
 
-//===============================================
-
-class MoveUpStrategy extends DefaultStrategy {
+class MoveUpStrat extends DefaultStrategy {
   constructor(playerIndex) {
     super(playerIndex);
   }
@@ -46,7 +41,7 @@ class MoveUpStrategy extends DefaultStrategy {
   }
 }
 
-module.exports = MoveRightStrategy;
-module.exports = MoveDownStrategy;
-module.exports = MoveLeftStrategy;
-module.exports = MoveUpStrategy;
+module.exports.MoveRightStrat = MoveRightStrat;
+module.exports.MoveDownStrat = MoveDownStrat;
+module.exports.MoveLeftStrat = MoveLeftStrat;
+module.exports.MoveUpStrat = MoveUpStrat;
