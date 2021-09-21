@@ -19,6 +19,7 @@ class Player {
             building a ${unit[0]} in an invalid hex at ${unit[1]}`; 
     newShip = new unitTypes[unit[0]](/* stuff */);
     this.ships.append(newShip);
+    this.game.board.grid(String([newShip.position["x"], newShip.position["y"]])).appendUnit(newShip)
   }
 
   upgrade(game, tech) { // Tech is formmated as a string
