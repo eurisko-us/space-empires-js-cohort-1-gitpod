@@ -1,6 +1,8 @@
-class Destroyer {
+const Unit = require("../units/unit.js");
+
+class Destroyer extends Unit {
   constructor(playerIndex, initialPosition, id, technology, turnCreated = null) {
-    Unit.call(this, playerIndex, initialPosition, id, technology, turnCreated);
+    super(playerIndex, initialPosition, id, technology, turnCreated);
     this.attack = 4;
     this.defense = 0;
     this.armor = 1

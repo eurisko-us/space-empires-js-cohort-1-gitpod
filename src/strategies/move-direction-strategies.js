@@ -1,35 +1,49 @@
-const DefaultStrategy = require("default-strategy.js")
+const DefaultStrategy = require("../strategies/default-strategy.js")
 
-class MoveRightStrategy {
-  constructor(playerIndex)
-    DefaultStrategy.call(playerIndex)
+class MoveRightStrategy extends DefaultStrategy {
+  constructor(playerIndex) {
+    super(playerIndex);
+  }
 
-  decideShipMovement(unitIndex, gameState)
-    return (1,0)
+  decideUnitMovement(unitIndex, gameState) {
+    return {"x": 1, "y": 0};
+  }
 }
 
-class MoveDownStrategy {
-  constructor(playerIndex)
-    DefaultStrategy.call(playerIndex)
+//===============================================
 
-  decideShipMovement(unitIndex, gameState)
-    return (0,1)
+class MoveDownStrategy extends DefaultStrategy {
+  constructor(playerIndex) {
+    super(playerIndex);
+  }
+
+  decideUnitMovement(unitIndex, gameState) {
+    return {"x": 0, "y": 1};
+  }
 }
 
-class MoveLeftStrategy {
-  constructor(playerIndex)
-    DefaultStrategy.call(playerIndex)
+//===============================================
 
-  decideShipMovement(unitIndex, gameState)
-    return (-1,0)
+class MoveLeftStrategy extends DefaultStrategy {
+  constructor(playerIndex) {
+    super(playerIndex);
+  }
+
+  decideUnitMovement(unitIndex, gameState) {
+    return {"x": -1, "y": 0};
+  }
 }
 
-class MoveUpStrategy {
-  constructor(playerIndex)
-    DefaultStrategy.call(playerIndex)
+//===============================================
 
-  decideShipMovement(unitIndex, gameState)
-    return (0,-1)
+class MoveUpStrategy extends DefaultStrategy {
+  constructor(playerIndex) {
+    super(playerIndex);
+  }
+
+  decideUnitMovement(unitIndex, gameState) {
+    return {"x": 0, "y": -1};
+  }
 }
 
 module.exports = MoveRightStrategy;

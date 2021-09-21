@@ -11,14 +11,15 @@ class EconomicEngine {
         }
         taxes = this.taxes(player);
       }
-      game.generateState(phase = "Economic", currentPlayer = player);
+      console.log(player)
+      game.generateState(player, "Economic");
       // After looking over the rule book theres no rule 
       // Saying the either technology or ships have to get bought first
       // Decide purchases should be formatted as an array like this: ["Movement", ["Scout", (0,6)], "Attack"]
       // The earlier the purchase is in the array the higher priority the player wants to purchase
-      purchases = player.strategy.decidePurchases(game.gameState);
-      for (purchase in purchases) {
-        if (this.techNames.includes(purchase))
+      let purchases = player.strategy.decidePurchases(game.gameState);
+      for (let purchase in purchases) {
+        if (typeof(purchase) == "string")
           this.buyTech(game, purchase, player);
         else
           this.buyUnit(game, purchase, player);
@@ -27,8 +28,8 @@ class EconomicEngine {
   }
 
   buyTech(game, tech, player) {
-    techData = game.gameState["technologyData"][tech];
-    techCost = techData[player.technology[tech] - 1]; // Adjustment for array indexing
+    let techData = game.gameState["technologyData"][tech];
+    let techCost = techData[player.technology[tech] - 1]; // Adjustment for array indexing
     if (techCost < player.creds) {
       player.creds -= techCost
       player.upgrade(game, tech);
@@ -53,8 +54,8 @@ class EconomicEngine {
   }
 
   income(player) {
-    total_income = 0;
-    for (let ship of player.ships) {
+    let income = 0;
+    for (let unit of player.units) {
       if (ship.type == "Colony" || ship.type == "Home Base")
         income += ship.income;
     }
@@ -62,8 +63,8 @@ class EconomicEngine {
   }
 
   taxes(player) {
-    total_taxes = 0;
-    for (let ship of player.ships)
+    let total_taxes = 0;
+    for (let unit of player.units)
       total_taxes += ship.maintenance;
     return total_taxes;
   }

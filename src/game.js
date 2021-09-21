@@ -20,17 +20,17 @@ class Game {
     // We could also reduce the number of movement rounds there are in the movement phase
     // And also limit the combat similar to the econonic phase
     this.phaseStats = {};
-    for (let phase of phaseStats) {
-      value = phaseStats[phase]
+    for (let phase in phaseStats) {
+      let value = phaseStats[phase]
       if (value == null)
         this.phaseStats[phase] = maxTurns;
       else
         this.phaseStats[phase] = value;
     }
     // Doing exactly what they say
-    initializePlayers();
-    initializeBoard();
-    initializeEngines();
+    this.initializePlayers();
+    this.initializeBoard();
+    this.initializeEngines();
   }
 
   initializePlayers() {
@@ -55,13 +55,14 @@ class Game {
       "rgb(255, 255, 100)" /* Darkish Yellow */,
       "rgb(50, 125, 5)" /* Dark Green */
     ] // CSS code for the colors in rgb codes
-    for (let i = 0; i < this.playerStrats.length(); i++) {
-      this.players.append(Player(this.playerStrats[i], this.playerHomeBasePositions[i], this.boardSize, i, this.playerColors[i]));
+    for (let i = 0; i < this.playerStrats.length; i++) {
+      this.players.push(new Player(this.playerStrats[i], this.playerHomeBasePositions[i], this.boardSize, i, this.playerColors[i]));
     }
   }
 
   initializeBoard() {
-    this.board = new Board(this.boardSize); // Will probs need more args, but thats for later
+    this.board = new Board(); // Will probs need more args, but thats for later
+    this.board.generateBoard(this.boardSize);
   }
 
   initializeEngines() { // All of these will probs need more args, but thats for later
@@ -96,15 +97,15 @@ class Game {
     }
   }
 
-  generateState(currentPlayer = None, phase = None, movementRound = 0) {
-    movementState = this.movementEngine.generateMovementState(movementRound)
+  generateState(currentPlayer, phase, movementRound = 0) {
+    let movementState = this.movementEngine.generateMovementState(movementRound)
     this.gameState = {
       "turn": this.turn,
       "winner": null,
       "boardSize": this.boardSize,
       "phase": phase,
       "round": movementState["round"],
-      "planets": this.board.grid.map(function (hex) { if(hex.planet != null) { return hex.position; } }),
+      "planets": [this.board.grid].map(function (hex) { if(hex.planet != null) { return hex.position; } }),
       "unitData": {
         "Battleship": { "cost": 20, "hullSize": 3, "shipsizeNeeded": 5, "tactics": 5, "attack": 5, "defense": 2, "maintenance": 3 },
         "Battlecruiser": { "cost": 15, "hullSize": 2, "shipsizeNeeded": 4, "tactics": 4, "attack": 5, "defense": 1, "maintenance": 2 },
@@ -128,23 +129,23 @@ class Game {
         "exploration": [15]
       }
     }
-    if(current_player == null) {
-      temp = {}
-      for (player_number in this.players) {
-        player = this.players[player_number];
-        temp[player_number] = player.generate_state(currentPlayer = True, combat = (phase == "Combat"))
+    if(currentPlayer == null) {
+      let temp = {}
+      for (let playerNumber in this.players) {
+        let player = this.players[playerNumber];
+        temp[playerNumber] = player.generateState(true, (phase == "Combat"))
       } 
-      this.game_state["players"] = temp
+      this.gameState["players"] = temp
     } else {
-      temp = {}
-      for (player_number in this.players) {
-        player = this.players[player_number];
-        temp[player_number] = player.generate_state(currentPlayer = (current_player == player), combat = (phase == "Combat"))
+      let temp = {}
+      for (let playerNumber in this.players) {
+        let player = this.players[playerNumber];
+        temp[playerNumber] = player.generateState((currentPlayer == player), (phase == "Combat"))
       } 
-      this.game_state["players"] = temp
+      this.gameState["players"] = temp
     }
     if (phase == "Combat")
-      this.game_state["combat"] = this.combat_engine.generate_combat_array()
+      this.gameState["combat"] = this.combat_engine.generateCombatArray()
     }
   }
 
