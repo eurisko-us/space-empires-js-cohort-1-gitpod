@@ -71,11 +71,12 @@ function orderWithGameState(firstShip,secondShip) { // But using gameState
   return -1;
 }
 
-class Hex extends Board {
-  constructor(position, planet = false, asteroid = false) {
+class Hex extends Board{
+  constructor(coord, planet = false, asteroid = false) {
     super(null); // A Hex is a part of the board, so it has to inherit from the board
-    this.position = position;
-    this.units = []
+    this.coord = coord;
+    this.units = [];
+
     if (planet)
       this.planet = new Planet(this.position);
     else

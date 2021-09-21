@@ -20,7 +20,7 @@ class Game {
     // We could also reduce the number of movement rounds there are in the movement phase
     // And also limit the combat similar to the econonic phase
     this.phaseStats = {};
-    for (let phase in phaseStats) {
+    for (let phase of Object.keys(phaseStats)) {
       let value = phaseStats[phase]
       if (value == null)
         this.phaseStats[phase] = maxTurns;
@@ -56,7 +56,8 @@ class Game {
       "rgb(50, 125, 5)" /* Dark Green */
     ] // CSS code for the colors in rgb codes
     for (let i = 0; i < this.playerStrats.length; i++) {
-      this.players.push(new Player(this.playerStrats[i], this.playerHomeBasePositions[i], this.boardSize, i, this.playerColors[i]));
+      let new_player = new Player(this.playerStrats[i], this.playerHomeBasePositions[i], this.boardSize, i, this.playerColors[i])
+      this.players.push(new_player);
     }
   }
 
