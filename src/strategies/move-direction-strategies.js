@@ -10,6 +10,8 @@ class MoveRightStrategy extends DefaultStrategy {
   }
 }
 
+//===============================================
+
 class MoveDownStrategy extends DefaultStrategy {
   constructor(playerIndex) {
     super(playerIndex);
@@ -20,6 +22,8 @@ class MoveDownStrategy extends DefaultStrategy {
   }
 }
 
+//===============================================
+
 class MoveLeftStrategy extends DefaultStrategy {
   constructor(playerIndex) {
     super(playerIndex);
@@ -29,6 +33,8 @@ class MoveLeftStrategy extends DefaultStrategy {
     return {"x": -1, "y": 0};
   }
 }
+
+//===============================================
 
 class MoveUpStrategy extends DefaultStrategy {
   constructor(playerIndex) {

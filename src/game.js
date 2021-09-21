@@ -97,7 +97,7 @@ class Game {
     }
   }
 
-  generateState(currentPlayer = null, phase = null, movementRound = 0) {
+  generateState(currentPlayer, phase, movementRound = 0) {
     let movementState = this.movementEngine.generateMovementState(movementRound)
     this.gameState = {
       "turn": this.turn,
