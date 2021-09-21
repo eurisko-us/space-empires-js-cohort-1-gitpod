@@ -1,15 +1,17 @@
+const Colony = require("../src/units/colony.js")
 class Player {
   constructor(strategy, position, boardSize, playerIndex, playerColor) {
     this.strategy = new strategy(playerIndex);
     this.creds = 0;
     this.boardSize = boardSize;
     this.technology = { "attack": 0, "defense": 0, "movement": 1, "shipsize": 1, "shipyard": 1, "terraform": 0, "tactics": 0, "exploration": 0 };
-    this.homeBase = Colony(playerIndex, position, boardSize, 0, this.technology, homeBase = True);
+    this.homeBase = new Colony(playerIndex, position, 0, this.technology, 0, true);
     this.playerIndex = playerIndex;
     this.playerColor = playerColor;
+    this.units = []
   }
 
-  build(game, unit) { // Unit is formatted as ["string of ship type", (array of position)]
+  build(game, unit) { // Unit is formatted as ["string of ship type", (tuple of position)]
     unitTypes = {"Scout": Scout, "Destroyer": Destroyer,/*, more fighting ships later */ "Colony Ship": ColonyShip, "Ship Yard": ShipYard}
     if (!getPossibleBuildPositions().includes(unit[1]))
       throw `Player ${this.playerIndex} tried to cheat by 
@@ -65,17 +67,17 @@ class Player {
     }
   }
 
-  generate_state(isCurrentPlayer, inCombat) {
+  generateState(isCurrentPlayer, inCombat) {
     if (isCurrentPlayer || inCombat) {
       return {
-        'name': this.strategy.__name__,
+        'name': this.strategy.name,
         'cp': this.creds,
         'units': this.units,
         //'colonies': [colony.generate_state(current_player, combat) for colony in sorted([ship for ship in this..ships if ship.type == 'Colony'], key=lambda ship: (ship.technology['tactics'], -ship.player.player_number, -ship.ID), reverse=True)],
         //'ship_yards': [ship_yard.generate_state(current_player, combat) for ship_yard in sorted([ship for ship in this..ships if ship.type == 'Shipyard'], key=lambda ship: (ship.technology['tactics'], -ship.player.player_number, -ship.ID), reverse=True)],
         'technology': this.technology,
-        'homeworld': this.home_base.generate_state(current_player, combat),
-        'num': this.player_number
+        'homeworld': this.homeBase.generateState(isCurrentPlayer, inCombat),
+        'num': this.playerNumber
       }
     } else {
       return {
@@ -83,10 +85,10 @@ class Player {
         'units': this.units,
         //'colonies': [colony.generate_state(current_player, combat) for colony in sorted([ship for ship in this..ships if ship.type == 'Colony'], key=lambda ship: (ship.technology['tactics'], -ship.player.player_number, -ship.ID), reverse=True)],
         //'ship_yards': [ship_yard.generate_state(current_player, combat) for ship_yard in sorted([ship for ship in this..ships if ship.type == 'Shipyard'], key=lambda ship: (ship.technology['tactics'], -ship.player.player_number, -ship.ID), reverse=True)],
-        'homeworld': this.home_base.generate_state(current_player, combat),
-        'num': this.player_number
+        'homeworld': this.homeBase.generateState(isCurrentPlayer, inCombat),
+        'num': this.playerNumber
       }
     }
-
   }
 }
+module.exports = Player;

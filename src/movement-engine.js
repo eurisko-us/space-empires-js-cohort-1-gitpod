@@ -2,33 +2,61 @@ class MovementEngine {
   completeMovementPhase(game, numOfRounds = 3) {
     for (let round = 0; round < numOfRounds; round++) {
       for (let player of game.players) {
-        for (let ship of player.ships) {
-          if (ship.can_move)
-            this.move(game, ship, round, player)
+        for (let unit of player.units) {
+          if (unit.canMove) {
+            this.move(game, unit, round, player)
+            console.log(`unit.position: ${JSON.stringify(unit.position)}`)
+          }
         }
       }
     }
   }
 
-  move(game, ship, round, player) {
-    for (let tech = 0; tech < ship.getMovementTechnology(ship.technology["movement"])[round]; tech++) {
+  move(game, unit, round, player) {
+    console.log(`unit.position: ${JSON.stringify(unit.position)}`)
+    for (let tech = 0; tech < unit.getMovementTechnology(unit.technology["movement"])[round]; tech++) {
       game.generateState(phase = "Movement");
-      translation = ship.player.strategy.decideShipMovement(game.gameState, ship.index);
-      // Ships can only move like a king in chess
+      let translation = player.strategy.decideUnitMovement(unit.index, game.gameState);
+      console.log(`translation: ${JSON.stringify(translation)}`);
+      // Units can only move like a king in chess
       // But it's repeated multiple times a movement phase
       if (Math.abs(translation["x"]) + Math.abs(translation["y"]) <= 1) {
         // ^ If moving only 1 space ^
-        ship.coords["x"] += translation["x"];
-        ship.coords["y"] += translation["y"];
-        ship.lastMoved = {'turn': game.turn, 'round': round, 'playerIndex': player.playerIndex};
+        let currentHex = this.getCurrentHex(game, unit.position);
+        if (this.isInSpace(unit, translation) && !this.isEnemyInCurrentHex(currentHex, unit)) {
+          unit.position["x"] += translation["x"];
+          unit.position["y"] += translation["y"];
+          unit.lastMoved = {'turn': game.turn, 'round': round, 'playerIndex': player.playerIndex};
+          game.board.moveShip(unit, translation);
+        }
       } else {
         // Else the wanted move is invalid, it throws an exception defined as such:
-        throw `Player ${ship.player.playerIndex}'s ${ship.type}, ${ship.id} 
+        throw `Player ${unit.player.playerIndex}'s ${unit.type}, ${unit.id} 
               tried to cheat with an invalid move, 
-              it tried to move to (${ship.x + translation["x"]}, ${ship.y + translation["y"]}) 
-              from (${ship.x}, ${ship.y}).`;
+              it tried to move to (${unit.x + translation["x"]}, ${unit.y + translation["y"]}) 
+              from (${unit.x}, ${unit.y}).`;
       }
     }
+  }
+
+  isInSpace(unit, translation) {
+    return 0 <= unit.position["x"] + translation["x"] < 13 && 0 <= unit.position["y"] + translation["y"] < 13;
+  }
+
+  getCurrentHex(game, position) {
+    console.log(game.board.grid)
+    return game.board.grid[position]
+  }
+
+  isEnemyInCurrentHex(hex, currentUnit) {
+    for (let unit in hex.units) {
+      if (unit.playerIndex != currentUnit.playerIndex)
+        return true;
+    }
+  }
+
+  generateMovementState(movementRound) {
+    return {"round": movementRound}
   }
 }
 
