@@ -1,6 +1,7 @@
-class ColonyShip {
+const Unit = require("../../src/units/unit.js");
+class ColonyShip extends Unit{
   constructor(playerIndex, initialPosition, id, technology, turnCreated = null) {
-    Unit.call(this, playerIndex, initialPosition, id, technology, turnCreated);
+    super(playerIndex, initialPosition, id, technology, turnCreated);
     this.cost = 8;
   }
 }

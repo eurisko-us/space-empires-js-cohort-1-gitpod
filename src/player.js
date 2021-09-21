@@ -1,10 +1,11 @@
+const Colony = require("../src/units/colony")
 class Player {
   constructor(strategy, position, boardSize, playerIndex, playerColor) {
     this.strategy = new strategy(playerIndex);
     this.creds = 0;
     this.boardSize = boardSize;
     this.technology = { "attack": 0, "defense": 0, "movement": 1, "shipsize": 1, "shipyard": 1, "terraform": 0, "tactics": 0, "exploration": 0 };
-    this.homeBase = Colony(playerIndex, position, boardSize, 0, this.technology, homeBase = True);
+    this.homeBase = new Colony(playerIndex, position, 0, this.technology, 0, true);
     this.playerIndex = playerIndex;
     this.playerColor = playerColor;
   }
@@ -90,3 +91,4 @@ class Player {
 
   }
 }
+module.exports = Player;
