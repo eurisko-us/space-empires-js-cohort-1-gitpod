@@ -1,6 +1,6 @@
 class CombatEngine {
   completeCombatPhase(game) {
-    possibleCombats = []
+    let possibleCombats = []
 
     for (let hex of Object.values(game.board.grid)) {
       if (moreThanTwoPlayersInSpace(hex.units))

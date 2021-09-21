@@ -1,4 +1,5 @@
 const Colony = require("../src/units/colony.js")
+
 class Player {
   constructor(strategy, position, boardSize, playerIndex, playerColor) {
     this.strategy = new strategy(playerIndex);
