@@ -1,32 +1,19 @@
 class Board {
-  generateBoard(boardSize = 13) {
-    this.grid = {};
-      for (let x = 0; x < boardSize; x++) {
-        for (let y = 0; y < boardSize; y++) 
-          this.grid[{"x": x, "y": y}] = new Hex({"x": x, "y": y});
-      }
-    console.log(`yes ${JSON.stringify(this.grid)}`)
-  }
-
-  removeUnit(unit, game) {
-    unit.destroy(game); // Remove current unit's player's refernce from the player's `units` array
-    // Remove grid's reference to the current unit
-    this.grid[String(unit.coords)].units.splice(this.grid[String((unit.position["x"], unit.position["y"]))].units.indexOf(unit)); // Removes the unit from the grid with the unit's location
-  }
-
-  moveShip(currentUnit, translation) { // Move unit reference from one hex to another
-    console.log(`fuckyoujs0 ${JSON.stringify(this.grid)}`);
-    let currentPosition = {"x": currentUnit.position["x"] - translation["x"], "y": currentUnit.position["y"] - translation["y"]};
-    console.log(`fuckyoujs ${JSON.stringify(currentPosition)}`);
-    let currentHex = this.grid[currentPosition];
-    console.log(`fuckyoujs2 ${JSON.stringify(currentHex)}`);
-    currentHex.removeUnit(currentUnit)
-    let newPosition = {"x": currentUnit.position["x"], "y": currentUnit.position["y"]};
-    console.log(`fuckyoujs3 ${JSON.stringify(newPosition)}`);
-    let newHex = this.grid[newPosition];
-    newHex.appendUnit(currentUnit)
-    console.log(`fuckyoujs4 ${JSON.stringify(currentHex)}`);
-  }
+ constructor(boardSize = 13) {
+   this.grid = {};
+     for (let x = 0; x < boardSize; x++) {
+       for (let y = 0; y < boardSize; y++) {
+         console.log(String([x,y]));
+         this.grid[String([x,y])]= new Hex([x,y]);
+     }
+   }
+ }
+ //"HELP"
+ removeUnit(unit, game) {
+   unit.destroy(game); // Remove current unit's player's refernce from the player's `units` array
+   // Remove grid's reference to the current unit
+   this.grid[String(unit.coords)].units.splice(this.grid[String(unit.coords)].units.indexOf(unit)); // Removes the unit from the grid with the unit's location
+ }
 }
 
 function order (firstShip,secondShip) {
