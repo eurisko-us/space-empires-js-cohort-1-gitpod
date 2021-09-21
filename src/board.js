@@ -1,19 +1,19 @@
 class Board {
-  generateBoard(boardSize = 13) {
-    this.grid = {};
-    this.boardSize = 13;
-    for (let x = 0; x < this.boardSize; x++) {
-      for (let y = 0; y < this.boardSize; y++) {
-        this.grid[String([x,y])] = new Hex({"x": x, "y": y});
-      }
-    }
-  }
+ constructor(boardSize = 13) {
+   this.grid = {};
+   this.boardSize = 13;
+   for (let x = 0; x < boardSize; x++) {
+     for (let y = 0; y < boardSize; y++) {
+       this.grid[String([x,y])]= new Hex([x,y]);
+     }
+   }
+ }
 
   removeUnit(unit, game) {
-    unit.destroy(game); // Remove current unit's player's refernce from the player's `units` array
-    // Remove grid's reference to the current unit
-    this.grid[String(unit.coords)].units.splice(this.grid[String((unit.position["x"], unit.position["y"]))].units.indexOf(unit)); // Removes the unit from the grid with the unit's location
-  }
+   unit.destroy(game); // Remove current unit's player's refernce from the player's `units` array
+   // Remove grid's reference to the current unit
+   this.grid[String(unit.coords)].units.splice(this.grid[String(unit.coords)].units.indexOf(unit)); // Removes the unit from the grid with the unit's location
+ }
 
   moveShip(currentUnit, translation) { // Move unit reference from one hex to another
     let currentPosition = String([currentUnit.position["x"] - translation["x"], currentUnit.position["y"] - translation["y"]]); 
@@ -67,10 +67,10 @@ function orderWithGameState(firstShip,secondShip) { // But using gameState
   return -1;
 }
 
-class Hex extends Board {
-  constructor(position, planet = false, asteroid = false) {
+class Hex extends Board{
+  constructor(coord, planet = false, asteroid = false) {
     super(null); // A Hex is a part of the board, so it has to inherit from the board
-    this.position = position;
+    this.coord = coord;
     this.units = [];
     if (planet)
       this.planet = new Planet(this.position);

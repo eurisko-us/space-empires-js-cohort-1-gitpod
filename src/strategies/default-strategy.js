@@ -6,6 +6,10 @@ class DefaultStrategy {
     this.playerIndex = playerIndex;
   }
 
+  decidePurchases(hiddenGameState) {
+    return [];
+  }
+    
   decideRemoval(hiddenGameState) {
     weakest_ship = hiddenGameState["players"][self.player_number]["units"].sort(orderWithGameState(firstShip,secondShip))[-1];
     return weakest_ship["type"], weakest_ship["num"];
