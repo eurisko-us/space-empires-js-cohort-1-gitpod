@@ -1,2 +1,2 @@
 language = "html"
-run = "node test/testBoard.js"
+run = "node test/testCombat.js"

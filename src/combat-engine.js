@@ -1,22 +1,21 @@
 class CombatEngine {
   completeCombatPhase(game) {
     possibleCombats = []
-    for (let hex of Object.values(game.board.grid)) {
-      if (moreThanTwoPlayersInSpace(hex.units))
-        possibleCombats.append(hex);
+    for (let position, ships of game.board.shipDict) {
+      if (moreThanTwoPlayersInSpace(ships))
+        possibleCombats.append(position);
     }
 
-    for (let combatHex of possibleCombats) {
+    for (combatPosition of possibleCombats) {
       shipsInCombat = [];
-      for (let ships of combatHex.units) {
+      for (let ships of game.board.shipDict[combatPosition]) {
         for (let ship of ships) {
           if (ship.canFight)
             shipsInCombat.append(ship);
         }
       }
 
-      let combatOrder = combatHex.sortForCombat();
-      return combatOrder
+      let combatOrder = combatPosition.sortForCombat();
       let attackingShipIndex = 0;
 
       while (!moreThanTwoPlayersInSpace(combatOrder)) {
