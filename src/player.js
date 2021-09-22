@@ -19,6 +19,9 @@ class Player {
 
   build(game, unit) { // Unit is formatted as ["string of ship type", (tuple of position)]
     let unitTypes = {"Scout": Scout, "Destroyer": Destroyer,/*, more fighting ships later */ "Colony Ship": ColonyShip}
+    // console.log(unit)
+    // console.log(unit[1]);
+    // console.log(this.getPossibleBuildPositions())
     if (!this.getPossibleBuildPositions().includes(unit[1]))
       throw `Player ${this.playerIndex} tried to cheat by 
             building a ${unit[0]} in an invalid hex at ${unit[1]}`; 
@@ -26,8 +29,8 @@ class Player {
     this.units.push(newShip);
   }
 
-  getPossibleBuildPositions(shipCoords) {
-    return [this.homeBase.position];
+  getPossibleBuildPositions() {
+    return [this.homeBase.coords];
   }
 
 

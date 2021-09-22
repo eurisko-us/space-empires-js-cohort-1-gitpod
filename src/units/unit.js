@@ -38,7 +38,7 @@ class Unit {
     if (isCurrentPlayer || inCombat) {
       return {
         "num": this.id,
-        "coords": this.position,
+        "coords": this.coords,
         "type": this.type,
         "hitsLeft": this.hitsLeft,
         "technology": this.technology,
@@ -49,7 +49,7 @@ class Unit {
     } else {
       return {
         "num": this.id,
-        "coords": this.position,
+        "coords": this.coords,
         "playerIndex": currentPlayerIndex,
         "lastMoved": this.lastMoved
       }
