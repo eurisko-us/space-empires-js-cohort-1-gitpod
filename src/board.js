@@ -1,13 +1,13 @@
 class Board {
  generateBoard(boardSize = 13) {
    this.grid = {};
-   this.boardSize = 13;
-   for (let x = 0; x < boardSize; x++) {
-     for (let y = 0; y < boardSize; y++) {
-       this.grid[String([x,y])]= new Hex([x,y]);
-     }
-   }
- }
+    this.boardSize = 13;
+    for (let x = 0; x < this.boardSize; x++) {
+      for (let y = 0; y < this.boardSize; y++) {
+        this.grid[String([x,y])] = new Hex({"x": x, "y": y});
+      }
+    }
+  }
 
   removeUnit(unit, game) {
    unit.destroy(game); // Remove current unit's player's refernce from the player's `units` array

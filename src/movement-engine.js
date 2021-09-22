@@ -44,6 +44,7 @@ class MovementEngine {
   }
 
   getCurrentHex(game, position) {
+    console.log
     return game.board.grid[String([position["x"], position["y"]])]
   }
 

@@ -8,6 +8,7 @@ class Scout extends Unit{
     this.fightingClass = 0;
     this.cost = 6;
     this.maintenance = 1;
+    this.name = "Scout";
   }
 }
 

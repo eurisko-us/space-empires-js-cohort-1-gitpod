@@ -13,6 +13,7 @@ class Unit {
     this.damage = 0;
     this.fightingClass = 0;
     this.cost = 0;
+    this.name = "Unit"
     this.maintenance = 0;
     this.lastMoved = {"turn": -1, "round": -1, "playerIndex": playerIndex};
   }
@@ -37,7 +38,7 @@ class Unit {
     if (isCurrentPlayer || inCombat) {
       return {
         "num": this.id,
-        "coords": (this.x, this.y),
+        "coords": this.position,
         "type": this.type,
         "hitsLeft": this.hitsLeft,
         "technology": this.technology,

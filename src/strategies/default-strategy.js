@@ -1,4 +1,5 @@
-const Board = require("/home/runner/space-empires-js-cohort-1/src/board.js");
+const Board = require("../../src/board");
+
 const orderWithGameState = Board.orderWithGameState;
 
 class DefaultStrategy {
@@ -11,8 +12,7 @@ class DefaultStrategy {
   }
     
   decideRemoval(hiddenGameState) {
-    weakest_ship = hiddenGameState["players"][self.player_number]["units"].sort(orderWithGameState(firstShip,secondShip))[-1];
-    return weakest_ship["type"], weakest_ship["num"];
+    return null;
   } 
     
   decideWhichUnitToAttack(hiddenGameStateForCombat, combatState, coords, attacker_index) {
