@@ -1,21 +1,21 @@
 class Unit {
   constructor(playerIndex, initialPosition, id, technology, turnCreated = null) {
-    this.playerIndex = playerIndex
-    this.technology = technology;
-    this.coords = initialPosition;
-    this.id = id;
-    this.turnCreated = turnCreated;
-    this.canMove = true;
-    this.canFight = true;
-    this.attack = 0;
-    this.defence = 0;
-    this.armor = 0;
-    this.damage = 0;
+    this.playerIndex   = playerIndex
+    this.technology    = technology;
+    this.coords        = initialPosition;
+    this.id            = id;
+    this.turnCreated   = turnCreated;
+    this.canMove       = true;
+    this.canFight      = true;
+    this.attack        = 0;
+    this.defence       = 0;
+    this.armor         = 0;
+    this.damage        = 0;
     this.fightingClass = 0;
-    this.cost = 0;
-    this.name = "Unit"
-    this.maintenance = 0;
-    this.lastMoved = {"turn": -1, "round": -1, "playerIndex": playerIndex};
+    this.cost          = 0;
+    this.name          = "Unit"
+    this.maintenance   = 0;
+    this.lastMoved     = {"turn": -1, "round": -1, "playerIndex": playerIndex};
   }
 
   getMovementTechnology(shipMovementLevel) {

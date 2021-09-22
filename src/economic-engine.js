@@ -29,8 +29,8 @@ class EconomicEngine {
   }
 
   buyTech(game, tech, player) {
-    let techData = game.gameState["technologyData"][tech];
-    let adjustment = 0
+    let techData         = game.gameState["technologyData"][tech];
+    let adjustment       = 0
     let adjustment_techs = ["shipsize", "movement", "shipyard"]
     if (adjustment_techs.includes(tech))
       adjustment = 1

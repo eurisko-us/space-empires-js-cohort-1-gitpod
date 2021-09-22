@@ -3,6 +3,7 @@ class ColonyShip extends Unit{
   constructor(playerIndex, initialPosition, id, technology, turnCreated = null) {
     super(playerIndex, initialPosition, id, technology, turnCreated);
     this.cost = 8;
+    this.name = "Colonyship"
   }
 }
 

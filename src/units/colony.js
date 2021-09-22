@@ -4,8 +4,10 @@ class Colony extends Unit {
     super(playerIndex, initialPosition, id, technology, turnCreated);
     this.homeBase = homeBase;
     if (this.homeBase) {
+      this.name   = "Homeworld"
       this.income = 20;
     } else {
+      this.name   = "Colony"
       this.income = 5;
     }
   }
