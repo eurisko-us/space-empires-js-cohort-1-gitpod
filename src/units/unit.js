@@ -2,7 +2,7 @@ class Unit {
   constructor(playerIndex, initialPosition, id, technology, turnCreated = null) {
     this.playerIndex = playerIndex
     this.technology = technology;
-    this.position = initialPosition;
+    this.coords = initialPosition;
     this.id = id;
     this.turnCreated = turnCreated;
     this.canMove = true;

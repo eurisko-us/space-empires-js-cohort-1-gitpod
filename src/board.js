@@ -69,7 +69,7 @@ function orderWithGameState(firstShip,secondShip) { // But using gameState
 
 class Hex extends Board{
   constructor(coord, planet = false, asteroid = false) {
-    super(null); // A Hex is a part of the board, so it has to inherit from the board
+    super(coord); // A Hex is a part of the board, so it has to inherit from the board
     this.coord = coord;
     this.units = [];
     if (planet)
@@ -83,7 +83,7 @@ class Hex extends Board{
   }
 
   sortForCombat() {
-    this.units = this.units.sort(order(firstShip,secondShip));
+    this.units = this.units.sort(order);
     return this.units
   }
 
