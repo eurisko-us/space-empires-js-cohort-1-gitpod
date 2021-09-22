@@ -1,3 +1,4 @@
+
 const Colony = require("/home/runner/space-empires-js-cohort-1/src/units/colony.js")
 const Destroyer = require("../src/units/destroyer.js");
 const Scout = require("../src/units/scout.js");
@@ -98,5 +99,4 @@ class Player {
     }
   }
 }
-
 module.exports = Player;
