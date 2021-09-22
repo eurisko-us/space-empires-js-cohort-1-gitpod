@@ -1,8 +1,9 @@
-
-const Colony = require("/home/runner/space-empires-js-cohort-1/src/units/colony.js")
-const Destroyer = require("../src/units/destroyer.js");
-const Scout = require("../src/units/scout.js");
-const ColonyShip = require("../src/units/colony-ship.js");
+const Colony = require("../src/units/colony.js")
+const Game = require("../src/game")
+const Scout = require("../src/units/scout")
+const Destroyer = require("../src/units/destroyer")
+const ColonyShip = require("../src/units/colony-ship")
+const DefaultStrategy = require("../src/strategies/default-strategy")
 
 class Player {
   constructor(strategy, position, boardSize, playerIndex, playerColor) {

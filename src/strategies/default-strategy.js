@@ -1,4 +1,5 @@
-const Board = require("/home/runner/space-empires-js-cohort-1/src/board.js");
+const Board = require("../../src/board");
+
 const orderWithGameState = Board.orderWithGameState;
 
 class DefaultStrategy {
