@@ -1,22 +1,21 @@
 class CombatEngine {
   completeCombatPhase(game) {
-    possibleCombats = []
-
+    let possibleCombats = []
     for (let hex of Object.values(game.board.grid)) {
-      if (moreThanTwoPlayersInSpace(hex.units))
-        possibleCombats.append(hex);
+      if (this.moreThanTwoPlayersInSpace(hex.units))
+        possibleCombats.push(hex);
     }
-
+    console.log(possibleCombats)
     for (let combatHex of possibleCombats) {
-      shipsInCombat = [];
-      for (let ships of combatHex.units) {
-        for (let ship of ships) {
-          if (ship.canFight)
-            shipsInCombat.append(ship);
-        }
+      console.log("Here")
+      let shipsInCombat = [];
+      for (let ship of combatHex.units) {
+        if (ship.canFight)
+          shipsInCombat.push(ship);
       }
 
       let combatOrder = combatHex.sortForCombat();
+      console.log(combatOrder)
       return combatOrder
       let attackingShipIndex = 0;
 
@@ -47,12 +46,13 @@ class CombatEngine {
   }
 
   moreThanTwoPlayersInSpace(ships) {
-    playerOne = ships[0].playerIndex;
+    if (ships.length == 0){return false}
+    let playerOne = ships[0].playerIndex;
     for (let ship of ships.slice(1)) {
       if (ship.playerIndex != playerOne)
-        return True
+        return true
     }
-    return False
+    return false
   }
 }
 
