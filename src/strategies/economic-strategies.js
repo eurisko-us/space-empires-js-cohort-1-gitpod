@@ -7,7 +7,8 @@ class SingleBuyStrategy extends DefaultStrategy {
     }
     
     decidePurchases(hiddenGameState) {
-      return ["movement"];
+      let homeCoords = hiddenGameState["players"][this.playerIndex]["homeworld"]["coords"];
+      return ["defense", ["Scout", homeCoords]];
     }
 }
 
