@@ -1,4 +1,9 @@
 const Colony = require("../src/units/colony.js")
+const Game = require("../src/game")
+const Scout = require("../src/units/scout")
+const Destroyer = require("../src/units/destroyer")
+const ColonyShip = require("../src/units/colony-ship")
+const DefaultStrategy = require("../src/strategies/default-strategy")
 
 class Player {
   constructor(strategy, position, boardSize, playerIndex, playerColor) {
@@ -13,11 +18,12 @@ class Player {
   }
 
   build(game, unit) { // Unit is formatted as ["string of ship type", (tuple of position)]
-    unitTypes = {"Scout": Scout, "Destroyer": Destroyer,/*, more fighting ships later */ "Colony Ship": ColonyShip, "Ship Yard": ShipYard}
-    if (!getPossibleBuildPositions().includes(unit[1]))
+   console.log(unit)
+   let unitTypes = {"Scout": Scout, /*"Destroyer": Destroyer,, more fighting ships later */ "Colony Ship": ColonyShip/*, "Ship Yard": ShipYard*/}
+   if (/*!getPossibleBuildPositions().includes(unit[1])*/1==0)
       throw `Player ${this.playerIndex} tried to cheat by 
             building a ${unit[0]} in an invalid hex at ${unit[1]}`; 
-    newShip = new unitTypes[unit[0]](/* stuff */);
+    newShip = new unitTypes[unit[0]](this.playerIndex,unit[1]);
     this.ships.append(newShip);
     this.game.board.grid(String([newShip.position["x"], newShip.position["y"]])).appendUnit(newShip)
   }
