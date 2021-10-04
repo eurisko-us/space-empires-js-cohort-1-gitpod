@@ -22,7 +22,9 @@ class Player {
     // console.log(unit)
     // console.log(unit[1]);
     // console.log(this.getPossibleBuildPositions())
-    if (!this.getPossibleBuildPositions().includes(unit[1]))
+    let unitBuildCoords = JSON.stringify(unit[1])
+    let possibleBuildPositions = this.getPossibleBuildPositions()
+    if (!possibleBuildPositions.includes(unitBuildCoords))
       throw `Player ${this.playerIndex} tried to cheat by 
             building a ${unit[0]} in an invalid hex at ${unit[1]}`; 
     let newShip = new unitTypes[unit[0]](/* stuff */);
@@ -30,7 +32,7 @@ class Player {
   }
 
   getPossibleBuildPositions() {
-    return [this.homeBase.coords];
+    return [JSON.stringify(this.homeBase.coords)];
   }
 
 
