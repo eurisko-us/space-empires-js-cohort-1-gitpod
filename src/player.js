@@ -6,33 +6,35 @@ const ColonyShip = require("../src/units/colony-ship")
 const DefaultStrategy = require("../src/strategies/default-strategy")
 
 class Player {
-  constructor(strategy, position, boardSize, playerIndex, playerColor) {
+  constructor(strategy, coord, boardSize, playerIndex, playerColor) {
     this.strategy = new strategy(playerIndex);
     this.creds = 27;
     this.boardSize = boardSize;
     this.technology = { "attack": 0, "defense": 0, "movement": 1, "shipsize": 1, "shipyard": 1, "terraform": 0, "tactics": 0, "exploration": 0 };
-    this.homeBase = new Colony(playerIndex, position, 0, this.technology, 0, true);
+    this.homeBase = new Colony(playerIndex, coord, 0, this.technology, 0, true);
     this.playerIndex = playerIndex;
     this.playerColor = playerColor;
-    this.units = []
+    this.units = [];
+    this.id_number = 0;
   }
 
-  build(game, unit) { // Unit is formatted as ["string of ship type", (tuple of position)]
+  build(game, unit) { // Unit is formatted as ["string of ship type", (tuple of coord)]
     let unitTypes = {"Scout": Scout, "Destroyer": Destroyer,/*, more fighting ships later */ "Colony Ship": ColonyShip}
     // console.log(unit)
     // console.log(unit[1]);
-    // console.log(this.getPossibleBuildPositions())
-    if (!this.getPossibleBuildPositions().includes(unit[1]))
+    // console.log(this.getPossibleBuildCoords())
+    if (!this.getPossibleBuildCoords().includes(unit[1]))
       throw `Player ${this.playerIndex} tried to cheat by 
             building a ${unit[0]} in an invalid hex at ${unit[1]}`; 
-    let newShip = new unitTypes[unit[0]](/* stuff */);
+    let newShip = new unitTypes[unit[0]](this.playerIndex, unit[1], this.id_number, this.technology, turnCreated = game.turn);
+    this.id_number += 1;
     this.units.push(newShip);
+    game.board.grid[String(unit[1])].appendUnitReference(newShip.generateState(true, false));
   }
 
-  getPossibleBuildPositions() {
+  getPossibleBuildCoords() {
     return [this.homeBase.coords];
   }
-
 
   upgrade(game, tech) { // Tech is formmated as a string
     // Upgrade Attack Technology

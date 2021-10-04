@@ -35,13 +35,13 @@ class Game {
 
   initializePlayers() {
     this.players = []
-    this.playerHomeBasePositions = [ // These are the incorrect initial positions of the players, their supposed to be in the corners not the center of the sides of the board
+    this.playerHomeBaseCoords = [ // These are the incorrect initial coords of the players, their supposed to be in the corners not the center of the sides of the board
       [Math.round(this.boardSize / 2), 0],
       [Math.round(this.boardSize / 2), this.boardSize - 1],
       [0, Math.round(this.boardSize / 2)],
       [this.boardSize - 1, Math.round(this.boardSize / 2)]
     ]
-    /* These are the correct positions for the player home worlds
+    /* These are the correct coords for the player home worlds
     [
         [0,0],
         [this.boardSize, 0],
@@ -56,7 +56,7 @@ class Game {
       "rgb(50, 125, 5)" /* Dark Green */
     ] // CSS code for the colors in rgb codes
     for (let i = 0; i < this.playerStrats.length; i++) {
-      let new_player = new Player(this.playerStrats[i], this.playerHomeBasePositions[i], this.boardSize, i, this.playerColors[i])
+      let new_player = new Player(this.playerStrats[i], this.playerHomeBaseCoords[i], this.boardSize, i, this.playerColors[i])
       this.players.push(new_player);
     }
   }
@@ -106,7 +106,7 @@ class Game {
       "boardSize": this.boardSize,
       "phase": phase,
       "round": movementState["round"],
-      "planets": [this.board.grid].map(function (hex) { if(hex.planet != null) { return hex.position; } }),
+      "planets": [this.board.grid].map(function (hex) { if(hex.planet != null) { return hex.coord; } }),
       "unitData": {
         "Battleship": { "cost": 20, "hullSize": 3, "shipsizeNeeded": 5, "tactics": 5, "attack": 5, "defense": 2, "maintenance": 3 },
         "Battlecruiser": { "cost": 15, "hullSize": 2, "shipsizeNeeded": 4, "tactics": 4, "attack": 5, "defense": 1, "maintenance": 2 },
