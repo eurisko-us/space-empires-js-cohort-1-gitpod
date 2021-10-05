@@ -23,17 +23,19 @@ class Player {
     // console.log(unit)
     // console.log(unit[1]);
     // console.log(this.getPossibleBuildCoords())
-    if (!this.getPossibleBuildCoords().includes(unit[1]))
+    let possibleBuildPositions = this.getPossibleBuildCoords()
+    let unitBuildCoords = JSON.stringify(unit[1])
+    if (!possibleBuildPositions.includes(unitBuildCoords))
       throw `Player ${this.playerIndex} tried to cheat by 
             building a ${unit[0]} in an invalid hex at ${unit[1]}`; 
-    let newShip = new unitTypes[unit[0]](this.playerIndex, unit[1], this.id_number, this.technology, turnCreated = game.turn);
+    let newShip = new unitTypes[unit[0]](this.playerIndex, unit[1], this.id_number, this.technology, game.turn);
     this.id_number += 1;
     this.units.push(newShip);
     game.board.grid[String(unit[1])].appendUnitReference(newShip.generateState(true, false));
   }
 
   getPossibleBuildCoords() {
-    return [this.homeBase.coords];
+    return [JSON.stringify(this.homeBase.coords)];
   }
 
   upgrade(game, tech) { // Tech is formmated as a string

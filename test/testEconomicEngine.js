@@ -5,6 +5,7 @@ const SingleBuyStrategy = require("../src/strategies/economic-strategies.js");
 g = new Game([SingleBuyStrategy, SingleBuyStrategy]);
 p0 = g.players[0]
 p1 = g.players[1]
+p0.creds = 26
 
 for (let x = 0; x < 2; x++) {
   console.log("===============================================")
