@@ -87,7 +87,7 @@ class Hex extends Board{
     return this.units
   }
 
-  appendUnit(unit) {
+  appendUnitReference(unit) {
     this.units.push(unit)
   }
 
