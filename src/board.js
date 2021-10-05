@@ -12,16 +12,17 @@ class Board {
   removeUnit(unit, game) {
    unit.destroy(game); // Remove current unit's player's refernce from the player's `units` array
    // Remove grid's reference to the current unit
-   this.grid[String(unit.coords)].units.splice(this.grid[String(unit.coords)].units.indexOf(unit)); // Removes the unit from the grid with the unit's location
+   this.grid[String(unit.coords)].removeUnitReference(unit.generateState(true,false) // Removes the unit from the grid with the unit's location
+   //.splice(this.grid[String(unit.coords)].units.indexOf(unit)); 
  }
 
   moveShip(currentUnit, translation) { // Move unit reference from one hex to another
-    let currentPosition = String([currentUnit.position["x"] - translation["x"], currentUnit.position["y"] - translation["y"]]); 
-    let currentHex = this.grid[currentPosition];
-    currentHex.removeUnitReference(currentUnit)
-    let newPosition = String([currentUnit.position["x"], currentUnit.position["y"]]);
-    let newHex = this.grid[newPosition];
-    newHex.appendUnit(currentUnit)
+    let currentCoord = String([currentUnit.coords[0] - translation["x"], currentUnit.coords[1] - translation["y"]]); 
+    let currentHex = this.grid[currentCoord];
+    currentHex.removeUnitReference(currentUnit.generateState(true, false))
+    let newCoord = String(currentUnit.coords);
+    let newHex = this.grid[newCoord];
+    newHex.appendUnitReference(currentUnit.generateState(true, false))
   }
 }
 
@@ -73,11 +74,11 @@ class Hex extends Board{
     this.coord = coord;
     this.units = [];
     if (planet)
-      this.planet = new Planet(this.position);
+      this.planet = new Planet(this.coord);
     else
       this.planet = null;
     if (asteroid)
-      this.asteroid = new Asteroid(this.position);
+      this.asteroid = new Asteroid(this.coord);
     else
       this.asteroid = null;
   }
@@ -97,16 +98,16 @@ class Hex extends Board{
 }
 
 class Planet {
-  constructor(position, colony = null, barren = false) { // `barren` is for later but simple
-    this.position = position;
+  constructor(coord, colony = null, barren = false) { // `barren` is for later but simple
+    this.coord = coord;
     this.colony = colony;
     this.barren = barren;
   } 
 }
 
 class Asteroid {
-  constructor(position, deepSpace = false) { // `deepSpace` is for later but simple
-    this.position = position;
+  constructor(coord, deepSpace = false) { // `deepSpace` is for later but simple
+    this.coord = coord;
     if (deepSpace)
       this.value = 10;
     else 

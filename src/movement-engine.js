@@ -19,10 +19,10 @@ class MovementEngine {
       // But it's repeated multiple times a movement phase
       if (Math.abs(translation["x"]) + Math.abs(translation["y"]) <= 1) {
         // ^ If moving only 1 space ^
-        let currentHex = this.getCurrentHex(game, unit.position);
+        let currentHex = this.getCurrentHex(game, unit.coords);
         if (this.isInSpace(unit, translation) && !this.isEnemyInCurrentHex(currentHex, unit)) {
-          unit.position["x"] += translation["x"];
-          unit.position["y"] += translation["y"];
+          unit.coords[0] += translation["x"];
+          unit.coords[1] += translation["y"];
           
           unit.lastMoved = {'turn': game.turn, 'round': round, 'playerIndex': player.playerIndex};
           game.board.moveShip(unit, translation);
@@ -31,21 +31,20 @@ class MovementEngine {
         // Else the wanted move is invalid, it throws an exception defined as such:
         throw `Player ${unit.player.playerIndex}'s ${unit.type}, ${unit.id} 
               tried to cheat with an invalid move, 
-              it tried to move to (${unit.x + translation["x"]}, ${unit.y + translation["y"]}) 
-              from (${unit.x}, ${unit.y}).`;
+              it tried to move to (${unit.coords[0] + translation["x"]}, ${unit.coords[1] + translation["y"]}) 
+              from (${unit.coords[0]}, ${unit.coords[1]}).`;
       }
     }
   }
 
   isInSpace(unit, translation) {
-    let x = unit.position["x"] + translation["x"]
-    let y = unit.position["y"] + translation["y"]
+    let x = unit.coords[0] + translation["x"]
+    let y = unit.coords[1] + translation["y"]
     return 0 <= x && x < 13 && 0 <= y && y < 13;
   }
 
-  getCurrentHex(game, position) {
-    console.log
-    return game.board.grid[String([position["x"], position["y"]])]
+  getCurrentHex(game, coord) {
+    return game.board.grid[String(coord)]
   }
 
   isEnemyInCurrentHex(hex, currentUnit) {

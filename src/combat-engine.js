@@ -28,11 +28,11 @@ class CombatEngine {
         let defendingShip = game.players[attackingShip.playerIndex].strategy.decide_defending_ship(combatOrderGameState);
         if (duel(attackingShip, defendingShip)) { // If the attacker hits the defender
           if (defendingShip.armor - defendingShip.damage - attackingShip.attack < 0) {  // If the attacker kills the defender
-            combatPosition.removeUnit(defendingShip, game);
+            combatCoord.removeUnit(defendingShip, game);
             attackingShipIndex = combatOrder.indexof(attackingShip);
           }
           else // If the attacker doesn't kill, but hits the defender
-            combatPosition.damage += 1; 
+            combatCoord.damage += 1; 
         }
         attackingShipIndex += 1;
       }
