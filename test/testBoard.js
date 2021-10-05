@@ -20,10 +20,12 @@ testUnit = ["Scout", [7,0]]
 
 p0.build(g,testUnit);
 
-console.log(g.board.grid['7,0'])
+console.log(g.board.grid['7,0']);
 
+g.board.removeUnit(p0.units[0],g);
 
- 
+console.log(g.board.grid['7,0']);
+
 /*
  
 sacrifice = Scout(whatever the requirements are)

@@ -12,7 +12,7 @@ class Board {
   removeUnit(unit, game) {
    unit.destroy(game); // Remove current unit's player's refernce from the player's `units` array
    // Remove grid's reference to the current unit
-   this.grid[String(unit.coords)].removeUnitReference(unit.generateState(true,false) // Removes the unit from the grid with the unit's location
+   this.grid[String(unit.coords)].removeUnitReference(unit.generateState(true,false)) // Removes the unit from the grid with the unit's location
    //.splice(this.grid[String(unit.coords)].units.indexOf(unit)); 
  }
 
