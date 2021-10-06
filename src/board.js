@@ -12,7 +12,7 @@ class Board {
   removeUnit(unit, game) {
    unit.destroy(game); // Remove current unit's player's refernce from the player's `units` array
    // Remove grid's reference to the current unit
-   this.grid[String(unit.coords)].removeUnitReference(unit.generateState(true,false)) // Removes the unit from the grid with the unit's location
+   this.grid[String(unit.coords)].removeUnit(unit) // Removes the unit from the grid with the unit's location
    //.splice(this.grid[String(unit.coords)].units.indexOf(unit)); 
  }
 
@@ -22,7 +22,7 @@ class Board {
     currentHex.removeUnitReference(currentUnit.generateState(true, false))
     let newCoord = String(currentUnit.coords);
     let newHex = this.grid[newCoord];
-    newHex.appendUnitReference(currentUnit.generateState(true, false))
+    newHex.appendUnit(currentUnit)
   }
 }
 
@@ -88,11 +88,11 @@ class Hex extends Board{
     return this.units
   }
 
-  appendUnitReference(unit) {
+  appendUnit(unit) {
     this.units.push(unit)
   }
 
-  removeUnitReference(unit) {
+  removeUnit(unit) {
     this.units.splice(this.units.indexOf(unit), 1)
   }
 }

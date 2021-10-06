@@ -31,7 +31,7 @@ class Player {
     let newShip = new unitTypes[unit[0]](this.playerIndex, unit[1], this.id_number, this.technology, game.turn);
     this.id_number += 1;
     this.units.push(newShip);
-    game.board.grid[String(unit[1])].appendUnitReference(newShip.generateState(true, false));
+    game.board.grid[String(unit[1])].appendUnit(newShip);
   }
 
   getPossibleBuildCoords() {
