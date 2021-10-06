@@ -40,8 +40,8 @@ class Player {
 
   upgrade(game, tech) { // Tech is formmated as a string
     // Upgrade Attack Technology
-    techMaxLevel = { "attack": 3, "defense": 3, "tactics": 3, "movement": 6, "shipyard": 2, "terraform": 2, "shipsize": 6 }
-    techUpgradeValue = function(tech) { if (tech == "shipyard") { return 0.5 } else { return 1.0 }}
+    let techMaxLevel = { "attack": 3, "defense": 3, "tactics": 3, "movement": 6, "shipyard": 2, "terraform": 2, "shipsize": 6 }
+    let techUpgradeValue = function(tech) { if (tech == "shipyard") { return 0.5 } else { return 1.0 }}
     if (this.technology[tech] < techMaxLevel[tech]) {
         this.technology[tech] += techUpgradeValue(tech);
         if (game.print_state_obsolete)

@@ -12,13 +12,15 @@ for (let x = 0; x < 2; x++) {
   console.log("BEFORE BUY", x)
   console.log("CREDS:", p0.creds)
   console.log("Defense tech lvl:", p0.technology["defense"]);
-  console.log("Player Units Before:", printUnitNames(p0.units));
+  console.log("Player 1 Units Before:", printUnitNames(p0.units));
+  console.log("Player 2 Units Before:", printUnitNames(p1.units));
   console.log("===============================================")
   g.economicEngine.completeEconomicPhase(g)
   console.log("AFTER BUY", x)
   console.log("CREDS:", p0.creds)
   console.log("Defense tech lvl:", p0.technology["defense"]);
-  console.log("Player Units After:", printUnitNames(p0.units))
+  console.log("Player 1 Units After:", printUnitNames(p0.units))
+  console.log("Player 2 Units After:", printUnitNames(p1.units))
   console.log("===============================================")
 }
 
