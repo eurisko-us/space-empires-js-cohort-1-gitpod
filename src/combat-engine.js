@@ -5,9 +5,7 @@ class CombatEngine {
       if (this.moreThanTwoPlayersInSpace(hex.units))
         possibleCombats.push(hex);
     }
-    console.log(possibleCombats)
     for (let combatHex of possibleCombats) {
-      console.log("Here")
       let shipsInCombat = [];
       for (let ship of combatHex.units) {
         if (ship.canFight)
@@ -15,26 +13,33 @@ class CombatEngine {
       }
 
       let combatOrder = combatHex.sortForCombat();
-      console.log(combatOrder)
-      return combatOrder
+
       let attackingShipIndex = 0;
 
-      while (!moreThanTwoPlayersInSpace(combatOrder)) {
+      while (this.moreThanTwoPlayersInSpace(combatOrder)) {
+        console.log(combatOrder.length, attackingShipIndex)
         let attackingShip = combatOrder[attackingShipIndex];
         // The attacking ship can decide which ship to attack
-        combatOrderGameState = []; // To pass into the strategy function
+        let combatOrderGameState = []; // To pass into the strategy function
         for (let ship of combatOrder) 
-          combatOrderGameState.append(ship.generate_state(isCombat = true));
-        let defendingShip = game.players[attackingShip.playerIndex].strategy.decide_defending_ship(combatOrderGameState);
-        if (duel(attackingShip, defendingShip)) { // If the attacker hits the defender
+          combatOrderGameState.push(ship.generateState(ship.playerIndex, true, true));
+        let defendingShipIndex = game.players[attackingShip.playerIndex].strategy.decideWhichUnitToAttack(combatOrderGameState, attackingShipIndex);
+        let defendingShip = combatOrder[defendingShipIndex]
+        if (this.duel(attackingShip, defendingShip)) { // If the attacker hits the defender
           if (defendingShip.armor - defendingShip.damage - attackingShip.attack < 0) {  // If the attacker kills the defender
-            combatCoord.removeUnit(defendingShip, game);
-            attackingShipIndex = combatOrder.indexof(attackingShip);
+            // game.board.grid[String(defendingShip.coords)].units.splice(game.board.grid[String(defendingShip.coords)].units.indexOf(defendingShip))
+            game.board.removeUnit(defendingShip, game);
+            combatOrder.splice(defendingShipIndex, 1)
+            attackingShipIndex = combatOrder.indexOf(attackingShip);
           }
           else // If the attacker doesn't kill, but hits the defender
-            combatCoord.damage += 1; 
+            defendingShip.damage += attackingShip.damage; 
         }
-        attackingShipIndex += 1;
+        if (attackingShipIndex == combatOrder.length-1) {
+          attackingShipIndex = 0;
+        }else{
+         attackingShipIndex += 1;
+        }
       }
     }
   }
@@ -49,11 +54,12 @@ class CombatEngine {
     if (ships.length == 0){return false}
     let playerOne = ships[0].playerIndex;
     for (let ship of ships.slice(1)) {
-      if (ship.playerIndex != playerOne)
-        return true
-    }
-    return false
-  }
+      if (ship.playerIndex != playerOne) {
+        return true;
+      };
+    };
+    return false;
+  };
 }
 
 module.exports = CombatEngine;

@@ -1,5 +1,5 @@
 class Board {
- generateBoard(boardSize = 13) {
+  generateBoard(boardSize = 13) {
    this.grid = {};
     this.boardSize = 13;
     for (let x = 0; x < this.boardSize; x++) {
