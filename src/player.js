@@ -20,9 +20,6 @@ class Player {
 
   build(game, unit) { // Unit is formatted as ["string of ship type", (tuple of coord)]
     let unitTypes = {"Scout": Scout, "Destroyer": Destroyer,/*, more fighting ships later */ "Colony Ship": ColonyShip}
-    // console.log(unit)
-    // console.log(unit[1]);
-    // console.log(this.getPossibleBuildCoords())
     let possibleBuildPositions = this.getPossibleBuildCoords()
     let unitBuildCoords = JSON.stringify(unit[1])
     if (!possibleBuildPositions.includes(unitBuildCoords))
@@ -40,8 +37,8 @@ class Player {
 
   upgrade(game, tech) { // Tech is formmated as a string
     // Upgrade Attack Technology
-    techMaxLevel = { "attack": 3, "defense": 3, "tactics": 3, "movement": 6, "shipyard": 2, "terraform": 2, "shipsize": 6 }
-    techUpgradeValue = function(tech) { if (tech == "shipyard") { return 0.5 } else { return 1.0 }}
+    let techMaxLevel = { "attack": 3, "defense": 3, "tactics": 3, "movement": 6, "shipyard": 2, "terraform": 2, "shipsize": 6 }
+    let techUpgradeValue = function(tech) { if (tech == "shipyard") { return 0.5 } else { return 1.0 }}
     if (this.technology[tech] < techMaxLevel[tech]) {
         this.technology[tech] += techUpgradeValue(tech);
         if (game.print_state_obsolete)

@@ -1,15 +1,15 @@
 class EconomicEngine {
   completeEconomicPhase(game) {
     for (let player of game.players) {
-      player.creds += this.income(player) - this.taxes(player);
-      if (player.creds < 0) {
+      player.creds += this.income(player);
+      if (player.creds-this.taxes(player) < 0) {
         let debt = this.taxes(player) - player.creds
         while (debt > 0) {
           let snowball = this.removeShip(game, player);
           // ^ Debt Snowball, its an actual term google it
           debt -= snowball;
         }
-        taxes = this.taxes(player);
+        let taxes = this.taxes(player);
       }
       game.generateState(player, "Economic");
       // After looking over the rule book theres no rule 
@@ -17,13 +17,13 @@ class EconomicEngine {
       // Decide purchases should be formatted as an array like this: ["Movement", ["Scout", (0,6)], "Attack"]
       // The earlier the purchase is in the array the higher priority the player wants to purchase
       let purchases = player.strategy.decidePurchases(game.gameState);
-      for (let purchase_index in purchases) {
-        let purchase = purchases[purchase_index]
+      for (let purchase of purchases) {
         if (typeof(purchase) == "string") {
           this.buyTech(game, purchase, player);
         }
-        else
+        else {
           this.buyUnit(game, purchase, player);
+        }
       }
     }
   }
@@ -43,7 +43,7 @@ class EconomicEngine {
 
   buyUnit(game, unit, player) {
     let unitCost = game.gameState["unitData"][unit[0]]["cost"];
-    if (unitCost <= player.creds) {
+    if (player.creds >= unitCost) {
       player.creds -= unitCost;
       player.build(game, unit); // Builds unit and adds to self in player class
     }
@@ -54,7 +54,7 @@ class EconomicEngine {
     let removalIndex = player.strategy.decideRemoval(game.gameState);
     let removalUnit = player.units[removalIndex];
     let maintenanceCost = removalUnit.maintenance;
-    game.board.removeUnit(removalUnit);
+    game.board.removeUnit(removalUnit, game);
     return maintenanceCost;
   }
 
@@ -69,8 +69,9 @@ class EconomicEngine {
 
   taxes(player) {
     let total_taxes = 0;
-    for (let unit of player.units)
+    for (let unit of player.units) {
       total_taxes += unit.maintenance;
+    }
     return total_taxes;
   }
 }
