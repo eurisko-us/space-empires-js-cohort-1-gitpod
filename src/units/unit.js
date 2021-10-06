@@ -58,7 +58,6 @@ class Unit {
 
   destroy(game) {
     // Remove current unit's player's refernce from the player's `units` array
-    
     game.players[this.playerIndex].units.splice(game.players[this.playerIndex].units.indexOf(this));
   }
 }

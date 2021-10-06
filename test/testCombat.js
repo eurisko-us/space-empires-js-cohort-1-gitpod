@@ -13,10 +13,7 @@ p2_units = [new Scout(1, [0,0], 0, p1.technology, 0), new Scout(1, [2,1], 1, p1.
 for (let p1_unit of p1_units){
   g.players[0].units.push(p1_unit);
   g.board.grid[String(p1_unit.coords)].appendUnit(p1_unit);
-  console.log(g.board.grid[String(p1_unit.coords)])
 }
-
-p2_units = [new Scout(1, {"x": 0,"y": 0}, 0, p1.technology, turnCreated = null), new Scout(1, {"x": 0,"y": 0}, 0, p1.technology, turnCreated = null), new ColonyShip(1, {"x": 0,"y": 0}, 0, p1.technology, turnCreated = null), new Scout(1, {"x": 2,"y": 1}, 0, p1.technology, turnCreated = null), new ColonyShip(1, {"x": 0,"y": 0}, 0, p1.technology, turnCreated = null)]
 
 
 for (let p2_unit of p2_units){
@@ -25,6 +22,10 @@ for (let p2_unit of p2_units){
 }
 
 g.combatEngine.completeCombatPhase(g)
+console.log(g.board.grid[String([0,0])])
+console.log(g.board.grid[String([2,1])])
+
+// console.log(g.board.grid[String([0,0])])
 
 // print('complete')
 //2 players. Player 1 tactics 0, Player 2 tactics 1
