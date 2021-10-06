@@ -20,9 +20,6 @@ class Player {
 
   build(game, unit) { // Unit is formatted as ["string of ship type", (tuple of coord)]
     let unitTypes = {"Scout": Scout, "Destroyer": Destroyer,/*, more fighting ships later */ "Colony Ship": ColonyShip}
-    // console.log(unit)
-    // console.log(unit[1]);
-    // console.log(this.getPossibleBuildCoords())
     let possibleBuildPositions = this.getPossibleBuildCoords()
     let unitBuildCoords = JSON.stringify(unit[1])
     if (!possibleBuildPositions.includes(unitBuildCoords))
