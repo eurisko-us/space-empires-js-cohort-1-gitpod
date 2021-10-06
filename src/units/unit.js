@@ -1,8 +1,8 @@
 class Unit {
-  constructor(playerIndex, initialPosition, id, technology, turnCreated = null) {
+  constructor(playerIndex, initialCoord, id, technology, turnCreated = null) {
     this.playerIndex   = playerIndex
     this.technology    = technology;
-    this.coords        = initialPosition;
+    this.coords        = initialCoord;
     this.id            = id;
     this.turnCreated   = turnCreated;
     this.canMove       = true;
@@ -34,7 +34,7 @@ class Unit {
     }
   }
 
-  generateState(currentPlayerIndex, isCurrentPlayer, inCombat) {
+  generateState(isCurrentPlayer, inCombat) {
     if (isCurrentPlayer || inCombat) {
       return {
         "num": this.id,
@@ -42,7 +42,7 @@ class Unit {
         "type": this.type,
         "hitsLeft": this.hitsLeft,
         "technology": this.technology,
-        "playerIndex": currentPlayerIndex,
+        "playerIndex": this.playerIndex,
         "turnCreated": this.turnCreated,
         "lastMoved": this.lastMoved
       }
@@ -50,7 +50,7 @@ class Unit {
       return {
         "num": this.id,
         "coords": this.coords,
-        "playerIndex": currentPlayerIndex,
+        "playerIndex": this.playerIndex,
         "lastMoved": this.lastMoved
       }
     }
