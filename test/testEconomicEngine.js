@@ -26,11 +26,7 @@ for (let x = 0; x < 2; x++) {
 
 
 function printUnitNames(units) {
-  let unitNames = [];
-  for (let unit in units) {
-    unitNames.push(units[unit].name);
-  }
-  return unitNames;
+  return units
 }
 
 console.log('complete')

@@ -25,9 +25,10 @@ class EconomicEngine {
         if (typeof(purchase) == "string") {
           this.buyTech(game, purchase, player);
         }
-        else
-          print("BUY HAPPENING????????????????????????/")
+        else {
+          console.log("BUY HAPPENING????????????????????????/")
           this.buyUnit(game, purchase, player);
+        }
       }
     }
   }
@@ -46,9 +47,8 @@ class EconomicEngine {
   }
 
   buyUnit(game, unit, player) {
-    console.log(game.gameState["unitData"])
     let unitCost = game.gameState["unitData"][unit[0]]["cost"];
-    if (unitCost <= player.creds) {
+    if (player.creds >= unitCost) {
       player.creds -= unitCost;
       player.build(game, unit); // Builds unit and adds to self in player class
     }
