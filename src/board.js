@@ -1,5 +1,5 @@
 class Board {
- generateBoard(boardSize = 13) {
+  generateBoard(boardSize = 13) {
    this.grid = {};
     this.boardSize = 13;
     for (let x = 0; x < this.boardSize; x++) {
@@ -12,7 +12,8 @@ class Board {
   removeUnit(unit, game) {
    unit.destroy(game); // Remove current unit's player's refernce from the player's `units` array
    // Remove grid's reference to the current unit
-   this.grid[String(unit.coords)].units.splice(this.grid[String(unit.coords)].units.indexOf(unit)); // Removes the unit from the grid with the unit's location
+   this.grid[String(unit.coords)].removeUnitReference(unit); 
+   // Removes the unit from the grid with the unit's location
  }
 
   moveShip(currentUnit, translation) { // Move unit reference from one hex to another
