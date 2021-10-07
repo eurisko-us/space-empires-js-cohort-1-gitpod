@@ -17,10 +17,10 @@ class Board {
  }
 
   moveShip(currentUnit, translation) { // Move unit reference from one hex to another
-    let currentCoord = String([currentUnit.coords[0] - translation["x"], currentUnit.coords[1] - translation["y"]]); 
+    let currentCoord = String([currentUnit.coords["x"] - translation["x"], currentUnit.coords["y"] - translation["y"]]); 
     let currentHex = this.grid[currentCoord];
-    currentHex.removeUnitReference(currentUnit.generateState(true, false))
-    let newCoord = String(currentUnit.coords);
+    currentHex.removeUnit(currentUnit)
+    let newCoord = String([currentUnit.coords["x"], currentUnit.coords["y"]]);
     let newHex = this.grid[newCoord];
     newHex.appendUnit(currentUnit)
   }

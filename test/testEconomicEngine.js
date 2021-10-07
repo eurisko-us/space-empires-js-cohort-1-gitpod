@@ -1,5 +1,5 @@
-const EconomicEngine    = require("../src/economic-engine.js");
-const Game              = require("../src/game.js")
+const EconomicEngine = require("../src/economic-engine.js");
+const Game = require("../src/game.js")
 const SingleBuyStrategy = require("../src/strategies/economic-strategies.js");
 
 g = new Game([SingleBuyStrategy, SingleBuyStrategy]);

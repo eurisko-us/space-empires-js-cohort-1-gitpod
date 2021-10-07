@@ -21,8 +21,8 @@ class MovementEngine {
         // ^ If moving only 1 space ^
         let currentHex = this.getCurrentHex(game, unit.coords);
         if (this.isInSpace(unit, translation) && !this.isEnemyInCurrentHex(currentHex, unit)) {
-          unit.coords[0] += translation["x"];
-          unit.coords[1] += translation["y"];
+          unit.coords["x"] += translation["x"];
+          unit.coords["y"] += translation["y"];
           
           unit.lastMoved = {'turn': game.turn, 'round': round, 'playerIndex': player.playerIndex};
           game.board.moveShip(unit, translation);
@@ -31,20 +31,20 @@ class MovementEngine {
         // Else the wanted move is invalid, it throws an exception defined as such:
         throw `Player ${unit.player.playerIndex}'s ${unit.type}, ${unit.id} 
               tried to cheat with an invalid move, 
-              it tried to move to (${unit.coords[0] + translation["x"]}, ${unit.coords[1] + translation["y"]}) 
-              from (${unit.coords[0]}, ${unit.coords[1]}).`;
+              it tried to move to (${unit.coords["x"] + translation["x"]}, ${unit.coords["y"] + translation["y"]}) 
+              from (${unit.coords["x"]}, ${unit.coords["y"]}).`;
       }
     }
   }
 
   isInSpace(unit, translation) {
-    let x = unit.coords[0] + translation["x"]
-    let y = unit.coords[1] + translation["y"]
+    let x = unit.coords["x"] + translation["x"]
+    let y = unit.coords["y"] + translation["y"]
     return 0 <= x && x < 13 && 0 <= y && y < 13;
   }
 
   getCurrentHex(game, coord) {
-    return game.board.grid[String(coord)]
+    return game.board.grid[String([coord["x"], coord["y"]])]
   }
 
   isEnemyInCurrentHex(hex, currentUnit) {
