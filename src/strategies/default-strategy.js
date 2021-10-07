@@ -12,7 +12,7 @@ class DefaultStrategy {
   }
     
   decideRemoval(hiddenGameState) {
-    return null;
+    return 0;
   } 
     
   decideWhichUnitToAttack(combatState, attacking_index) {

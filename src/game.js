@@ -73,26 +73,30 @@ class Game {
   }
 
   play() {
-    while (!checkIfPlayerHasWon() && this.turn <= this.maxTurns) {
+    while (/*!this.checkIfPlayerHasWon() &&*/ this.turn <= this.maxTurns) {
       this.generateState(); // Not even gonna bother right now
       this.completeTurn();
       this.turn += 1;
     }
   }
 
+  /*checkIfPlayerHasWon() {
+    later
+  }*/
+
   completeTurn() { // Iterate through the phases
     for (let phase in this.phaseStats) {
       let value = this.phaseStats[phase];
       if (phase == "Movement") {
-        this.generateState(phase = "Movement");
+        this.generateState(null, "Movement");
         this.movementEngine.completeMovementPhase(this, value);
       }
       if (phase == "Combat" && this.turn <= value) {
-        this.generateState(phase = "Combat");
+        this.generateState(null, "Combat");
         this.combatEngine.completeCombatPhase(this);
       }
       if (phase == "Economic" && this.turn <= value) {
-        this.generateState(phase = "Economic");
+        this.generateState(null, "Economic");
         this.economicEngine.completeEconomicPhase(this);
       }
     }
@@ -145,8 +149,8 @@ class Game {
       } 
       this.gameState["players"] = temp
     }
-    if (phase == "Combat")
-      this.gameState["combat"] = this.combat_engine.generateCombatArray()
+    //if (phase == "Combat")
+      //this.gameState["combat"] = this.combat_engine.generateCombatArray()
     }
   }
 

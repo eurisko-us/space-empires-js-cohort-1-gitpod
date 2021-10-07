@@ -8,7 +8,7 @@ const DefaultStrategy = require("../src/strategies/default-strategy")
 class Player {
   constructor(strategy, coord, boardSize, playerIndex, playerColor) {
     this.strategy = new strategy(playerIndex);
-    this.creds = 27;
+    this.creds = 20;
     this.boardSize = boardSize;
     this.technology = { "attack": 0, "defense": 0, "movement": 1, "shipsize": 1, "shipyard": 1, "terraform": 0, "tactics": 0, "exploration": 0 };
     this.homeBase = new Colony(playerIndex, coord, 0, this.technology, 0, true);

@@ -17,7 +17,8 @@ class CombatEngine {
       let attackingShipIndex = 0;
 
       while (this.moreThanTwoPlayersInSpace(combatOrder)) {
-        console.log(combatOrder.length, attackingShipIndex)
+        
+        console.log("\n\nCOMBAT", combatOrder.length, attackingShipIndex, "\n\n")
         let attackingShip = combatOrder[attackingShipIndex];
         // The attacking ship can decide which ship to attack
         let combatOrderGameState = []; // To pass into the strategy function

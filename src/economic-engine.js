@@ -59,10 +59,11 @@ class EconomicEngine {
   }
 
   income(player) {
-    let income = 0;
+    let income = player.homeBase.income;
     for (let unit of player.units) {
-      if (unit.type == "Colony" || unit.type == "Home Base")
+      if (unit.name == "Colony") {
         income += unit.income;
+      }
     }
     return income;
   }

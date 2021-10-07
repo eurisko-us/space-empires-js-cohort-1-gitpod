@@ -8,7 +8,6 @@ const MoveUpStrat = moveDirectionStrategies.MoveUpStrat;
 
 console.log(`\nTesting Basic Movement`);
 
-
 let testOne = new Game([MoveRightStrat], maxTurns = 1, phaseStats = {"Movement": 1});
 
 testOne.players[0].units.push(new Scout(0, {"x": 6,"y": 6}, 0, testOne.players[0].technology));
