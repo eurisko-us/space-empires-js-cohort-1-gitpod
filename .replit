@@ -4,4 +4,4 @@
 #run = "src/board.js"
 #node test/testBoard.js
 language = "js"
-run = "node test/test-game.js"
+run = "node test/test-board.js"

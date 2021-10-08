@@ -14,6 +14,7 @@ class Game {
     this.boardSize = boardSize;
     this.turn = 1;
     this.maxTurns = maxTurns;
+    this.planetCoords=["7,0","7,12"]
     // `phaseStats` is when we want only 
     // For example 1 economic phase for the whole game,
     // We would pass in `"economic": 1` in phase stats
@@ -63,7 +64,11 @@ class Game {
 
   initializeBoard() {
     this.board = new Board(); // Will probs need more args, but thats for later
-    this.board.generateBoard(this.boardSize);
+    this.board.generateBoard(this.planetCoords, this.boardSize);
+    for (let player of this.players){
+      console.log("boogy down")
+      this.board.grid[String(player.startingCoord)].planet.colony=player.homeBase;
+    }
   }
 
   initializeEngines() { // All of these will probs need more args, but thats for later

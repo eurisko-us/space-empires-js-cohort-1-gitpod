@@ -16,6 +16,7 @@ class Player {
     this.playerColor = playerColor;
     this.units = [];
     this.id_number = 0;
+    this.startingCoord = coord
   }
 
   build(game, unit) { // Unit is formatted as ["string of ship type", (tuple of coord)]

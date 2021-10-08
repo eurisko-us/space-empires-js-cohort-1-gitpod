@@ -1,10 +1,20 @@
 class Board {
-  generateBoard(boardSize = 13) {
-   this.grid = {};
+  generateBoard(planetCoords,boardSize = 13) {
+    this.grid = {};
     this.boardSize = 13;
+    // console.log(planetCoords)
     for (let x = 0; x < this.boardSize; x++) {
       for (let y = 0; y < this.boardSize; y++) {
-        this.grid[String([x,y])] = new Hex({"x": x, "y": y});
+        // console.log(planetCoords.includes(String([x,y])))
+        // console.log(String([x,y]))
+        if (planetCoords.includes(String([x,y]))){
+          this.grid[String([x,y])] = new Hex({"x": x, "y": y, }, true);
+          // console.log("boogy")
+        }
+        else{
+          this.grid[String([x,y])] = new Hex({"x": x, "y": y});
+        }
+
       }
     }
   }
@@ -74,6 +84,7 @@ class Hex extends Board{
     super(coord); // A Hex is a part of the board, so it has to inherit from the board
     this.coord = coord;
     this.units = [];
+    console.log(planet)
     if (planet)
       this.planet = new Planet(this.coord);
     else
