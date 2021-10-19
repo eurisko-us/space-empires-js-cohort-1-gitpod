@@ -7,6 +7,7 @@ const Unit = require("../src/units/unit.js");
 const ColonyShip = require("../src/units/colony-ship.js");
 const Destroyer = require("../src/units/destroyer.js");
 const Scout = require("../src/units/scout.js");
+const Logger = require("../src/logger.js");
 
 class Game {
   constructor(playerStrats, boardSize = 13, phaseStats = { "Economic": null, "Movement": 3, "Combat": null }, maxTurns = 100) {
@@ -14,7 +15,11 @@ class Game {
     this.boardSize = boardSize;
     this.turn = 1;
     this.maxTurns = maxTurns;
+<<<<<<< Updated upstream
     this.planetCoords=["7,0","7,12"]
+=======
+    this.initializeLogger();
+>>>>>>> Stashed changes
     // `phaseStats` is when we want only 
     // For example 1 economic phase for the whole game,
     // We would pass in `"economic": 1` in phase stats
@@ -61,6 +66,10 @@ class Game {
       this.players.push(new_player);
     }
   }
+
+  initializeLogger() {
+    this.logger = new Logger(true, "sampleLogFile.txt");
+  };
 
   initializeBoard() {
     this.board = new Board(); // Will probs need more args, but thats for later

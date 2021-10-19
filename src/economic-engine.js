@@ -1,6 +1,8 @@
-class EconomicEngine {
+  class EconomicEngine {
   completeEconomicPhase(game) {
+    game.logger.log("Starting Economic Phase");
     for (let player of game.players) {
+      game.logger.log(`Starting Phase for Player ${player.playerIndex}`);
       player.creds += this.income(player);
       if (player.creds-this.taxes(player) < 0) {
         let debt = this.taxes(player) - player.creds

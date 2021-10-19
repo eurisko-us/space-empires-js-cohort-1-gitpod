@@ -4,4 +4,8 @@
 #run = "src/board.js"
 #node test/testBoard.js
 language = "js"
+<<<<<<< Updated upstream
 run = "node test/test-board.js"
+=======
+run = "node test/sample-log.js"
+>>>>>>> Stashed changes
