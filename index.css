@@ -2,10 +2,8 @@
   font-family: 'Play', sans-serif;
 }
 
-.flex-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+.wrapper {
+  display: grid;
 }
 
 .item {
