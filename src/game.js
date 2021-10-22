@@ -10,7 +10,7 @@ const Scout = require("../src/units/scout.js");
 const Logger = require("../src/logger.js");
 
 class Game {
-  constructor(clientSockets, playerStrats, boardSize = 13, phaseStats = { "Economic": null, "Movement": 3, "Combat": null }, maxTurns = 100) {
+  constructor(clientSockets, playerStrats, boardSize = 13, display, phaseStats = { "Economic": null, "Movement": 3, "Combat": null }, maxTurns = 100, ) {
     this.clientSockets = clientSockets;
     this.playerStrats = playerStrats;
     this.boardSize = boardSize;
@@ -18,6 +18,7 @@ class Game {
     this.maxTurns = maxTurns;
     this.planetCoords=["7,0","7,12"]
     this.initializeLogger();
+    this.displayClass=display
     // `phaseStats` is when we want only 
     // For example 1 economic phase for the whole game,
     // We would pass in `"economic": 1` in phase stats
@@ -125,6 +126,7 @@ class Game {
         this.generateState(null, "Economic");
         this.economicEngine.completeEconomicPhase(this);
       }
+      this.displayClass.update(this.gameState)
     }
   }
 
