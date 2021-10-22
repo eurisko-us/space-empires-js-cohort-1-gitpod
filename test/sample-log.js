@@ -1,19 +1,17 @@
-const EconomicEngine = require("../src/economic-engine.js");
-const Game = require("../src/game.js")
-const SingleBuyStrategy = require("../src/strategies/economic-strategies.js");
+const Game = require("../src/game");
+const Scout = require("../src/units/scout");
+const gameTestingStrategies = require("../src/strategies/game-testing-strategies.js");
+const StratOne = gameTestingStrategies.StratOne;
+const StratTwo = gameTestingStrategies.StratTwo;
 
-g = new Game([SingleBuyStrategy, SingleBuyStrategy]);
-p0 = g.players[0]
-p1 = g.players[1]
-p0.creds = 26
+console.log(`\nTesting Simple Strategies`);
 
-for (let x = 0; x < 2; x++) {
-  g.economicEngine.completeEconomicPhase(g)
-}
+let testOne = new Game([StratOne, StratTwo], 13, {"Economic": null, "Movement": 3, "Combat": null}, 3, true);
+
+console.log("0 player 0\n\n", testOne.players[0])
+console.log("0 player 1\n\n", testOne.players[1])
+
+testOne.generateState();
+testOne.completeTurn();
 
 console.log('complete')
-
-
-//2 players. Player 1 tactics 0, Player 2 tactics 1
-//(0,0) P1 1 scout, 1 destroyer, 1 colony ship; P2 2 scouts, 1 ColonyShip
-//(2,1) P1 3 scouts; P2 1 scout, 1 colony ship

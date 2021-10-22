@@ -1,5 +1,11 @@
 class MovementEngine {
-  completeMovementPhase(game, numOfRounds = 3) {
+  completeMovementPhase(game, numOfRounds) {
+    if (game.canLog) { 
+      game.log.logSpecificText(`\nBEGINNING OF TURN ${game.turn} MOVEMENT PHASE\n`);
+      oldGameState = {};
+      for (key of game.gameState) 
+        oldGameState[key] = game.gameState[key];
+    }
     for (let round = 0; round < numOfRounds; round++) {
       for (let player of game.players) {
         for (let unit of player.units) {
@@ -8,7 +14,13 @@ class MovementEngine {
           }
         }
       }
+      game.generateState(null, "Movement");
+      if (game.canLog)
+        game.log.simpleLogMovement(oldGameState, game.gameState, round, false, false)
     }
+    if (game.canLog) {
+      game.log.endSimpleLogMovement(game.gameState)
+      game.log.logSpecificText(`\nEND OF TURN ${game.turn} MOVEMENT PHASE\n`)
   }
 
   move(game, unit, round, player) {

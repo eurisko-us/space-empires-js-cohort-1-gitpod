@@ -10,16 +10,13 @@ const Scout = require("../src/units/scout.js");
 const Logger = require("../src/logger.js");
 
 class Game {
-  constructor(playerStrats, boardSize = 13, phaseStats = { "Economic": null, "Movement": 3, "Combat": null }, maxTurns = 100) {
+  constructor(playerStrats, boardSize = 13, phaseStats = { "Economic": null, "Movement": 3, "Combat": null }, maxTurns = 100, canLog = false) {
     this.playerStrats = playerStrats;
     this.boardSize = boardSize;
     this.turn = 1;
     this.maxTurns = maxTurns;
-<<<<<<< Updated upstream
     this.planetCoords=["7,0","7,12"]
-=======
     this.initializeLogger();
->>>>>>> Stashed changes
     // `phaseStats` is when we want only 
     // For example 1 economic phase for the whole game,
     // We would pass in `"economic": 1` in phase stats
@@ -37,6 +34,8 @@ class Game {
     this.initializePlayers();
     this.initializeBoard();
     this.initializeEngines();
+    this.log = logger();
+    this.log.getActiveFilePath('/logs', false);
   }
 
   initializePlayers() {

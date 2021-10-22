@@ -1,5 +1,5 @@
 class Board {
-  generateBoard(planetCoords,boardSize = 13) {
+  generateBoard(planetCoords, boardSize = 13) {
     this.grid = {};
     this.boardSize = 13;
     // console.log(planetCoords)
@@ -8,11 +8,11 @@ class Board {
         // console.log(planetCoords.includes(String([x,y])))
         // console.log(String([x,y]))
         if (planetCoords.includes(String([x,y]))){
-          this.grid[String([x,y])] = new Hex({"x": x, "y": y, }, true);
+          this.grid[String([x,y])] = new Hex([x,y], true);
           // console.log("boogy")
         }
         else{
-          this.grid[String([x,y])] = new Hex({"x": x, "y": y});
+          this.grid[String([x,y])] = new Hex([x,y]);
         }
 
       }
@@ -80,17 +80,15 @@ function orderWithGameState(firstShip,secondShip) { // But using gameState
 }
 
 class Hex extends Board{
-  constructor(coord, planet = false, asteroid = false) {
-    super(coord); // A Hex is a part of the board, so it has to inherit from the board
-    this.coord = coord;
+  constructor(coords, planet = false, asteroid = false) {
+    this.coords = coords;
     this.units = [];
-    console.log(planet)
     if (planet)
-      this.planet = new Planet(this.coord);
+      this.planet = new Planet(this.coords);
     else
       this.planet = null;
     if (asteroid)
-      this.asteroid = new Asteroid(this.coord);
+      this.asteroid = new Asteroid(this.coords);
     else
       this.asteroid = null;
   }
@@ -110,16 +108,16 @@ class Hex extends Board{
 }
 
 class Planet {
-  constructor(coord, colony = null, barren = false) { // `barren` is for later but simple
-    this.coord = coord;
+  constructor(coords, colony = null, barren = false) { // `barren` is for later but simple
+    this.coords = coords;
     this.colony = colony;
     this.barren = barren;
   } 
 }
 
 class Asteroid {
-  constructor(coord, deepSpace = false) { // `deepSpace` is for later but simple
-    this.coord = coord;
+  constructor(coords, deepSpace = false) { // `deepSpace` is for later but simple
+    this.coords = coords;
     if (deepSpace)
       this.value = 10;
     else 
