@@ -1,0 +1,12 @@
+{
+  "name": "demo-game",
+  "version": "0.1.0",
+  "contributors": [
+    "Jason Roberts <jasonr11@gmail.com>"
+  ],
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^4.3.1"
+  },
+  "private": true
+}
