@@ -2,8 +2,9 @@
   font-family: 'Play', sans-serif;
 }
 
-.wrapper {
-  display: grid;
+td.boardSpace {
+  width: 20px;
+  height: 20px;
 }
 
 .item {
