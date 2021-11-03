@@ -1,7 +1,7 @@
+
 class Game {
   constructor(clientSockets) {
       this.clientSockets = clientSockets;
-      console.log("made it here")
       this.state = null;
   }
 
@@ -10,7 +10,7 @@ class Game {
           this.state = this.generateRandomGameState();
           for(let socketId in this.clientSockets) {
               let socket = this.clientSockets[socketId];
-
+              
               socket.emit('gameState', { 
                   gameState: this.state
               });        

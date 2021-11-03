@@ -1,13 +1,8 @@
 const socket = io();
 
 socket.on('gameState', (data) => {
-    updateUI(data.gameState);
+    updateBoard(data.gameState.board);
 });
-
-function updateUI(gameState) {
-    let board = gameState.board;
-    updateBoard(board);            
-}
 
 function updateBoard(board) {
     // Delete board table if it already exists because we're just going to recreate it
