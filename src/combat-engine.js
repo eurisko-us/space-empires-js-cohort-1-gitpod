@@ -1,7 +1,7 @@
 class CombatEngine {
   completeCombatPhase(game) {
     if (game.canLog)
-      game.log.logSpecificText(`\nBEGINNING OF TURN ${game.turn} COMBAT PHASE\n`)
+      game.logger.logSpecificText(`\nBEGINNING OF TURN ${game.turn} COMBAT PHASE\n`)
     let possibleCombats = []
     for (let hex of Object.values(game.board.grid)) {
       if (this.moreThanTwoPlayersInSpace(hex.units))
@@ -9,7 +9,7 @@ class CombatEngine {
     }
 
     if (game.canLog && possibleCombats.length > 0)
-      game.log.simpleLogCombatInitialization(game.gameState);
+      game.logger.simpleLogCombatInitialization(game.gameState);
     for (let combatHex of possibleCombats) {
       let shipsInCombat = [];
       for (let ship of combatHex.units) {
@@ -18,8 +18,8 @@ class CombatEngine {
       }
 
       if (game.canLog) {
-        combatString = `\n\tCombat at ${Tuple(combatHex.coords)}\n`;
-        game.log.logSpecificText(combatString);
+        let combatString = `\n\tCombat at ${combatHex.coords}\n`;
+        game.logger.logSpecificText(combatString);
       }
 
       let combatOrder = combatHex.sortForCombat();
@@ -43,7 +43,7 @@ class CombatEngine {
         if (duelResult) { // If the attacker hits the defender
           if (defendingShip.armor - defendingShip.damage - attackingShip.attack < 0) {  // If the attacker kills the defender
             if (game.canLog)
-              game.log.simpleLogCombat(game.players[attackingShip.playerIndex].generateState(false, true), attackingShip.generateState(false, true), game.players[defendingShip.playerIndex].generateState(false, true), defendingShip.generateState(false, true), duelResult, hitThreshold, diceRoll);
+              game.logger.simpleLogCombat(game.players[attackingShip.playerIndex].generateState(false, true), attackingShip.generateState(false, true), game.players[defendingShip.playerIndex].generateState(false, true), defendingShip.generateState(false, true), duelResult, hitThreshold, diceRoll);
             // game.board.grid[String(defendingShip.coords)].units.splice(game.board.grid[String(defendingShip.coords)].units.indexOf(defendingShip))
             game.board.removeUnit(defendingShip, game);
             combatOrder.splice(defendingShipIndex, 1)
@@ -59,9 +59,9 @@ class CombatEngine {
       }
     }
     if (game.canLog && possibleCombats.length > 0)
-      game.log.endSimpleLogCombat(game.gameState);
+      game.logger.endSimpleLogCombat(game.gameState);
     if (game.canLog)
-      game.log.logSpecificText(`\nEND OF TURN ${self.game.turn} COMBAT PHASE\n`);
+      game.logger.logSpecificText(`\nEND OF TURN ${game.turn} COMBAT PHASE\n`);
     
   }
 

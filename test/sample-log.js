@@ -1,17 +1,12 @@
 const Game = require("../src/game");
-const Scout = require("../src/units/scout");
 const gameTestingStrategies = require("../src/strategies/game-testing-strategies.js");
 const StratOne = gameTestingStrategies.StratOne;
 const StratTwo = gameTestingStrategies.StratTwo;
 
 console.log(`\nTesting Simple Strategies`);
 
-let testOne = new Game([StratOne, StratTwo], 13, {"Economic": null, "Movement": 3, "Combat": null}, 3, true);
+let testOne = new Game([StratOne, StratTwo], 13, {"Movement": 3, "Combat": null, "Economic": null}, 10, true);
 
-console.log("0 player 0\n\n", testOne.players[0])
-console.log("0 player 1\n\n", testOne.players[1])
+testOne.play();
 
-testOne.generateState();
-testOne.completeTurn();
-
-console.log('complete')
+console.log('complete');

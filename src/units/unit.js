@@ -39,7 +39,7 @@ class Unit {
       return {
         "num": this.id,
         "coords": this.coords,
-        "type": this.type,
+        "type": this.name,
         "hitsLeft": this.hitsLeft,
         "technology": this.technology,
         "playerIndex": this.playerIndex,

@@ -11,7 +11,7 @@ class Player {
     this.creds = 20;
     this.boardSize = boardSize;
     this.technology = { "attack": 0, "defense": 0, "movement": 1, "shipsize": 1, "shipyard": 1, "terraform": 0, "tactics": 0, "exploration": 0 };
-    this.homeBase = new Colony(playerIndex, coord, 0, this.technology, 0, true);
+    this.homeBase = new Colony(playerIndex, coord, null, this.technology, null, true);
     this.playerIndex = playerIndex;
     this.playerColor = playerColor;
     this.units = [];
@@ -52,20 +52,21 @@ class Player {
       return {
         'name': this.strategy.name,
         'cp': this.creds,
-        'units': this.units,
+        'homeworld': this.homeBase.generateState(isCurrentPlayer, inCombat),
+        'units': this.units.map(function (unit) { return unit.generateState(isCurrentPlayer, inCombat); }),
         //'colonies': [colony.generate_state(current_player, combat) for colony in sorted([ship for ship in this..ships if ship.type == 'Colony'], key=lambda ship: (ship.technology['tactics'], -ship.player.player_number, -ship.ID), reverse=True)],
         //'ship_yards': [ship_yard.generate_state(current_player, combat) for ship_yard in sorted([ship for ship in this..ships if ship.type == 'Shipyard'], key=lambda ship: (ship.technology['tactics'], -ship.player.player_number, -ship.ID), reverse=True)],
         'technology': this.technology,
-        'homeworld': this.homeBase.generateState(isCurrentPlayer, inCombat),
-        'num': this.playerNumber
+        
+        'num': this.playerIndex
       }
     } else {
       return {
         'name': this.strategy.name,
-        'units': this.units,
+        'homeworld': this.homeBase.generateState(isCurrentPlayer, inCombat),
+        'units': this.units.map(function (unit) { return unit.generateState(isCurrentPlayer, inCombat); }),
         //'colonies': [colony.generate_state(current_player, combat) for colony in sorted([ship for ship in this..ships if ship.type == 'Colony'], key=lambda ship: (ship.technology['tactics'], -ship.player.player_number, -ship.ID), reverse=True)],
         //'ship_yards': [ship_yard.generate_state(current_player, combat) for ship_yard in sorted([ship for ship in this..ships if ship.type == 'Shipyard'], key=lambda ship: (ship.technology['tactics'], -ship.player.player_number, -ship.ID), reverse=True)],
-        'homeworld': this.homeBase.generateState(isCurrentPlayer, inCombat),
         'num': this.playerNumber
       }
     }

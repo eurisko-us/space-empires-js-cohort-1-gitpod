@@ -2,14 +2,10 @@ class Board {
   generateBoard(planetCoords, boardSize = 13) {
     this.grid = {};
     this.boardSize = 13;
-    // console.log(planetCoords)
     for (let x = 0; x < this.boardSize; x++) {
       for (let y = 0; y < this.boardSize; y++) {
-        // console.log(planetCoords.includes(String([x,y])))
-        // console.log(String([x,y]))
         if (planetCoords.includes(String([x,y]))){
           this.grid[String([x,y])] = new Hex([x,y], true);
-          // console.log("boogy")
         }
         else{
           this.grid[String([x,y])] = new Hex([x,y]);
@@ -29,7 +25,6 @@ class Board {
   moveShip(currentUnit, translation) { // Move unit reference from one hex to another
     let currentCoord = String([currentUnit.coords[0] - translation["x"], currentUnit.coords[1] - translation["y"]]); 
     let currentHex = this.grid[currentCoord];
-    console.log("hex", currentHex)
     currentHex.removeUnit(currentUnit)
     let newCoord = String(currentUnit.coords);
     let newHex = this.grid[newCoord];
@@ -79,7 +74,7 @@ function orderWithGameState(firstShip,secondShip) { // But using gameState
   return -1;
 }
 
-class Hex extends Board{
+class Hex {
   constructor(coords, planet = false, asteroid = false) {
     this.coords = coords;
     this.units = [];
