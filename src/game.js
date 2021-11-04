@@ -1,25 +1,22 @@
-const MovementEngine = require("../src/movement-engine.js");
-const CombatEngine = require("../src/combat-engine.js");
-const EconomicEngine = require("../src/economic-engine.js");
-const Board = require("../src/board.js");
-const Player = require("../src/player.js");
-const Unit = require("../src/units/unit.js");
-const ColonyShip = require("../src/units/colony-ship.js");
-const Destroyer = require("../src/units/destroyer.js");
-const Scout = require("../src/units/scout.js");
-const Logger = require("../src/logger.js");
+const MovementEngine = require("./movement-engine.js");
+const CombatEngine = require("./combat-engine.js");
+const EconomicEngine = require("./economic-engine.js");
+const Board = require("./board.js");
+const Player = require("./player.js");
+const Unit = require("./units/unit.js");
+const ColonyShip = require("./units/colony-ship.js");
+const Destroyer = require("./units/destroyer.js");
+const Scout = require("./units/scout.js");
+const Logger = require("./logger.js");
 
 class Game {
-  constructor(playerStrats, boardSize = 13, phaseStats = { "Economic": null, "Movement": 3, "Combat": null }, maxTurns = 100) {
+  constructor(playerStrats, boardSize = 13, phaseStats = { "Economic": null, "Movement": 3, "Combat": null }, maxTurns = 100, canLog = false) {
     this.playerStrats = playerStrats;
     this.boardSize = boardSize;
     this.turn = 1;
     this.maxTurns = maxTurns;
-<<<<<<< Updated upstream
+    this.canLog = canLog;
     this.planetCoords=["7,0","7,12"]
-=======
-    this.initializeLogger();
->>>>>>> Stashed changes
     // `phaseStats` is when we want only 
     // For example 1 economic phase for the whole game,
     // We would pass in `"economic": 1` in phase stats
@@ -34,6 +31,7 @@ class Game {
         this.phaseStats[phase] = value;
     }
     // Doing exactly what they say
+    this.initializeLogger();
     this.initializePlayers();
     this.initializeBoard();
     this.initializeEngines();
@@ -68,14 +66,15 @@ class Game {
   }
 
   initializeLogger() {
-    this.logger = new Logger(true, "sampleLogFile.txt");
+    this.logger = new Logger;
+    this.logger.getActiveFile('/logs');
+    this.logger.logSpecificText('GAME START\n')
   };
 
   initializeBoard() {
     this.board = new Board(); // Will probs need more args, but thats for later
     this.board.generateBoard(this.planetCoords, this.boardSize);
     for (let player of this.players){
-      console.log("boogy down")
       this.board.grid[String(player.startingCoord)].planet.colony=player.homeBase;
     }
   }
@@ -102,15 +101,15 @@ class Game {
     for (let phase in this.phaseStats) {
       let value = this.phaseStats[phase];
       if (phase == "Movement") {
-        this.generateState(null, "Movement");
-        this.movementEngine.completeMovementPhase(this, value);
+        this.gameState = this.generateState(true, "Movement");
+        this.movementEngine.completeMovementPhase(this, value + 1);
       }
       if (phase == "Combat" && this.turn <= value) {
-        this.generateState(null, "Combat");
+        this.gameState = this.generateState(true, "Combat");
         this.combatEngine.completeCombatPhase(this);
       }
       if (phase == "Economic" && this.turn <= value) {
-        this.generateState(null, "Economic");
+        this.gameState = this.generateState(true, "Economic");
         this.economicEngine.completeEconomicPhase(this);
       }
     }
@@ -148,7 +147,7 @@ class Game {
         "exploration": [15]
       }
     }
-    if(currentPlayer == null) {
+    if(currentPlayer) {
       let temp = {}
       for (let playerNumber in this.players) {
         let player = this.players[playerNumber];
@@ -163,9 +162,10 @@ class Game {
       } 
       this.gameState["players"] = temp
     }
+    return this.gameState
     //if (phase == "Combat")
       //this.gameState["combat"] = this.combat_engine.generateCombatArray()
-    }
   }
+}
 
 module.exports = Game;

@@ -10,6 +10,8 @@ class Colony extends Unit {
       this.name = "Colony"
       this.income = 5;
     }
+    this.canMove = false
+    const coords = initialCoord
   }
 }
 

@@ -1,17 +1,30 @@
 class MovementEngine {
-  completeMovementPhase(game, numOfRounds = 3) {
-    for (let round = 0; round < numOfRounds; round++) {
+  completeMovementPhase(game, numOfRounds) {
+    if (game.canLog)
+      game.logger.logSpecificText(`\nBEGINNING OF TURN ${game.turn} MOVEMENT PHASE\n`);
+    for (let round = 1; round < numOfRounds; round++) {
+      if (game.canLog)
+        var oldGameState = JSON.parse(JSON.stringify(game.gameState));
       for (let player of game.players) {
         for (let unit of player.units) {
-          if (unit.canMove) {
+          if (unit.canMove)
             this.move(game, unit, round, player)
-          }
         }
       }
+      if (game.canLog)
+        game.logger.simpleLogMovement(oldGameState, game.gameState, round, false, false)
+      game.generateState(true, "Movement");
+
+    }
+    if (game.canLog) {
+      game.logger.endSimpleLogMovement(game.gameState)
+      game.logger.logSpecificText(`\nEND OF TURN ${game.turn} MOVEMENT PHASE\n`)
     }
   }
 
   move(game, unit, round, player) {
+    if (unit.name == "Homeworld")
+      console.log('wtf')
     for (let tech = 0; tech < unit.getMovementTechnology(unit.technology["movement"])[round]; tech++) {
       game.generateState(player, "Movement");
       let translation = player.strategy.decideUnitMovement(unit.index, game.gameState);

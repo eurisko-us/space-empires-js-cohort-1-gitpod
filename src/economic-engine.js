@@ -1,17 +1,21 @@
   class EconomicEngine {
   completeEconomicPhase(game) {
-    game.logger.log("Starting Economic Phase");
+    if (game.canLog)
+      game.logger.logSpecificText(`\nBEGINNING OF TURN ${game.turn} ECONOMIC PHASE`)
     for (let player of game.players) {
-      game.logger.log(`Starting Phase for Player ${player.playerIndex}`);
-      player.creds += this.income(player);
-      if (player.creds-this.taxes(player) < 0) {
+      let playerStartingCreds = player.creds;
+      game.logger.logSpecificText(`\nStarting Phase for Player ${player.playerIndex}`);
+      let income = this.income(player);
+      player.creds += income;
+      let taxes = this.taxes(player);
+      if (player.creds - taxes < 0) {
         let debt = this.taxes(player) - player.creds
         while (debt > 0) {
           let snowball = this.removeShip(game, player);
           // ^ Debt Snowball, its an actual term google it
           debt -= snowball;
         }
-        let taxes = this.taxes(player);
+        taxes = this.taxes(player);
       }
       game.generateState(player, "Economic");
       // After looking over the rule book theres no rule 
@@ -19,15 +23,28 @@
       // Decide purchases should be formatted as an array like this: ["Movement", ["Scout", (0,6)], "Attack"]
       // The earlier the purchase is in the array the higher priority the player wants to purchase
       let purchases = player.strategy.decidePurchases(game.gameState);
+      let correctedPurchases = {'technology': [], 'units': []};
       for (let purchase of purchases) {
+        let result;//buy, cost;
         if (typeof(purchase) == "string") {
-          this.buyTech(game, purchase, player);
+          result = this.buyTech(game, purchase, player);
+          if (result[0] == true)
+            correctedPurchases['technology'].push([purchase, result[1]]);
         }
         else {
-          this.buyUnit(game, purchase, player);
-        }
+          result = this.buyUnit(game, purchase, player);
+          if (result[0] == true)
+            correctedPurchases['units'].push([purchase, result[1]]);
+        }          
+        
       }
+      game.generateState(true, false);
+      if (game.canLog)
+        game.logger.simpleLogEconomic(taxes, income, playerStartingCreds, player.creds, correctedPurchases)
     }
+    if (game.canLog)
+      game.logger.logSpecificText(`\nEND OF TURN ${game.turn} ECONOMIC PHASE`)
+
   }
 
   buyTech(game, tech, player) {
@@ -40,7 +57,10 @@
     if (techCost <= player.creds) {
       player.creds -= techCost;
       player.upgrade(game, tech);
-    }
+      return [true, techCost];
+    } else
+      return [false, techCost];
+    
   }
 
   buyUnit(game, unit, player) {
@@ -48,6 +68,9 @@
     if (player.creds >= unitCost) {
       player.creds -= unitCost;
       player.build(game, unit); // Builds unit and adds to self in player class
+      return [true, unitCost];
+    } else {
+      return [false, unitCost];
     }
   }
 
