@@ -17,12 +17,12 @@ class Logger {
     for (let playerNumber in newGameState['players']) {
       let player = newGameState['players'][playerNumber];
       let oldPlayer = oldGameState['players'][playerNumber];
-      for (let shipIndex in player['units']) {
-        let oldShipAttributes = oldPlayer['units'][shipIndex];
-        let newShipAttributes = player['units'][shipIndex];
-        if (!['Shipyard', 'Base', 'Home Base', 'Colony'].includes(newShipAttributes['type']) && (oldShipAttributes['coords'] != newShipAttributes['coords'])) {
-          let shipString = `\t\tPlayer ${playerNumber} ${newShipAttributes['type']} ${newShipAttributes['num']}: ${oldShipAttributes['coords']} -> ${newShipAttributes['coords']}\n`;
-          this.logSpecificText(shipString);
+      for (let unitIndex in player['units']) {
+        let oldUnitAttributes = oldPlayer['units'][unitIndex];
+        let newUnitAttributes = player['units'][unitIndex];
+        if (!['Unityard', 'Base', 'Home Base', 'Colony'].includes(newUnitAttributes['type']) && (oldUnitAttributes['coords'] != newUnitAttributes['coords'])) {
+          this.logSpecificText(`\t\tPlayer ${playerNumber} ${newUnitAttributes['type']} ${newUnitAttributes['num']}: ${oldUnitAttributes['coords']} -> ${newUnitAttributes['coords']}\n`);
+          
         }
       }
     }
@@ -32,14 +32,12 @@ class Logger {
     this.logSpecificText(`\n\tEnding Unit Locations\n`);
     for (let playerNumber in gameState['players']) {
       let player = gameState['players'][playerNumber];
-      let playerString = `\t\tPlayer ${playerNumber}\n`;
-      this.logSpecificText(playerString);
-      let homeBaseString = `\t\t\tHomeworld: ${player['homeworld']['coords']}\n`;
-      this.logSpecificText(homeBaseString);
-      for (let shipIndex in player['units']) {
-        let shipAttributes = player['units'][shipIndex];
-        let shipString = `\t\t\t${shipAttributes['type']} ${shipAttributes['num']}: ${shipAttributes['coords']}\n`;
-        this.logSpecificText(shipString);
+      this.logSpecificText(`\t\tPlayer ${playerNumber}\n`);
+      this.logSpecificText(`\t\t\tHomeworld: ${player['homeworld']['coords']}\n`);
+      for (let unitIndex in player['units']) {
+        let unitAttributes = player['units'][unitIndex];
+        this.logSpecificText(`\t\t\t${unitAttributes['type']} ${unitAttributes['num']}: ${unitAttributes['coords']}\n`);
+        
       }
     }
   }
@@ -47,61 +45,61 @@ class Logger {
   simpleLogCombatInitialization(gameState) {
     this.logSpecificText(`\n\tCombat Locations:\n`);
     for (let location in gameState['combat']) {
-      let ships = gameState['combat'][location];
-      let locationString = `\n\t\t${location}\n\n`;
-      this.logSpecificText(locationString);
-      for (let shipAttributes of ships) {
-        let shipString = `\t\tPlayer ${shipAttributes['playerNumber']} ${shipAttributes['type']} ${shipAttributes['num']}`;
-        this.logSpecificText(shipString);
+      let units = gameState['combat'][location];
+      this.logSpecificText(`\t\t(${location})\n`);
+      for (let unitAttributes of units) {
+        this.logSpecificText(`\t\t\tPlayer ${unitAttributes['playerIndex']} ${unitAttributes['type']} ${unitAttributes['num']}`);
+        
       }
     }
   }
 
-  simpleLogCombat(playerOne, shipOne, playerTwo, shipTwo, didShipOneHit, hitThreshold, currentRoll) {
-    let strings = [`\t\tAttacker: Player ${playerOne['num']} ${shipOne['type']} ${shipOne['num']}\n`];
-    strings.push(`\t\tDefender: Player ${playerTwo['num']} ${shipTwo['type']} ${shipTwo['num']}\n`);
-    strings.push(`\t\tMiss threshold: ${hitThreshold}\n`);
-    strings.push(`\t\tDie Roll: ${currentRoll}\n`);
-    if (didShipOneHit) {
-      strings.push(`\t\tHit!\n`);
-      if (shipTwo['hitsLeft'] < 1)
-        strings.push(`Player ${playerTwo['num']} ${shipTwo['type']} ${shipTwo['num']} was destroyed\n`);
+  simpleLogCombat(playerOneIndex, unitOne, playerTwoIndex, unitTwo, didUnitOneHit, hitThreshold, currentRoll) {
+    this.logSpecificText(`\t\tAttacker: Player ${playerOneIndex} ${unitOne['type']} ${unitOne['num']}\n`);
+    this.logSpecificText(`\t\tDefender: Player ${playerTwoIndex} ${unitTwo['type']} ${unitTwo['num']}\n`);
+    this.logSpecificText(`\t\tMiss threshold: ${hitThreshold}\n`);
+    this.logSpecificText(`\t\tDie Roll: ${currentRoll}\n`);
+    if (didUnitOneHit) {
+      this.logSpecificText(`\t\tHit!\n`);
+      if (unitTwo['hitsLeft'] < 1)
+      this.logSpecificText(`Player ${playerTwo['num']} ${unitTwo['type']} ${unitTwo['num']} was destroyed\n`);
     } else
-      strings.push(`\t\t(Miss)\n`);
-    for (let string of strings)
-      this.logSpecificText(string);
+    this.logSpecificText(`\t\t(Miss)\n`);
   }
 
   endSimpleLogCombat(gameState) {
     this.logSpecificText(`\n\tSurvivors:\n`);
     for (let location in gameState['combat']) {
-      let ships = gameState['combat'][location];
-      this.logSpecificText(`\n\t${location}\n\n`);
-      for (let shipAttributes of ships) {
-        let shipString = `\t\tPlayer ${shipAttributes['playerNumber']} ${shipAttributes['type']} ${shipAttributes['num']}: ${shipAttributes['coords']}\n`;
-        this.logSpecificText(shipString);
+      let units = gameState['combat'][location];
+      this.logSpecificText(`\t\t(${location})\n`);
+      for (let unitAttributes of units) {
+        this.logSpecificText(`\t\t\tPlayer ${unitAttributes['playerIndex']} ${unitAttributes['type']} ${unitAttributes['num']}: ${unitAttributes['coords']}\n`);
+        
       }
     }
   }
 
   simpleLogEconomic(playerTaxes, playerIncome, initialPlayerCreds, finalPlayerCreds, purchases) {
-    let playerString = `\n\tInitial Creds : ${initialPlayerCreds} \n\tMaintenance : ${playerTaxes} \n\tIncome : ${playerIncome} \n\tTotal Creds : ${initialPlayerCreds + playerIncome - playerTaxes}`;
+    let totalCreds = initialPlayerCreds + playerIncome - playerTaxes;
+    let totalCost = 0;
+    this.logSpecificText(`\n\tInitial Creds : ${initialPlayerCreds} \n\tMaintenance : ${playerTaxes} \n\tIncome : ${playerIncome} \n\tTotal Creds : ${totalCreds}\n`);
     if (purchases['technology'].length > 0) {
-      playerString += `\n\tTechnology Purchases\n`;
+      this.logSpecificText(`\tTechnology Purchases`);
       for (let techIndex in purchases['technology']) {
         let tech = purchases['technology'][techIndex];
-        playerString += `\t\t${tech[0]} | Cost : ${tech[1]}\n`;
+        this.logSpecificText(`\t\t${tech[0]} | Cost : ${tech[1]}`);
+        totalCost += tech[1];
       }
     }
     if (purchases['units'].length > 0) {
-      playerString += `\n\tUnit Purchases\n`;
+      this.logSpecificText(`\n\tUnit Purchases`);
       for (let unitIndex in purchases['units']) {
         let unit = purchases['units'][unitIndex];
-        playerString += `\t\tType : ${unit[0][0]} | Cost : ${unit[1]}\n`;
+        this.logSpecificText(`\t\tType : ${unit[0][0]} | Cost : ${unit[1]}`);
+        totalCost += unit[1];
       }
     }
-    playerString += `\n\tTotal Cost : ${initialPlayerCreds + playerIncome - playerTaxes - finalPlayerCreds} \n\tFinal Creds : ${finalPlayerCreds}`;
-    this.logSpecificText(playerString);
+    this.logSpecificText(`\n\tTotal Cost : ${totalCost} \n\tFinal Creds : ${finalPlayerCreds}`);
   }
 
   logSpecificText(content) {

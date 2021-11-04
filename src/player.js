@@ -2,7 +2,7 @@ const Colony = require("../src/units/colony.js")
 const Game = require("../src/game")
 const Scout = require("../src/units/scout")
 const Destroyer = require("../src/units/destroyer")
-const ColonyShip = require("../src/units/colony-ship")
+const ColonyUnit = require("../src/units/colony-ship")
 const DefaultStrategy = require("../src/strategies/default-strategy")
 
 class Player {
@@ -10,26 +10,26 @@ class Player {
     this.strategy = new strategy(playerIndex);
     this.creds = 20;
     this.boardSize = boardSize;
-    this.technology = { "attack": 0, "defense": 0, "movement": 1, "shipsize": 1, "shipyard": 1, "terraform": 0, "tactics": 0, "exploration": 0 };
-    this.homeBase = new Colony(playerIndex, coord, null, this.technology, null, true);
+    this.technology = { "attack": 0, "defense": 0, "movement": 1, "unitsize": 1, "unityard": 1, "terraform": 0, "tactics": 0, "exploration": 0 };
+    this.homeBase = new Colony(playerIndex, JSON.parse(JSON.stringify(coord)), null, this.technology, null, true);
     this.playerIndex = playerIndex;
     this.playerColor = playerColor;
     this.units = [];
-    this.id_number = 0;
+    this.idNumber = 0;
     this.startingCoord = coord
   }
 
-  build(game, unit) { // Unit is formatted as ["string of ship type", (tuple of coord)]
-    let unitTypes = {"Scout": Scout, "Destroyer": Destroyer,/*, more fighting ships later */ "Colony Ship": ColonyShip}
+  build(game, unit) { // Unit is formatted as ["string of unit type", (tuple of coord)]
+    let unitTypes = {"Scout": Scout, "Destroyer": Destroyer,/*, more fighting units later */ "Colony Unit": ColonyUnit}
     let possibleBuildPositions = this.getPossibleBuildCoords()
     let unitBuildCoords = JSON.stringify(unit[1])
     if (!possibleBuildPositions.includes(unitBuildCoords))
       throw `Player ${this.playerIndex} tried to cheat by 
             building a ${unit[0]} in an invalid hex at ${unit[1]}`; 
-    let newShip = new unitTypes[unit[0]](this.playerIndex, unit[1], this.id_number, this.technology, game.turn);
-    this.id_number += 1;
-    this.units.push(newShip);
-    game.board.grid[String(unit[1])].appendUnit(newShip);
+    let newUnit = new unitTypes[unit[0]](this.playerIndex, JSON.parse(JSON.stringify(unit[1])), this.idNumber, this.technology, game.turn);
+    this.idNumber += 1;
+    this.units.push(newUnit);
+    game.board.grid[String(unit[1])].appendUnit(newUnit);
   }
 
   getPossibleBuildCoords() {
@@ -38,12 +38,10 @@ class Player {
 
   upgrade(game, tech) { // Tech is formmated as a string
     // Upgrade Attack Technology
-    let techMaxLevel = { "attack": 3, "defense": 3, "tactics": 3, "movement": 6, "shipyard": 2, "terraform": 2, "shipsize": 6 }
-    let techUpgradeValue = function(tech) { if (tech == "shipyard") { return 0.5 } else { return 1.0 }}
+    let techMaxLevel = { "attack": 3, "defense": 3, "tactics": 3, "movement": 6, "unityard": 2, "terraform": 2, "unitsize": 6 }
+    let techUpgradeValue = function(tech) { if (tech == "unityard") { return 0.5 } else { return 1.0 }}
     if (this.technology[tech] < techMaxLevel[tech]) {
         this.technology[tech] += techUpgradeValue(tech);
-        if (game.print_state_obsolete)
-            console.log(`Player ${this.player_number} upgraded their ${tech} tech from ${this.technology[tech] - 1} to ${this.technology[tech]}`);
     }
   }
 
@@ -54,8 +52,8 @@ class Player {
         'cp': this.creds,
         'homeworld': this.homeBase.generateState(isCurrentPlayer, inCombat),
         'units': this.units.map(function (unit) { return unit.generateState(isCurrentPlayer, inCombat); }),
-        //'colonies': [colony.generate_state(current_player, combat) for colony in sorted([ship for ship in this..ships if ship.type == 'Colony'], key=lambda ship: (ship.technology['tactics'], -ship.player.player_number, -ship.ID), reverse=True)],
-        //'ship_yards': [ship_yard.generate_state(current_player, combat) for ship_yard in sorted([ship for ship in this..ships if ship.type == 'Shipyard'], key=lambda ship: (ship.technology['tactics'], -ship.player.player_number, -ship.ID), reverse=True)],
+        //'colonies': [colony.generateState(isCurrentPlayer, combat) for colony in sorted([unit for unit in this..units if unit.type == 'Colony'], key=lambda unit: (unit.technology['tactics'], -unit.player.playerNumber, -unit.ID), reverse=True)],
+        //'ship-yards': [ship-yards.generateState(isCurrentPlayer, combat) for ship-yards in sorted([unit for unit in this..units if unit.type == 'Unityard'], key=lambda unit: (unit.technology['tactics'], -unit.player.playerNumber, -unit.ID), reverse=True)],
         'technology': this.technology,
         
         'num': this.playerIndex
@@ -65,8 +63,8 @@ class Player {
         'name': this.strategy.name,
         'homeworld': this.homeBase.generateState(isCurrentPlayer, inCombat),
         'units': this.units.map(function (unit) { return unit.generateState(isCurrentPlayer, inCombat); }),
-        //'colonies': [colony.generate_state(current_player, combat) for colony in sorted([ship for ship in this..ships if ship.type == 'Colony'], key=lambda ship: (ship.technology['tactics'], -ship.player.player_number, -ship.ID), reverse=True)],
-        //'ship_yards': [ship_yard.generate_state(current_player, combat) for ship_yard in sorted([ship for ship in this..ships if ship.type == 'Shipyard'], key=lambda ship: (ship.technology['tactics'], -ship.player.player_number, -ship.ID), reverse=True)],
+        //'colonies': [colony.generateState(isCurrentPlayer, combat) for colony in sorted([unit for unit in this..units if unit.type == 'Colony'], key=lambda unit: (unit.technology['tactics'], -unit.player.playerNumber, -unit.ID), reverse=True)],
+        //'ship-yards': [ship-yards.generateState(isCurrentPlayer, combat) for ship-yards in sorted([unit for unit in this..units if unit.type == 'Unityard'], key=lambda unit: (unit.technology['tactics'], -unit.player.playerNumber, -unit.ID), reverse=True)],
         'num': this.playerNumber
       }
     }

@@ -4,7 +4,7 @@ const EconomicEngine = require("./economic-engine.js");
 const Board = require("./board.js");
 const Player = require("./player.js");
 const Unit = require("./units/unit.js");
-const ColonyShip = require("./units/colony-ship.js");
+const ColonyUnit = require("./units/colony-ship.js");
 const Destroyer = require("./units/destroyer.js");
 const Scout = require("./units/scout.js");
 const Logger = require("./logger.js");
@@ -60,8 +60,8 @@ class Game {
       "rgb(50, 125, 5)" /* Dark Green */
     ] // CSS code for the colors in rgb codes
     for (let i = 0; i < this.playerStrats.length; i++) {
-      let new_player = new Player(this.playerStrats[i], this.playerHomeBaseCoords[i], this.boardSize, i, this.playerColors[i])
-      this.players.push(new_player);
+      let newPlayer = new Player(this.playerStrats[i], this.playerHomeBaseCoords[i], this.boardSize, i, this.playerColors[i])
+      this.players.push(newPlayer);
     }
   }
 
@@ -125,28 +125,29 @@ class Game {
       "round": movementState["round"],
       "planets": [this.board.grid].map(function (hex) { if(hex.planet != null) { return hex.coord; } }),
       "unitData": {
-        "Battleship": { "cost": 20, "hullSize": 3, "shipsizeNeeded": 5, "tactics": 5, "attack": 5, "defense": 2, "maintenance": 3 },
-        "Battlecruiser": { "cost": 15, "hullSize": 2, "shipsizeNeeded": 4, "tactics": 4, "attack": 5, "defense": 1, "maintenance": 2 },
-        "Cruiser": { "cost": 12, "hullSize": 2, "shipsizeNeeded": 3, "tactics": 3, "attack": 4, "defense": 1, "maintenance": 2 },
-        "Destroyer": { "cost": 9, "hullSize": 1, "shipsizeNeeded": 2, "tactics": 2, "attack": 4, "defense": 0, "maintenance": 1 },
-        "Dreadnaught": { "cost": 24, "hullSize": 3, "shipsizeNeeded": 6, "tactics": 5, "attack": 6, "defense": 3, "maintenance": 3 },
-        "Scout": { "cost": 6, "hullSize": 1, "shipsizeNeeded": 1, "tactics": 1, "attack": 3, "defense": 0, "maintenance": 1 },
-        "Shipyard": { "cost": 3, "hullSize": 1, "shipsizeNeeded": 1, "tactics": 3, "attack": 3, "defense": 0, "maintenance": 0 },
-        "Decoy": { "cost": 1, "hullSize": 0, "shipsizeNeeded": 1, "tactics": 0, "attack": 0, "defense": 0, "maintenance": 0 },
-        "Colonyship": { "cost": 8, "hullSize": 1, "shipsizeNeeded": 1, "tactics": 0, "attack": 0, "defense": 0, "maintenance": 0 },
-        "Base": { "cost": 12, "hullSize": 3, "shipsizeNeeded": 2, "tactics": 5, "attack": 7, "defense": 2, "maintenance": 0 },
+        "Battleunit": { "cost": 20, "hullSize": 3, "unitsizeNeeded": 5, "tactics": 5, "attack": 5, "defense": 2, "maintenance": 3 },
+        "Battlecruiser": { "cost": 15, "hullSize": 2, "unitsizeNeeded": 4, "tactics": 4, "attack": 5, "defense": 1, "maintenance": 2 },
+        "Cruiser": { "cost": 12, "hullSize": 2, "unitsizeNeeded": 3, "tactics": 3, "attack": 4, "defense": 1, "maintenance": 2 },
+        "Destroyer": { "cost": 9, "hullSize": 1, "unitsizeNeeded": 2, "tactics": 2, "attack": 4, "defense": 0, "maintenance": 1 },
+        "Dreadnaught": { "cost": 24, "hullSize": 3, "unitsizeNeeded": 6, "tactics": 5, "attack": 6, "defense": 3, "maintenance": 3 },
+        "Scout": { "cost": 6, "hullSize": 1, "unitsizeNeeded": 1, "tactics": 1, "attack": 3, "defense": 0, "maintenance": 1 },
+        "Unityard": { "cost": 3, "hullSize": 1, "unitsizeNeeded": 1, "tactics": 3, "attack": 3, "defense": 0, "maintenance": 0 },
+        "Decoy": { "cost": 1, "hullSize": 0, "unitsizeNeeded": 1, "tactics": 0, "attack": 0, "defense": 0, "maintenance": 0 },
+        "Colonyunit": { "cost": 8, "hullSize": 1, "unitsizeNeeded": 1, "tactics": 0, "attack": 0, "defense": 0, "maintenance": 0 },
+        "Base": { "cost": 12, "hullSize": 3, "unitsizeNeeded": 2, "tactics": 5, "attack": 7, "defense": 2, "maintenance": 0 },
       },
       "technologyData": {
-        "shipsize": [0, 10, 15, 20, 25, 30],
+        "unitsize": [0, 10, 15, 20, 25, 30],
         "attack": [20, 30, 40],
         "defense": [20, 30, 40],
         "movement": [0, 20, 30, 40, 40, 40],
-        "shipyard": [0, 20, 30],
+        "unityard": [0, 20, 30],
         "terraform": [25],
         "tactics": [15, 20, 30],
         "exploration": [15]
       }
     }
+
     if(currentPlayer) {
       let temp = {}
       for (let playerNumber in this.players) {
@@ -162,9 +163,9 @@ class Game {
       } 
       this.gameState["players"] = temp
     }
+    if (phase == "Combat")
+      this.gameState["combat"] = this.combatEngine.generateCombatArray(this);
     return this.gameState
-    //if (phase == "Combat")
-      //this.gameState["combat"] = this.combat_engine.generateCombatArray()
   }
 }
 
