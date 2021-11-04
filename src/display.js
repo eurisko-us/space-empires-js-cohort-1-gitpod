@@ -1,63 +1,55 @@
-class Display {
-  constructor(game){
-    this.game = game;
-    this.board = game.board.grid;
-  }
-  function generateBoard(boardSize){
-    let boardSize = this.game.boardSize
-    let columns = '';
-    for(let i = 0; i < boardSize; i ++){
-      columns += '50px '
-    }
-    document.getElementById("wrapper").style.['grid-template-columns'] = columns;
-    document.getElementById("wrapper").style.['grid-template-rows'] = columns;
 
-    for(let i = boardSize; i > 0; i--) {
-      for(let j = boardSize; j > 0; j--){
-          document.body.onload = createHex(i,j,boardSize);
-      }
-    }
-    let starter = document.getElementById("starter");
-    starter.remove();
+class Game {
+  constructor(clientSockets) {
+      this.clientSockets = clientSockets;
+      this.state = null;
   }
 
-  function createHex (x,y){
-    let newHex = document.createElement("div");
-    newHex.setAttribute("id",'h_'+String(x)+','+String(y));
-    let hexContent = document.createTextNode(String([x,y]));
-    
-    newHex.appendChild(hexContent);
-    
-    let previousHex = document.getElementById("starter");
-    previousHex.parentNode.insertBefore(newHex, previousHex);
-  }
-
-  function updateBoard(){
-    for(hex of Object.keys(this.board)){
-      this.updateHexLoc(hex);
-      this.updateHexUnits(hex);
-    }
-  }
-
-  function updateHexLoc(){
-      if (hex.planet){
-        if(hex.planet.colony == null){
-          return 'green'
-        }else{
-          if(hex.planet.colony,player == 0){
-            return 'p0_planet_green'
-          }else{
-            return 'p1_planet_green'
+  start() {
+      setInterval(() => {
+          this.state = this.generateRandomGameState();
+          for(let socketId in this.clientSockets) {
+              let socket = this.clientSockets[socketId];
+              
+              socket.emit('gameState', { 
+                  gameState: this.state
+              });        
           }
-        }
-      }else{
-        return 'black'
-      }
+      }, 200);  
   }
 
-  function updateHexUnits(hex){
-    units = {'Scout':0, 'ColonyShip':0}
-    
+  generateRandomGameState() {
+      let board = {
+          numRows: 20,
+          numCols: 20,
+          spaces: []
+      };
+
+      board.spaces = new Array(board.numRows);
+      for(let i = 0; i < board.numRows; i++) {
+          board.spaces[i] = new Array(board.numCols);
+      }
+
+      for(let i = 0; i < board.numRows; i++) {
+          for(let j = 0; j < board.numCols; j++) {        
+              let r = this.getRandomInteger(1, 20);
+              board.spaces[i][j] = r;
+          }
+      }    
+
+      let gameState = {
+          board
+      };
+
+      return gameState;
+  }
+
+  getRandomInteger(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+
+      return Math.floor(Math.random() * (max - min + 1) + min);
   }
 }
-module.exports = Display;
+
+module.exports = Game;

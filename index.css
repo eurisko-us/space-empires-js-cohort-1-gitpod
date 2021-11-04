@@ -2,19 +2,20 @@
   font-family: 'Play', sans-serif;
 }
 
-.wrapper {
-  display: grid;
+td.boardSpace {
+  width: 200px;
+  height: 200px;
 }
 
-.item {
+/* .item {
   flex: 0 9%;
   height: 100px;
   width: 100px;
-  /* margin-bottom: 2%; (100-32*3)/2 */
+  margin-bottom: 2%; (100-32*3)/2
   background-color: #ccc;
   border-style: solid;
 
-}
+} */
 /* .grid {
   display: grid;
   grid-gap: 1px;
