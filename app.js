@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
-const Game = require('./src/display');
+const Display = require('./src/display');
 
 // app.use(express.static('public'))
 
@@ -29,5 +29,5 @@ http.listen(3000, () => {
     console.log('Listening on *:3000');
 });
 
-const game = new Game(clientSockets);
-game.start();
+const display = new Display(clientSockets);
+display.start();

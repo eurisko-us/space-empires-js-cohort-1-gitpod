@@ -115,36 +115,37 @@ class Game {
     }
   }
 
-  generateState(currentPlayer, phase, movementRound = 0) {
+  generateState(currentPlayer, phase_, movementRound = 0) {
     let movementState = this.movementEngine.generateMovementState(movementRound)
     this.gameState = {
-      "turn": this.turn,
-      "winner": null,
-      "boardSize": this.boardSize,
-      "phase": phase,
-      "round": movementState["round"],
-      "planets": [this.board.grid].map(function (hex) { if(hex.planet != null) { return hex.coord; } }),
-      "unitData": {
-        "Battleship": { "cost": 20, "hullSize": 3, "shipsizeNeeded": 5, "tactics": 5, "attack": 5, "defense": 2, "maintenance": 3 },
-        "Battlecruiser": { "cost": 15, "hullSize": 2, "shipsizeNeeded": 4, "tactics": 4, "attack": 5, "defense": 1, "maintenance": 2 },
-        "Cruiser": { "cost": 12, "hullSize": 2, "shipsizeNeeded": 3, "tactics": 3, "attack": 4, "defense": 1, "maintenance": 2 },
-        "Destroyer": { "cost": 9, "hullSize": 1, "shipsizeNeeded": 2, "tactics": 2, "attack": 4, "defense": 0, "maintenance": 1 },
-        "Dreadnaught": { "cost": 24, "hullSize": 3, "shipsizeNeeded": 6, "tactics": 5, "attack": 6, "defense": 3, "maintenance": 3 },
-        "Scout": { "cost": 6, "hullSize": 1, "shipsizeNeeded": 1, "tactics": 1, "attack": 3, "defense": 0, "maintenance": 1 },
-        "Shipyard": { "cost": 3, "hullSize": 1, "shipsizeNeeded": 1, "tactics": 3, "attack": 3, "defense": 0, "maintenance": 0 },
-        "Decoy": { "cost": 1, "hullSize": 0, "shipsizeNeeded": 1, "tactics": 0, "attack": 0, "defense": 0, "maintenance": 0 },
-        "Colonyship": { "cost": 8, "hullSize": 1, "shipsizeNeeded": 1, "tactics": 0, "attack": 0, "defense": 0, "maintenance": 0 },
-        "Base": { "cost": 12, "hullSize": 3, "shipsizeNeeded": 2, "tactics": 5, "attack": 7, "defense": 2, "maintenance": 0 },
+      turn: this.turn,
+      winner: null,
+      boardSize: this.boardSize,
+      phase: phase_,
+      board: this.board.generateState(),
+      round: movementState["round"],
+      planets: [this.board.grid].map(function (hex) { if(hex.planet != null) { return hex.coord; } }),
+      unitData: {
+        Battleship: { "cost": 20, "hullSize": 3, "shipsizeNeeded": 5, "tactics": 5, "attack": 5, "defense": 2, "maintenance": 3 },
+        Battlecruiser: { "cost": 15, "hullSize": 2, "shipsizeNeeded": 4, "tactics": 4, "attack": 5, "defense": 1, "maintenance": 2 },
+        Cruiser: { "cost": 12, "hullSize": 2, "shipsizeNeeded": 3, "tactics": 3, "attack": 4, "defense": 1, "maintenance": 2 },
+        Destroyer: { "cost": 9, "hullSize": 1, "shipsizeNeeded": 2, "tactics": 2, "attack": 4, "defense": 0, "maintenance": 1 },
+        Dreadnaught: { "cost": 24, "hullSize": 3, "shipsizeNeeded": 6, "tactics": 5, "attack": 6, "defense": 3, "maintenance": 3 },
+        Scout: { "cost": 6, "hullSize": 1, "shipsizeNeeded": 1, "tactics": 1, "attack": 3, "defense": 0, "maintenance": 1 },
+        Shipyard: { "cost": 3, "hullSize": 1, "shipsizeNeeded": 1, "tactics": 3, "attack": 3, "defense": 0, "maintenance": 0 },
+        Decoy: { "cost": 1, "hullSize": 0, "shipsizeNeeded": 1, "tactics": 0, "attack": 0, "defense": 0, "maintenance": 0 },
+        Colonyship: { "cost": 8, "hullSize": 1, "shipsizeNeeded": 1, "tactics": 0, "attack": 0, "defense": 0, "maintenance": 0 },
+        Base: { "cost": 12, "hullSize": 3, "shipsizeNeeded": 2, "tactics": 5, "attack": 7, "defense": 2, "maintenance": 0 },
       },
-      "technologyData": {
-        "shipsize": [0, 10, 15, 20, 25, 30],
-        "attack": [20, 30, 40],
-        "defense": [20, 30, 40],
-        "movement": [0, 20, 30, 40, 40, 40],
-        "shipyard": [0, 20, 30],
-        "terraform": [25],
-        "tactics": [15, 20, 30],
-        "exploration": [15]
+      technologyData: {
+        shipsize: [0, 10, 15, 20, 25, 30],
+        attack: [20, 30, 40],
+        defense: [20, 30, 40],
+        movement: [0, 20, 30, 40, 40, 40],
+        shipyard: [0, 20, 30],
+        terraform: [25],
+        tactics: [15, 20, 30],
+        exploration: [15]
       }
     }
     if(currentPlayer) {
@@ -153,14 +154,14 @@ class Game {
         let player = this.players[playerNumber];
         temp[playerNumber] = player.generateState(true, (phase == "Combat"))
       } 
-      this.gameState["players"] = temp
+      this.gameState.players = temp
     } else {
       let temp = {}
       for (let playerNumber in this.players) {
         let player = this.players[playerNumber];
         temp[playerNumber] = player.generateState((currentPlayer == player), (phase == "Combat"))
       } 
-      this.gameState["players"] = temp
+      this.gameState.players = temp
     }
     return this.gameState
     //if (phase == "Combat")

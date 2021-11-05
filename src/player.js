@@ -50,24 +50,23 @@ class Player {
   generateState(isCurrentPlayer, inCombat) {
     if (isCurrentPlayer || inCombat) {
       return {
-        'name': this.strategy.name,
-        'cp': this.creds,
-        'homeworld': this.homeBase.generateState(isCurrentPlayer, inCombat),
-        'units': this.units.map(function (unit) { return unit.generateState(isCurrentPlayer, inCombat); }),
+        name: this.strategy.name,
+        cp: this.creds,
+        units: this.units,
         //'colonies': [colony.generate_state(current_player, combat) for colony in sorted([ship for ship in this..ships if ship.type == 'Colony'], key=lambda ship: (ship.technology['tactics'], -ship.player.player_number, -ship.ID), reverse=True)],
         //'ship_yards': [ship_yard.generate_state(current_player, combat) for ship_yard in sorted([ship for ship in this..ships if ship.type == 'Shipyard'], key=lambda ship: (ship.technology['tactics'], -ship.player.player_number, -ship.ID), reverse=True)],
-        'technology': this.technology,
-        
-        'num': this.playerIndex
+        technology: this.technology,
+        homeworld: this.homeBase.generateState(isCurrentPlayer, inCombat),
+        num: this.playerNumber
       }
     } else {
       return {
-        'name': this.strategy.name,
-        'homeworld': this.homeBase.generateState(isCurrentPlayer, inCombat),
-        'units': this.units.map(function (unit) { return unit.generateState(isCurrentPlayer, inCombat); }),
+        name: this.strategy.name,
+        units: this.units,
         //'colonies': [colony.generate_state(current_player, combat) for colony in sorted([ship for ship in this..ships if ship.type == 'Colony'], key=lambda ship: (ship.technology['tactics'], -ship.player.player_number, -ship.ID), reverse=True)],
         //'ship_yards': [ship_yard.generate_state(current_player, combat) for ship_yard in sorted([ship for ship in this..ships if ship.type == 'Shipyard'], key=lambda ship: (ship.technology['tactics'], -ship.player.player_number, -ship.ID), reverse=True)],
-        'num': this.playerNumber
+        homeworld: this.homeBase.generateState(isCurrentPlayer, inCombat),
+        num: this.playerNumber
       }
     }
   }

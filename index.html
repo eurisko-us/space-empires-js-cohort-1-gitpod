@@ -14,10 +14,10 @@
   <script>const socket = io();
 
     socket.on('gameState', (data) => {
-        updateBoard(data.gameState.board);
+        updateBoard(data.gameState);
     });
     
-    function updateBoard(board) {
+    function updateBoard(gameState) {
         // Delete board table if it already exists because we're just going to recreate it
         let boardTable = document.getElementById('board');
         if (boardTable) {
@@ -29,7 +29,7 @@
 
         document.body.appendChild(boardTable);
     
-        for(let i = 0; i < board.numRows; i++) {
+        for(let i = 0; i < gameState["boardSize"]; i++) {
             let row = boardTable.insertRow();
     
             for(let j = 0; j < board.numCols; j++) {

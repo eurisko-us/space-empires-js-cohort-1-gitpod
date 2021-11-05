@@ -1,21 +1,70 @@
+const Game = require("game")
+const Strategy1 = require("strategies/default-strategy")
+const Strategy2 = require("strategies/default-strategy")
 
-class Game {
+class Display {
   constructor(clientSockets) {
       this.clientSockets = clientSockets;
       this.state = null;
   }
 
-  start() {
-      setInterval(() => {
-          this.state = this.generateRandomGameState();
-          for(let socketId in this.clientSockets) {
-              let socket = this.clientSockets[socketId];
+//   start() {
+//       setInterval(() => {
+//           this.state = this.generateRandomGameState();
+//           for(let socketId in this.clientSockets) {
+//               let socket = this.clientSockets[socketId];
               
-              socket.emit('gameState', { 
-                  gameState: this.state
-              });        
+//               socket.emit('gameState', { 
+//                   gameState: this.state
+//               });        
+//           }
+//       }, 200);  
+//   }
+
+  socket_emit(game){
+    for(let socketId in this.clientSockets) {
+        let socket = this.clientSockets[socketId];
+        
+        socket.emit('gameState', { 
+            gameState: game.generateState()
+        });        
+    }
+  }
+
+  start() {
+    let strategies = [new Strategy1(), new Strategy2()]
+
+    let game = new Game(strategies)
+    
+    while (game.turn <= game.maxTurns) { // Not even gonna bother right now
+        for (let phase in game.phaseStats) {
+            let value = game.phaseStats[phase];
+            if (phase == "Movement") {
+              game.generateState(null, "Movement");
+              for (let round = 0; round < value; round++) {
+                for (let player of game.players) {
+                  for (let unit of player.units) {
+                    if (unit.canMove) {
+                      this.move(game, unit, round, player)
+                    }
+                  }
+                }
+                this.socket_emit(game);
+              }
+            }
+            if (phase == "Combat" && this.turn <= value) {
+              this.generateState(null, "Combat");
+              this.combatEngine.completeCombatPhase(this);
+              this.socket_emit(game)
+            }
+            if (phase == "Economic" && this.turn <= value) {
+              this.generateState(null, "Economic");
+              this.economicEngine.completeEconomicPhase(this);
+              this.socket_emit(game)
+            }
           }
-      }, 200);  
+        game.turn += 1;
+      }
   }
 
   generateRandomGameState() {
@@ -52,4 +101,4 @@ class Game {
   }
 }
 
-module.exports = Game;
+module.exports = Display;

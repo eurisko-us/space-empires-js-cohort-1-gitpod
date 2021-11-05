@@ -5,20 +5,36 @@ class Board {
     for (let x = 0; x < this.boardSize; x++) {
       for (let y = 0; y < this.boardSize; y++) {
         if (planetCoords.includes(String([x,y]))){
-          this.grid[String([x,y])] = new Hex([x,y], true);
+          this.grid[[x,y]] = new Hex({"x": x, "y": y, }, true);
+          // console.log("boogy")
         }
         else{
-          this.grid[String([x,y])] = new Hex([x,y]);
+          this.grid[[x,y]] = new Hex({"x": x, "y": y});
         }
 
       }
     }
   }
 
+  generateState() {
+    let state = {};
+    for(let hex in this.grid) {
+      let hexObject = this.grid[hex];
+      state[hex] == {'planet':null, 'units':[]};
+      if(hexObject.planet) {
+        state[hex]['planet'] = hexObject.planet.generateState();
+      }
+      for(let unit in hexObject.units){
+        state[hex]['units'].push(unit.generateState());
+      }
+    };
+    return state;
+  }
+
   removeUnit(unit, game) {
    unit.destroy(game); // Remove current unit's player's refernce from the player's `units` array
    // Remove grid's reference to the current unit
-   this.grid[String(unit.coords)].removeUnit(unit) // Removes the unit from the grid with the unit's location
+   this.grid[unit.coords].removeUnit(unit) // Removes the unit from the grid with the unit's location
    //.splice(this.grid[String(unit.coords)].units.indexOf(unit)); 
  }
 
@@ -108,6 +124,10 @@ class Planet {
     this.colony = colony;
     this.barren = barren;
   } 
+
+  generateState() {
+    return {coord:this.coord, colony: this.colony.generateState()};
+  }
 }
 
 class Asteroid {
@@ -123,3 +143,7 @@ class Asteroid {
 module.exports = Board;
 module.exports.order = order;
 module.exports.orderWithGameState = orderWithGameState;
+
+b = new Board()
+b.generateBoard([[0,0],[1,1]])
+b.generateState()
