@@ -20,6 +20,7 @@
     function updateBoard(gameState) {
         // Delete board table if it already exists because we're just going to recreate it
         let boardTable = document.getElementById('board');
+        let board = gameState.board
         if (boardTable) {
             document.body.removeChild(boardTable);
         }
@@ -29,10 +30,10 @@
 
         document.body.appendChild(boardTable);
     
-        for(let i = 0; i < gameState["boardSize"]; i++) {
+        for(let i = 0; i < gameState.boardSize; i++) {
             let row = boardTable.insertRow();
     
-            for(let j = 0; j < board.numCols; j++) {
+            for(let j = 0; j < gameState.boardSize; j++) {
                 let spaceValue = board.spaces[i][j];
     
                 let cell = row.insertCell();
