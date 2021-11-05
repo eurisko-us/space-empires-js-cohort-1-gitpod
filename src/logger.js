@@ -67,18 +67,6 @@ class Logger {
     this.logSpecificText(`\t\t(Miss)\n`);
   }
 
-  endSimpleLogCombat(gameState) {
-    this.logSpecificText(`\n\tSurvivors:\n`);
-    for (let location in gameState['combat']) {
-      let units = gameState['combat'][location];
-      this.logSpecificText(`\t\t(${location})\n`);
-      for (let unitAttributes of units) {
-        this.logSpecificText(`\t\t\tPlayer ${unitAttributes['playerIndex']} ${unitAttributes['type']} ${unitAttributes['num']}: ${unitAttributes['coords']}\n`);
-        
-      }
-    }
-  }
-
   simpleLogEconomic(playerTaxes, playerIncome, initialPlayerCreds, finalPlayerCreds, purchases) {
     let totalCreds = initialPlayerCreds + playerIncome - playerTaxes;
     let totalCost = 0;

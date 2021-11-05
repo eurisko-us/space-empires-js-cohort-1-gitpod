@@ -55,10 +55,9 @@ class CombatEngine {
           attackingUnitIndex = 0;
         else
           attackingUnitIndex += 1;
+        game.generateState(false, "Combat");
       }
     }
-    if (game.canLog && possibleCombats.length > 0)
-      game.logger.endSimpleLogCombat(game.gameState);
     if (game.canLog)
       game.logger.logSpecificText(`\nEND OF TURN ${game.turn} COMBAT PHASE\n`);
     
