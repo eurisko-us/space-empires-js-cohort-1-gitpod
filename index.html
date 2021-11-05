@@ -20,11 +20,10 @@
     function updateBoard(gameState) {
         // Delete board table if it already exists because we're just going to recreate it
         let boardTable = document.getElementById('board');
-        let board = gameState.board
         if (boardTable) {
             document.body.removeChild(boardTable);
         }
-    
+        let board = gameState.boardState
         boardTable = document.createElement('table');
         boardTable.id = 'board';
 
@@ -34,18 +33,23 @@
             let row = boardTable.insertRow();
     
             for(let j = 0; j < gameState.boardSize; j++) {
-                let spaceValue = board.spaces[i][j];
+                let hex = board[JSON.stringify([i,j])];
     
                 let cell = row.insertCell();
-                cell.className = 'boardSpace';
+                cell.className = 'hex';
                 cell.width = "20px";
                 cell.height = "20px";
-                if (spaceValue === 1) {
-                    cell.style.backgroundColor = 'red';
-                } else if (spaceValue === 2)  {
+                if ((hex["planet"] == null) && (hex["units"].length == 0)) { // empty
+                    cell.style.backgroundColor = 'grey';
+                }
+                if ((hex["planet"] != null))  { // has planet
+                    cell.style.backgroundColor = 'green';
+                } else if (hex["units"].length > 0) { // no planet and has ships
                     cell.style.backgroundColor = 'blue';
-                } else {
-                    cell.style.backgroundColor = 'black';
+                    // this will be made with more detail later so 
+                    // individual ships will be shown and colored independently
+                    // so be prepared future colby i will curse you with this
+                    // - past colby
                 }
             }
         }

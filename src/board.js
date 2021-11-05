@@ -140,7 +140,9 @@ class Asteroid {
   }
 }
 
-module.exports = Board;
+module.exports.Board = Board;
+module.exports.Planet = Planet;
+module.exports.Asteroid = Asteroid;
 module.exports.order = order;
 module.exports.orderWithGameState = orderWithGameState;
 
