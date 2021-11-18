@@ -1,6 +1,6 @@
-const Game = require("game")
-const Strategy1 = require("strategies/default-strategy")
-const Strategy2 = require("strategies/default-strategy")
+const Game = require("../src/game")
+const Strategy1 = require("../src/strategies/default-strategy")
+const Strategy2 = require("../src/strategies/default-strategy")
 
 class Display {
   constructor(clientSockets) {
