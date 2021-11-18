@@ -104,6 +104,7 @@ class Game {
         this.gameState = this.generateState(true, "Movement");
         for (let round = 1; round < value + 1; round++) {
           this.movementEngine.completeMovementPhase(this, round);
+        }
       }
       if (phase == "Combat" && this.turn <= value) {
         this.gameState = this.generateState(true, "Combat");
