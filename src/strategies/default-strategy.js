@@ -1,4 +1,5 @@
-const Board = require("../../src/board");
+const BoardClasses = require("./board.js");
+const Board = BoardClasses.Board;
 
 const orderWithGameState = Board.orderWithGameState;
 
