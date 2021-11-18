@@ -102,7 +102,8 @@ class Game {
       let value = this.phaseStats[phase];
       if (phase == "Movement") {
         this.gameState = this.generateState(true, "Movement");
-        this.movementEngine.completeMovementPhase(this, value + 1);
+        for (let round = 1; round < value + 1; round++) {
+          this.movementEngine.completeMovementPhase(this, round);
       }
       if (phase == "Combat" && this.turn <= value) {
         this.gameState = this.generateState(true, "Combat");

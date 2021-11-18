@@ -1,21 +1,18 @@
 class MovementEngine {
-  completeMovementPhase(game, numOfRounds) {
+  completeMovementPhase(game, round) {
     if (game.canLog)
       game.logger.logSpecificText(`\nBEGINNING OF TURN ${game.turn} MOVEMENT PHASE\n`);
-    for (let round = 1; round < numOfRounds; round++) {
-      if (game.canLog)
-        var oldGameState = JSON.parse(JSON.stringify(game.gameState));
-      for (let player of game.players) {
-        for (let unit of player.units) {
-          if (unit.canMove)
-            this.move(game, unit, round, player)
-        }
+    if (game.canLog)
+      var oldGameState = JSON.parse(JSON.stringify(game.gameState));
+    for (let player of game.players) {
+      for (let unit of player.units) {
+        if (unit.canMove)
+          this.move(game, unit, round, player)
       }
-      if (game.canLog)
-        game.logger.simpleLogMovement(oldGameState, game.gameState, round, false, false)
-      game.generateState(true, "Movement");
-
     }
+    if (game.canLog)
+      game.logger.simpleLogMovement(oldGameState, game.gameState, round, false, false)
+    game.generateState(true, "Movement");
     if (game.canLog) {
       game.logger.endSimpleLogMovement(game.gameState)
       game.logger.logSpecificText(`\nEND OF TURN ${game.turn} MOVEMENT PHASE\n`)

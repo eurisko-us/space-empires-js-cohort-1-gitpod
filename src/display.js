@@ -37,34 +37,28 @@ class Display {
     let game = new Game(strategies)
     
     while (game.turn <= game.maxTurns) { // Not even gonna bother right now
-        for (let phase in game.phaseStats) {
-            let value = game.phaseStats[phase];
-            if (phase == "Movement") {
-              game.generateState(null, "Movement");
-              for (let round = 0; round < value; round++) {
-                for (let player of game.players) {
-                  for (let unit of player.units) {
-                    if (unit.canMove) {
-                      this.move(game, unit, round, player)
-                    }
-                  }
-                }
-                this.socket_emit(game);
-              }
-            }
-            if (phase == "Combat" && this.turn <= value) {
-              this.generateState(null, "Combat");
-              this.combatEngine.completeCombatPhase(this);
-              this.socket_emit(game)
-            }
-            if (phase == "Economic" && this.turn <= value) {
-              this.generateState(null, "Economic");
-              this.economicEngine.completeEconomicPhase(this);
-              this.socket_emit(game)
-            }
+      for (let phase in game.phaseStats) {
+        let value = game.phaseStats[phase];
+        if (phase == "Movement") {
+          game.generateState(null, "Movement");
+          for (let round = 1; round < value + 1; round++) {
+            game.movementEngine.completeMovementPhase(this, round);
+            this.socket_emit(game);
           }
-        game.turn += 1;
+        }
+        if (phase == "Combat" && this.turn <= value) {
+          this.generateState(null, "Combat");
+          this.combatEngine.completeCombatPhase(this);
+          this.socket_emit(game)
+        }
+        if (phase == "Economic" && this.turn <= value) {
+          this.generateState(null, "Economic");
+          this.economicEngine.completeEconomicPhase(this);
+          this.socket_emit(game)
+        }
       }
+      game.turn += 1;
+    }
   }
 
   generateRandomGameState() {
