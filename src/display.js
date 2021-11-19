@@ -2,6 +2,7 @@ const Game = require("../src/game")
 const Strategy1 = require("../src/strategies/default-strategy")
 const Strategy2 = require("../src/strategies/default-strategy")
 
+
 class Display {
   constructor(clientSockets) {
       this.clientSockets = clientSockets;
@@ -24,7 +25,6 @@ class Display {
   socket_emit(game){
     for(let socketId in this.clientSockets) {
         let socket = this.clientSockets[socketId];
-        
         socket.emit('gameState', { 
             gameState: game.generateState()
         });        
@@ -32,17 +32,17 @@ class Display {
   }
 
   start() {
-    let strategies = [new Strategy1(), new Strategy2()]
+    let strategies = [new Strategy1(0), new Strategy2(1)]
 
     let game = new Game(strategies)
     
-    while (game.turn <= game.maxTurns) { // Not even gonna bother right now
+    while (game.turn <= game.maxTurns) { 
       for (let phase in game.phaseStats) {
         let value = game.phaseStats[phase];
         if (phase == "Movement") {
           game.generateState(null, "Movement");
           for (let round = 1; round < value + 1; round++) {
-            game.movementEngine.completeMovementPhase(this, round);
+            game.movementEngine.completeMovementPhase(game, round);
             this.socket_emit(game);
           }
         }

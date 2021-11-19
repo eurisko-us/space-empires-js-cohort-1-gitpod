@@ -1,7 +1,8 @@
 const MovementEngine = require("./movement-engine.js");
 const CombatEngine = require("./combat-engine.js");
 const EconomicEngine = require("./economic-engine.js");
-const Board = require("./board.js");
+const BoardObjects = require("./board.js");
+const Board = BoardObjects.Board;
 const Player = require("./player.js");
 const Unit = require("./units/unit.js");
 const ColonyShip = require("./units/colony-ship.js");
@@ -154,14 +155,14 @@ class Game {
       let temp = {}
       for (let playerNumber in this.players) {
         let player = this.players[playerNumber];
-        temp[playerNumber] = player.generateState(true, (phase == "Combat"))
+        temp[playerNumber] = player.generateState(true, (phase_ == "Combat"))
       } 
       this.gameState.players = temp
     } else {
       let temp = {}
       for (let playerNumber in this.players) {
         let player = this.players[playerNumber];
-        temp[playerNumber] = player.generateState((currentPlayer == player), (phase == "Combat"))
+        temp[playerNumber] = player.generateState((currentPlayer == player), (phase_ == "Combat"))
       } 
       this.gameState.players = temp
     }

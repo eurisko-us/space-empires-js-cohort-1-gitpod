@@ -21,9 +21,11 @@ class Board {
     for(let hex in this.grid) {
       let hexObject = this.grid[hex];
       state[hex] == {'planet':null, 'units':[]};
-      if(hexObject.planet) {
+      try{
         state[hex]['planet'] = hexObject.planet.generateState();
       }
+      catch(err){}
+
       for(let unit in hexObject.units){
         state[hex]['units'].push(unit.generateState());
       }
@@ -126,7 +128,11 @@ class Planet {
   } 
 
   generateState() {
-    return {coord:this.coord, colony: this.colony.generateState()};
+    if(this.colony){
+       return {coord:this.coord, colony: this.colony.generateState()};
+    }else{
+      return {coord:this.coord, colony: null};
+    }
   }
 }
 

@@ -15,19 +15,22 @@ let clientSockets = {};
 io.on('connection', (socket) => {
     let socketId = socket.id;
     clientSockets[socketId] = socket;
-
     console.log('Client socket connected:' + socket.id);
-
+    const display = new Display(clientSockets);
+    display.start();
     socket.on('disconnect', () => {
         console.log('Client socket disconnected: ' + socketId);
 
         delete clientSockets[socketId];
-    });  
+    });
 });
 
 http.listen(3000, () => {
     console.log('Listening on *:3000');
 });
 
-const display = new Display(clientSockets);
-display.start();
+// if(Object.keys(clientSockets).length > 0){
+//     console.log("Here2")
+//     const display = new Display(clientSockets);
+//     display.start();
+// }
