@@ -9,29 +9,25 @@ class Display {
       this.state = null;
   }
 
-//   start() {
-//       setInterval(() => {
-//           this.state = this.generateRandomGameState();
-//           for(let socketId in this.clientSockets) {
-//               let socket = this.clientSockets[socketId];
-              
-//               socket.emit('gameState', { 
-//                   gameState: this.state
-//               });        
-//           }
-//       }, 200);  
-//   }
-
   socket_emit(game){
     for(let socketId in this.clientSockets) {
         let socket = this.clientSockets[socketId];
         socket.emit('gameState', { 
             gameState: game.generateState()
-        });        
+        });
     }
   }
 
   start() {
+    let socketCheck = setInterval(() => {
+      if(Object.keys(this.clientSockets).length != 0){
+        console.log("In Interval");
+        this.runGame();
+      }
+    }, 200);
+  }
+
+  runGame() {
     let strategies = [new Strategy1(0), new Strategy2(1)]
 
     let game = new Game(strategies)

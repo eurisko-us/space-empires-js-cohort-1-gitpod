@@ -9,7 +9,7 @@ class Logger {
     this.activeFileName = `log-${newLogNumber}.txt`;
     this.activeFile = `${this.currentDirectory}/${this.activeFileName}`;
     console.log(`active file ${this.activeFile}`);
-   fs.truncate(this.activeFile, 0, function(){console.log('done')});
+   fs.truncate(this.activeFile, 0, function(){console.log('logger')});
   }
 
   simpleLogMovement(oldGameState, newGameState, movementRound) {
