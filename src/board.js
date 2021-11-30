@@ -129,9 +129,9 @@ class Planet {
 
   generateState() {
     if(this.colony){
-       return {coord:this.coord, colony: this.colony.generateState()};
+       return {coord:this.coords, colony: this.colony.generateState()};
     }else{
-      return {coord:this.coord, colony: null};
+      return {coord:this.coords, colony: null};
     }
   }
 }
