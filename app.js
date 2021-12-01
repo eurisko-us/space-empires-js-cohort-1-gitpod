@@ -18,7 +18,7 @@ io.on('connection', (socket) => {
     console.log('Client socket connected:' + socket.id);
     
     socket.on('disconnect', () => {
-        console.log('Client socket disconnected: ' + socketId);
+        console.log('Client socket unconnected: ' + socketId);
 
         delete clientSockets[socketId];
     });
