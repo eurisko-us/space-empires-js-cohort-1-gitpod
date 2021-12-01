@@ -4,10 +4,10 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const Display = require('./src/display');
 
-// app.use(express.static('public'))
+app.use(express.static('public'))
 
 app.get('/', function(req, res) {
-	res.sendFile(__dirname + '/index.html');
+	res.sendFile(__dirname + '/public/index.html');
 });
 
 let clientSockets = {};
