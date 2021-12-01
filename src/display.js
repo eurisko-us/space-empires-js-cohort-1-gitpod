@@ -12,6 +12,7 @@ class Display {
   socket_emit(game){
     for(let socketId in this.clientSockets) {
         let socket = this.clientSockets[socketId];
+        console.log("Emitting")
         socket.emit('gameState', { 
             gameState: game.generateState()
         });
@@ -21,7 +22,6 @@ class Display {
   start() {
     let socketCheck = setInterval(() => {
       if(Object.keys(this.clientSockets).length != 0){
-        console.log("In Interval");
         this.runGame();
       }
     }, 200);
