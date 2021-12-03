@@ -17,7 +17,6 @@ class Game {
     this.turn = 1;
     this.maxTurns = maxTurns;
     this.canLog = canLog;
-    this.planetCoords=["7,0","7,12"]
     // `phaseStats` is when we want only 
     // For example 1 economic phase for the whole game,
     // We would pass in `"economic": 1` in phase stats
@@ -41,10 +40,10 @@ class Game {
   initializePlayers() {
     this.players = []
     this.playerHomeBaseCoords = [ // These are the incorrect initial coords of the players, their supposed to be in the corners not the center of the sides of the board
-      [Math.round(this.boardSize / 2), 0],
-      [Math.round(this.boardSize / 2), this.boardSize - 1],
-      [0, Math.round(this.boardSize / 2)],
-      [this.boardSize - 1, Math.round(this.boardSize / 2)]
+      [Math.floor(this.boardSize / 2), 0],
+      [Math.floor(this.boardSize / 2), this.boardSize - 1],
+      //[0, Math.floor(this.boardSize / 2)],
+      //[this.boardSize - 1, Math.floor(this.boardSize / 2)]
     ]
     /* These are the correct coords for the player home worlds
     [
@@ -61,8 +60,8 @@ class Game {
       "rgb(50, 125, 5)" /* Dark Green */
     ] // CSS code for the colors in rgb codes
     for (let i = 0; i < this.playerStrats.length; i++) {
-      let new_player = new Player(this.playerStrats[i], this.playerHomeBaseCoords[i], this.boardSize, i, this.playerColors[i])
-      this.players.push(new_player);
+      let newPlayer = new Player(this.playerStrats[i], this.playerHomeBaseCoords[i], this.boardSize, i, this.playerColors[i])
+      this.players.push(newPlayer);
     }
   }
 
@@ -74,7 +73,7 @@ class Game {
 
   initializeBoard() {
     this.board = new Board(); // Will probs need more args, but thats for later
-    this.board.generateBoard(this.planetCoords, this.boardSize);
+    this.board.generateBoard(this.playerHomeBaseCoords, this.boardSize);
     for (let player of this.players){
       this.board.grid[String(player.startingCoord)].planet.colony=player.homeBase;
     }
@@ -104,7 +103,7 @@ class Game {
       if (phase == "Movement") {
         this.gameState = this.generateState(true, "Movement");
         for (let round = 1; round < value + 1; round++) {
-          this.movementEngine.completeMovementPhase(this, round);
+          this.movementEngine.completeMovementRound(this, round);
         }
       }
       if (phase == "Combat" && this.turn <= value) {

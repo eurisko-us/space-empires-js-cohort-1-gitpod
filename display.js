@@ -9,7 +9,7 @@ class Display {
       this.state = null;
   }
 
-  socket_emit(game){
+  socketEmit(game){
     for(let socketId in this.clientSockets) {
         let socket = this.clientSockets[socketId];
         socket.emit('gameState', {
@@ -19,7 +19,7 @@ class Display {
   }
 
   start() {
-    let socketCheck = setInterval(() => {
+    let _ = setInterval(() => {
       if(Object.keys(this.clientSockets).length != 0){
         this.runGame();
       }
@@ -29,27 +29,27 @@ class Display {
   runGame() {
     let strategies = [new Strategy1(0), new Strategy2(1)]
 
-    let game = new Game(strategies)
+    let game = new Game(strategies, 13, { "Economic": null, "Movement": 3, "Combat": null }, 100, true)
     
-    while (game.turn <= game.maxTurns) { 
+    for(let turn = 0; turn < game.maxTurns; turn++) {
       for (let phase in game.phaseStats) {
         let value = game.phaseStats[phase];
         if (phase == "Movement") {
           game.generateState(null, "Movement");
           for (let round = 1; round < value + 1; round++) {
-            game.movementEngine.completeMovementPhase(game, round);
-            this.socket_emit(game);
+            game.movementEngine.completeMovementRound(game, round);
+            this.socketEmit(game);
           }
         }
-        if (phase == "Combat" && this.turn <= value) {
-          this.generateState(null, "Combat");
-          this.combatEngine.completeCombatPhase(this);
-          this.socket_emit(game)
+        if (phase == "Combat" && game.turn <= value) {
+          game.generateState(null, "Combat");
+          game.combatEngine.completeCombatPhase(game);
+          this.socketEmit(game)
         }
-        if (phase == "Economic" && this.turn <= value) {
-          this.generateState(null, "Economic");
-          this.economicEngine.completeEconomicPhase(this);
-          this.socket_emit(game)
+        if (phase == "Economic" && game.turn <= value) {
+          game.generateState(null, "Economic");
+          game.economicEngine.completeEconomicPhase(game);
+          this.socketEmit(game)
         }
       }
       game.turn += 1;

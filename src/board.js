@@ -1,17 +1,12 @@
 class Board {
-  generateBoard(planetCoords, boardSize = 13) {
+  generateBoard(planetCoords, boardSize) {
     this.grid = {};
-    this.boardSize = 13;
-    for (let x = 0; x < this.boardSize; x++) {
-      for (let y = 0; y < this.boardSize; y++) {
-        if (planetCoords.includes(String([x,y]))){
-          this.grid[[x,y]] = new Hex({"x": x, "y": y, }, true);
-          // console.log("boogy")
-        }
-        else{
-          this.grid[[x,y]] = new Hex({"x": x, "y": y});
-        }
-
+    for (let y = 0; y < boardSize; y++) {
+      for (let x = 0; x < boardSize; x++) {
+        let currentCoord = [x,y];
+        let planetHere = JSON.stringify(planetCoords).includes(JSON.stringify(currentCoord));
+        let asteriodHere = false;
+        this.grid[currentCoord] = new Hex({"x": x, "y": y}, planetHere, asteriodHere);
       }
     }
   }
@@ -93,7 +88,7 @@ function orderWithGameState(firstShip,secondShip) { // But using gameState
 }
 
 class Hex {
-  constructor(coords, planet = false, asteroid = false) {
+  constructor(coords, planet, asteroid) {
     this.coords = coords;
     this.units = [];
     if (planet)
@@ -151,7 +146,3 @@ module.exports.Planet = Planet;
 module.exports.Asteroid = Asteroid;
 module.exports.order = order;
 module.exports.orderWithGameState = orderWithGameState;
-
-b = new Board()
-b.generateBoard([[0,0],[1,1]])
-b.generateState()

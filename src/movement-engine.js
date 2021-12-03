@@ -1,5 +1,5 @@
 class MovementEngine {
-  completeMovementPhase(game, round) {
+  completeMovementRound(game, round) {
     if (game.canLog)
       game.logger.logSpecificText(`\nBEGINNING OF TURN ${game.turn} MOVEMENT PHASE\n`);
     if (game.canLog)
