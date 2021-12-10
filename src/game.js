@@ -38,39 +38,22 @@ class Game {
     this.initializeEngines();
   }
 
-  next() {
-    if (this.turn > this.maxTurns) { return true; }
 
-    switch (this.phase) {
-      case "Movement":
-        this.phase = "Combat";
-        break;
-      case "Combat":
-        this.phase = "Economic";
-        break;
-      case "Economic":
-        this.phase = "Movement";
-        this.turn += 1;
-        break;
-    }
-
-    return false;
-  }
 
   initializePlayers() {
     this.players = []
     this.playerHomeBaseCoords = [ // These are the incorrect initial coords of the players, their supposed to be in the corners not the center of the sides of the board
       [Math.floor(this.boardSize / 2), 0],
-      [Math.floor(this.boardSize / 2), this.boardSize - 1],
-      //[0, Math.floor(this.boardSize / 2)],
-      //[this.boardSize - 1, Math.floor(this.boardSize / 2)]
+      [Math.floor(this.boardSize / 2),  this.boardSize - 1],
+      //[0,  Math.floor(this.boardSize / 2)],
+      //[this.boardSize - 1,  Math.floor(this.boardSize / 2)]
     ]
-    /* These are the correct coords for the player home worlds
+    /* These are the correct coords for the player home worlds but since diagonals are stoopid, not yet
     [
-        [0,0],
-        [this.boardSize, 0],
-        [0, this.boardSize],
-        [htis.boardSize, this.boardSize]
+        [1, 1],
+        [this.boardSize - 1,  1],
+        [1,  this.boardSize - 1],
+        [this.boardSize - 1,  this.boardSize - 1]
     ]
     */
     this.playerColors = [ // These are the colors of the actual game for the four players
@@ -93,9 +76,10 @@ class Game {
 
   initializeBoard() {
     this.board = new Board(); // Will probs need more args, but thats for later
-    this.board.generateBoard(this.playerHomeBaseCoords, this.boardSize);
+    let planetCoords = [Math.floor(this.boardSize / 2) + ',' +  0, Math.floor(this.boardSize / 2) + ',' + (this.boardSize - 1)]
+    this.board.generateBoard(planetCoords, this.boardSize);
     for (let player of this.players){
-      this.board.grid[String(player.startingCoord)].planet.colony=player.homeBase;
+      this.board.grid[player.startingCoords[0] + ',' + player.startingCoords[1]].planet.colony=player.homeBase;
     }
   }
 
@@ -106,36 +90,63 @@ class Game {
   }
 
   play() {
-    while (/*!this.checkIfPlayerHasWon() &&*/ this.turn <= this.maxTurns) {
-      this.generateState(); // Not even gonna bother right now
-      this.completeTurn();
-      this.turn += 1;
+    let continuePlaying = true;
+    while (continuePlaying) {
+      continuePlaying = this.completePhase();
     }
   }
 
+  completePhase() { // Iterate through the phases
+    if (/*checkIfPlayerHasWon() && */this.turn > this.maxTurns) { return false; } // check if keep playing
+    this.phaseValue = this.game.phaseStats[this.game.phase];
+
+    switch (this.phase) {
+      case "Movement":
+        for (let round = 1; round < this.phaseValue + 1; round++) {
+          this.movementEngine.completeMovementRound(this, round);
+          this.generateState(null, this.phase);
+        }
+        this.next();
+        break;
+      case "Combat":
+        this.combatEngine.completeCombatPhase(this);
+        this.generateState(null, this.phase);
+        this.next();
+        break;
+      case "Economic":
+        this.economicEngine.completeEconomicPhase(this);        
+        this.generateState(null, this.phase);
+        this.next();
+        break;
+    }
+
+    return true;
+  }
+
+  next() {
+    if (/*checkIfPlayerHasWon() && */this.turn > this.maxTurns) { return false; } // check if keep playing (for display.js)
+
+    switch (this.phase) {
+      case "Movement":
+        this.phase = "Combat";
+        break;
+      case "Combat":
+        this.phase = "Economic";
+        break;
+      case "Economic":
+        this.phase = "Movement";
+        this.turn += 1;
+        break;
+    }
+
+    this.phaseValue = this.phaseStats[this.phase];
+
+    return true;
+  }
+  
   /*checkIfPlayerHasWon() {
     later
   }*/
-
-  completeTurn() { // Iterate through the phases
-    for (let phase in this.phaseStats) {
-      let value = this.phaseStats[phase];
-      if (phase == "Movement") {
-        this.gameState = this.generateState(true, "Movement");
-        for (let round = 1; round < value + 1; round++) {
-          this.movementEngine.completeMovementRound(this, round);
-        }
-      }
-      if (phase == "Combat" && this.turn <= value) {
-        this.gameState = this.generateState(true, "Combat");
-        this.combatEngine.completeCombatPhase(this);
-      }
-      if (phase == "Economic" && this.turn <= value) {
-        this.gameState = this.generateState(true, "Economic");
-        this.economicEngine.completeEconomicPhase(this);
-      }
-    }
-  }
 
   generateState(currentPlayer, phase_, movementRound = 0) {
     let movementState = this.movementEngine.generateMovementState(movementRound)

@@ -77,6 +77,9 @@
   removeShip(game, player) {
     game.generateState(player, "Economic");
     let removalIndex = player.strategy.decideRemoval(game.gameState);
+    if (player.units.length == 0) {
+      throw `Player ${player.playerIndex} loses!`
+    }
     let removalUnit = player.units[removalIndex];
     let maintenanceCost = removalUnit.maintenance;
     game.board.removeUnit(removalUnit, game);

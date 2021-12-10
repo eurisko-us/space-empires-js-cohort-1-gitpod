@@ -36,40 +36,53 @@ class Display {
 
     this.game = new Game(strategies, 13, { "Economic": null, "Movement": 3, "Combat": null }, 100, true)
     
-    this.interval = setInterval(this.runPhase.bind(this), 2000);
+    this.interval = setInterval(this.runPhase.bind(this), 2000); // 2 Second Delay for each Phase
   }
 
   runPhase() {
     console.log('Turn = ' + this.game.turn + ', Phase = ' + this.game.phase);
 
     if (this.game.turn > this.game.maxTurns) { return; }
-    let value = this.game.phaseStats[this.game.phase];
+    this.phaseValue = this.game.phaseStats[this.game.phase];
 
     switch (this.game.phase) {
       case "Movement":
-        for (let round = 1; round < value + 1; round++) {
-          this.game.movementEngine.completeMovementRound(this.game, round);
-          this.game.generateState(null, this.phase);
-          this.socketEmit(this.game.gameState);
-        }
+        this.movementValue = 0;
+        this.movementInterval = setInterval(this.runMovementPhase.bind(this), 1000); // 1 Second Delay for each Movment Round
         break;
       case "Combat":
         this.game.combatEngine.completeCombatPhase(this.game);
         this.game.generateState(null, this.phase);
+        this.game.gameState.phase = this.phase
         this.socketEmit(this.game.gameState);
         break;
       case "Economic":
         this.game.economicEngine.completeEconomicPhase(this.game);        
         this.game.generateState(null, this.phase);
+        this.game.gameState.phase = this.phase
         this.socketEmit(this.game.gameState);
         break;
     }
 
-    let done = this.game.next();
+    let continuePlaying = this.game.next();
 
-    if (done) { 
+    if (!continuePlaying) { 
       clearInterval(this.interval);
     }
+  }
+
+  runMovementPhase() {
+    this.game.movementEngine.completeMovementRound(this.game, this.movementValue);
+    this.game.generateState(null, this.phase);
+    this.game.gameState.phase = this.phase
+    this.socketEmit(this.game.gameState);
+
+    this.movementValue += 1;
+
+    if (this.movementValue >= this.phaseValue) {
+      clearInterval(this.movementInterval)
+    }
+
   }
 
   generateRandomGameState() {

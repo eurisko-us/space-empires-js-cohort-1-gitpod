@@ -3,10 +3,12 @@ class Board {
     this.grid = {};
     for (let y = 0; y < boardSize; y++) {
       for (let x = 0; x < boardSize; x++) {
-        let currentCoord = [x,y];
-        let planetHere = JSON.stringify(planetCoords).includes(JSON.stringify(currentCoord));
+        let currentCoords = x + ',' + y;
+        let planetHere = false;
+        if (planetCoords.includes(currentCoords))
+          planetHere = true;
         let asteriodHere = false;
-        this.grid[currentCoord] = new Hex({"x": x, "y": y}, planetHere, asteriodHere);
+        this.grid[currentCoords] = new Hex(x + ',' + y, planetHere, asteriodHere);
       }
     }
   }
@@ -29,11 +31,11 @@ class Board {
  }
 
   moveShip(currentUnit, translation) { // Move unit reference from one hex to another
-    let currentCoord = String([currentUnit.coords[0] - translation["x"], currentUnit.coords[1] - translation["y"]]); 
-    let currentHex = this.grid[currentCoord];
+    let currentCoords = (currentUnit.coords[0] - translation["x"]) + ',' + (currentUnit.coords[1] - translation["y"]);
+    let currentHex = this.grid[currentCoords];
     currentHex.removeUnit(currentUnit)
-    let newCoord = String(currentUnit.coords);
-    let newHex = this.grid[newCoord];
+    let newCoords = currentUnit.coords[0] + ',' + currentUnit.coords[1];
+    let newHex = this.grid[newCoords];
     newHex.appendUnit(currentUnit)
   }
 }

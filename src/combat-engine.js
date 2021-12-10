@@ -72,10 +72,9 @@ class CombatEngine {
   }
 
   moreThanTwoPlayersInSpace(ships) {
-    if (ships.length == 0){return false}
-    let playerOne = ships[0].playerIndex;
-    for (let ship of ships.slice(1)) {
-      if (ship.playerIndex != playerOne) {
+    if (ships.length == 0){ return false; }
+    for (let ship of ships) {
+      if (ship.playerIndex != ships[0].playerIndex) {
         return true;
       };
     };

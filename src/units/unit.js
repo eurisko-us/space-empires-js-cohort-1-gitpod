@@ -31,7 +31,7 @@ class Unit {
       return [2, 2, 2]
     } else if (shipMovementLevel == 5) {
       return [2, 2, 3]
-    } else if (shipMovementLevel == 5) {
+    } else if (shipMovementLevel == 6) {
       return [2, 3, 3]
     }
   }

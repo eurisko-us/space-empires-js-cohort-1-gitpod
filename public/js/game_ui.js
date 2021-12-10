@@ -1,12 +1,8 @@
 const socket = io();
 
-
-
 socket.on('gameState', function(data){
-    let testOutput = document.getElementById("test");
-
-    testOutput.innerHTML = "Maybe";
     updateBoard(data.gameState);
+
 });
 
 function updateBoard(gameState) {
@@ -15,7 +11,18 @@ function updateBoard(gameState) {
 
     // Delete board table if it already exists because we're just going to recreate it
     let board = gameState.board;
-    testOutput.innerHTML = "In Update";
+
+    switch (gameState.phase) {
+      case "Movement":
+        testOutput.innerHTML = "TURN " + gameState.turn + " MOVEMENT ROUND " + gameState.round;
+        break;
+      case "Combat":
+        testOutput.innerHTML = "TURN " + gameState.turn + " COMBAT";
+        break;
+      case "Economic":
+        testOutput.innerHTML = "TURN " + gameState.turn + " ECONOMIC";
+        break;
+    }
     let boardTable = document.getElementById('board');
     if (boardTable) {
         document.body.removeChild(boardTable);
@@ -25,32 +32,27 @@ function updateBoard(gameState) {
     boardTable.id = 'board';
     document.body.appendChild(boardTable);
 
-    testOutput.innerHTML = "New Board Done";
-    for(let i = 0; i < 13; i++) {
-        testOutput.innerHTML = "Starting Row";
+    for(let y = 0; y < 13; y++) {
         let row = boardTable.insertRow();
-        testOutput.innerHTML = "Row Done";
 
-        for(let j = 0; j < 13; j++) {
-            testOutput.innerHTML = "bad";
+        for(let x = 0; x < 13; x++) {
             let hex = row.insertCell();
             hex.className = 'boardSpace';
             hex.style.backgroundColor = 'black';
 
-            let hexIndex = i + ',' + j;
+            let hexIndex = x + ',' + y;
             let hex_attributes = board[hexIndex];
 
             if (hex_attributes) {
                 if ((hex_attributes["planet"] == null) && (hex_attributes["units"].length == 0)) { // empty
-                    testOutput.innerHTML = "EMPTY";
                     hex.style.backgroundColor = 'grey';
                 }
                 if ((hex_attributes["planet"] != null))  { // has planet
-                    testOutput.innerHTML = "PLANT";
                     hex.style.backgroundColor = 'green';
+                    hex.innerHTML = "Num Ships: " + hex_attributes["units"].length;
                 } else if (hex_attributes["units"].length > 0) { // no planet and has ships
-                    testOutput.innerHTML = "SPACE SHIP";
                     hex.style.backgroundColor = 'blue';
+                    hex.innerHTML = "Num Ships: " + hex_attributes["units"].length;
                     // this will be made with more detail later so 
                     // individual ships will be shown and colored independently
                     // so be prepared future colby i will curse you with this
@@ -60,23 +62,5 @@ function updateBoard(gameState) {
         }
     }
     
-            // let hex_attributes = board[JSON.stringify([i,j])];
-            // let hex = row.insertCell();
-            // hex.className = 'hex';
-            // hex.width = "20px";
-            // hex.height = "20px";
-            // if ((hex_attributes["planet"] == null) && (hex_attributes["units"].length == 0)) { // empty
-            //     hex.style.backgroundColor = 'grey';
-            // }
-            // if ((hex_attributes["planet"] != null))  { // has planet
-            //     hex.style.backgroundColor = 'green';
-            // } else if (hex_attributes["units"].length > 0) { // no planet and has ships
-            //     hex.style.backgroundColor = 'blue';
-            //     // this will be made with more detail later so 
-            //     // individual ships will be shown and colored independently
-            //     // so be prepared future colby i will curse you with this
-            //     // - past colby
-            // }else{
-            //     hex.style.backgroundColor = 'black';
-            // }
+    
 }
