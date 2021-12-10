@@ -88,11 +88,10 @@ class CombatEngine {
     return [diceRoll == 1 || diceRoll <= hitThreshold, diceRoll, hitThreshold];
   }
 
-  moreThanTwoPlayersInSpace(units) {
-    if (units.length == 0){return false}
-    let playerOne = units[0].playerIndex;
-    for (let unit of units.slice(1)) {
-      if (unit.playerIndex != playerOne) {
+  moreThanTwoPlayersInSpace(ships) {
+    if (ships.length == 0){ return false; }
+    for (let ship of ships) {
+      if (ship.playerIndex != ships[0].playerIndex) {
         return true;
       };
     };

@@ -8,8 +8,8 @@ class Logger {
     let newLogNumber = fs.readdirSync(this.currentDirectory).length;
     this.activeFileName = `log-${newLogNumber}.txt`;
     this.activeFile = `${this.currentDirectory}/${this.activeFileName}`;
-    console.log(`active file ${this.activeFile}`);
-   fs.truncate(this.activeFile, 0, function(){console.log('done')});
+    // console.log(`active file ${this.activeFile}`);
+    fs.truncate(this.activeFile, 0, function(){console.log()});
   }
 
   simpleLogMovement(oldGameState, newGameState, movementRound) {

@@ -3,10 +3,10 @@ const gameTestingStrategies = require("../src/strategies/game-testing-strategies
 const StratOne = gameTestingStrategies.StratOne;
 const StratTwo = gameTestingStrategies.StratTwo;
 
-console.log(`\nTesting Simple Strategies`);
+console.log(`\nTesting Logger`);
 
 let testOne = new Game([StratOne, StratTwo], 13, {"Movement": 3, "Combat": null, "Economic": null}, 10, true);
 
 testOne.play();
 
-console.log('complete');
+console.log('Complete');

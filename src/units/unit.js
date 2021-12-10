@@ -3,7 +3,9 @@ class Unit {
     this.playerIndex = playerIndex
     this.technology = technology;
     this.coords = initialCoord;
-    this.id = id;
+    this.id = 0;
+    if (id != null)
+      this.id = id
     this.turnCreated = turnCreated;
     this.canMove = true;
     this.canFight = true;
@@ -29,7 +31,7 @@ class Unit {
       return [2, 2, 2]
     } else if (unitMovementLevel == 5) {
       return [2, 2, 3]
-    } else if (unitMovementLevel == 5) {
+    } else if (shipMovementLevel == 6) {
       return [2, 3, 3]
     }
   }

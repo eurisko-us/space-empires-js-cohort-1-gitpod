@@ -1,7 +1,8 @@
 const MovementEngine = require("./movement-engine.js");
 const CombatEngine = require("./combat-engine.js");
 const EconomicEngine = require("./economic-engine.js");
-const Board = require("./board.js");
+const BoardObjects = require("./board.js");
+const Board = BoardObjects.Board;
 const Player = require("./player.js");
 const Unit = require("./units/unit.js");
 const ColonyUnit = require("./units/colony-ship.js");
@@ -14,9 +15,9 @@ class Game {
     this.playerStrats = playerStrats;
     this.boardSize = boardSize;
     this.turn = 1;
+    this.phase = 'Economic';
     this.maxTurns = maxTurns;
     this.canLog = canLog;
-    this.planetCoords=["7,0","7,12"]
     // `phaseStats` is when we want only 
     // For example 1 economic phase for the whole game,
     // We would pass in `"economic": 1` in phase stats
@@ -37,20 +38,22 @@ class Game {
     this.initializeEngines();
   }
 
+
+
   initializePlayers() {
     this.players = []
     this.playerHomeBaseCoords = [ // These are the incorrect initial coords of the players, their supposed to be in the corners not the center of the sides of the board
-      [Math.round(this.boardSize / 2), 0],
-      [Math.round(this.boardSize / 2), this.boardSize - 1],
-      [0, Math.round(this.boardSize / 2)],
-      [this.boardSize - 1, Math.round(this.boardSize / 2)]
+      [Math.floor(this.boardSize / 2), 0],
+      [Math.floor(this.boardSize / 2),  this.boardSize - 1],
+      //[0,  Math.floor(this.boardSize / 2)],
+      //[this.boardSize - 1,  Math.floor(this.boardSize / 2)]
     ]
-    /* These are the correct coords for the player home worlds
+    /* These are the correct coords for the player home worlds but since diagonals are stoopid, not yet
     [
-        [0,0],
-        [this.boardSize, 0],
-        [0, this.boardSize],
-        [htis.boardSize, this.boardSize]
+        [1, 1],
+        [this.boardSize - 1,  1],
+        [1,  this.boardSize - 1],
+        [this.boardSize - 1,  this.boardSize - 1]
     ]
     */
     this.playerColors = [ // These are the colors of the actual game for the four players
@@ -73,9 +76,10 @@ class Game {
 
   initializeBoard() {
     this.board = new Board(); // Will probs need more args, but thats for later
-    this.board.generateBoard(this.planetCoords, this.boardSize);
+    let planetCoords = [Math.floor(this.boardSize / 2) + ',' +  0, Math.floor(this.boardSize / 2) + ',' + (this.boardSize - 1)]
+    this.board.generateBoard(planetCoords, this.boardSize);
     for (let player of this.players){
-      this.board.grid[String(player.startingCoord)].planet.colony=player.homeBase;
+      this.board.grid[player.startingCoords[0] + ',' + player.startingCoords[1]].planet.colony=player.homeBase;
     }
   }
 
@@ -86,65 +90,94 @@ class Game {
   }
 
   play() {
-    while (/*!this.checkIfPlayerHasWon() &&*/ this.turn <= this.maxTurns) {
-      this.generateState(); // Not even gonna bother right now
-      this.completeTurn();
-      this.turn += 1;
+    let continuePlaying = true;
+    while (continuePlaying) {
+      continuePlaying = this.completePhase();
     }
   }
 
+  completePhase() { // Iterate through the phases
+    if (/*checkIfPlayerHasWon() && */this.turn > this.maxTurns) { return false; } // check if keep playing
+    this.phaseValue = this.game.phaseStats[this.game.phase];
+
+    switch (this.phase) {
+      case "Movement":
+        for (let round = 1; round < this.phaseValue + 1; round++) {
+          this.movementEngine.completeMovementRound(this, round);
+          this.generateState(null, this.phase);
+        }
+        this.next();
+        break;
+      case "Combat":
+        this.combatEngine.completeCombatPhase(this);
+        this.generateState(null, this.phase);
+        this.next();
+        break;
+      case "Economic":
+        this.economicEngine.completeEconomicPhase(this);        
+        this.generateState(null, this.phase);
+        this.next();
+        break;
+    }
+
+    return true;
+  }
+
+  next() {
+    if (/*checkIfPlayerHasWon() && */this.turn > this.maxTurns) { return false; } // check if keep playing (for display.js)
+
+    switch (this.phase) {
+      case "Movement":
+        this.phase = "Combat";
+        break;
+      case "Combat":
+        this.phase = "Economic";
+        break;
+      case "Economic":
+        this.phase = "Movement";
+        this.turn += 1;
+        break;
+    }
+
+    this.phaseValue = this.phaseStats[this.phase];
+
+    return true;
+  }
+  
   /*checkIfPlayerHasWon() {
     later
   }*/
 
-  completeTurn() { // Iterate through the phases
-    for (let phase in this.phaseStats) {
-      let value = this.phaseStats[phase];
-      if (phase == "Movement") {
-        this.gameState = this.generateState(true, "Movement");
-        this.movementEngine.completeMovementPhase(this, value + 1);
-      }
-      if (phase == "Combat" && this.turn <= value) {
-        this.gameState = this.generateState(true, "Combat");
-        this.combatEngine.completeCombatPhase(this);
-      }
-      if (phase == "Economic" && this.turn <= value) {
-        this.gameState = this.generateState(true, "Economic");
-        this.economicEngine.completeEconomicPhase(this);
-      }
-    }
-  }
-
-  generateState(currentPlayer, phase, movementRound = 0) {
+  generateState(currentPlayer, phase_, movementRound = 0) {
     let movementState = this.movementEngine.generateMovementState(movementRound)
     this.gameState = {
-      "turn": this.turn,
-      "winner": null,
-      "boardSize": this.boardSize,
-      "phase": phase,
-      "round": movementState["round"],
-      "planets": [this.board.grid].map(function (hex) { if(hex.planet != null) { return hex.coord; } }),
-      "unitData": {
-        "Battleunit": { "cost": 20, "hullSize": 3, "unitsizeNeeded": 5, "tactics": 5, "attack": 5, "defense": 2, "maintenance": 3 },
-        "Battlecruiser": { "cost": 15, "hullSize": 2, "unitsizeNeeded": 4, "tactics": 4, "attack": 5, "defense": 1, "maintenance": 2 },
-        "Cruiser": { "cost": 12, "hullSize": 2, "unitsizeNeeded": 3, "tactics": 3, "attack": 4, "defense": 1, "maintenance": 2 },
-        "Destroyer": { "cost": 9, "hullSize": 1, "unitsizeNeeded": 2, "tactics": 2, "attack": 4, "defense": 0, "maintenance": 1 },
-        "Dreadnaught": { "cost": 24, "hullSize": 3, "unitsizeNeeded": 6, "tactics": 5, "attack": 6, "defense": 3, "maintenance": 3 },
-        "Scout": { "cost": 6, "hullSize": 1, "unitsizeNeeded": 1, "tactics": 1, "attack": 3, "defense": 0, "maintenance": 1 },
-        "Unityard": { "cost": 3, "hullSize": 1, "unitsizeNeeded": 1, "tactics": 3, "attack": 3, "defense": 0, "maintenance": 0 },
-        "Decoy": { "cost": 1, "hullSize": 0, "unitsizeNeeded": 1, "tactics": 0, "attack": 0, "defense": 0, "maintenance": 0 },
-        "Colonyunit": { "cost": 8, "hullSize": 1, "unitsizeNeeded": 1, "tactics": 0, "attack": 0, "defense": 0, "maintenance": 0 },
-        "Base": { "cost": 12, "hullSize": 3, "unitsizeNeeded": 2, "tactics": 5, "attack": 7, "defense": 2, "maintenance": 0 },
+      turn: this.turn,
+      winner: null,
+      boardSize: this.boardSize,
+      phase: phase_,
+      board: this.board.generateState(),
+      round: movementState["round"],
+      unitData: {
+        Battleship: { "cost": 20, "hullSize": 3, "shipsizeNeeded": 5, "tactics": 5, "attack": 5, "defense": 2, "maintenance": 3 },
+        Battlecruiser: { "cost": 15, "hullSize": 2, "shipsizeNeeded": 4, "tactics": 4, "attack": 5, "defense": 1, "maintenance": 2 },
+        Cruiser: { "cost": 12, "hullSize": 2, "shipsizeNeeded": 3, "tactics": 3, "attack": 4, "defense": 1, "maintenance": 2 },
+        Destroyer: { "cost": 9, "hullSize": 1, "shipsizeNeeded": 2, "tactics": 2, "attack": 4, "defense": 0, "maintenance": 1 },
+        Dreadnaught: { "cost": 24, "hullSize": 3, "shipsizeNeeded": 6, "tactics": 5, "attack": 6, "defense": 3, "maintenance": 3 },
+        Scout: { "cost": 6, "hullSize": 1, "shipsizeNeeded": 1, "tactics": 1, "attack": 3, "defense": 0, "maintenance": 1 },
+        Shipyard: { "cost": 3, "hullSize": 1, "shipsizeNeeded": 1, "tactics": 3, "attack": 3, "defense": 0, "maintenance": 0 },
+        Decoy: { "cost": 1, "hullSize": 0, "shipsizeNeeded": 1, "tactics": 0, "attack": 0, "defense": 0, "maintenance": 0 },
+        Colonyship: { "cost": 8, "hullSize": 1, "shipsizeNeeded": 1, "tactics": 0, "attack": 0, "defense": 0, "maintenance": 0 },
+        Base: { "cost": 12, "hullSize": 3, "shipsizeNeeded": 2, "tactics": 5, "attack": 7, "defense": 2, "maintenance": 0 },
       },
-      "technologyData": {
-        "unitsize": [0, 10, 15, 20, 25, 30],
-        "attack": [20, 30, 40],
-        "defense": [20, 30, 40],
-        "movement": [0, 20, 30, 40, 40, 40],
-        "unityard": [0, 20, 30],
-        "terraform": [25],
-        "tactics": [15, 20, 30],
-        "exploration": [15]
+      technologyData: {
+        shipsize: [0, 10, 15, 20, 25, 30],
+        attack: [20, 30, 40],
+        defense: [20, 30, 40],
+        movement: [0, 20, 30, 40, 40, 40],
+        shipyard: [0, 20, 30],
+        terraform: [25],
+        tactics: [15, 20, 30],
+        exploration: [15]
       }
     }
 
@@ -152,16 +185,16 @@ class Game {
       let temp = {}
       for (let playerNumber in this.players) {
         let player = this.players[playerNumber];
-        temp[playerNumber] = player.generateState(true, (phase == "Combat"))
+        temp[playerNumber] = player.generateState(true, (phase_ == "Combat"))
       } 
-      this.gameState["players"] = temp
+      this.gameState.players = temp
     } else {
       let temp = {}
       for (let playerNumber in this.players) {
         let player = this.players[playerNumber];
-        temp[playerNumber] = player.generateState((currentPlayer == player), (phase == "Combat"))
+        temp[playerNumber] = player.generateState((currentPlayer == player), (phase_ == "Combat"))
       } 
-      this.gameState["players"] = temp
+      this.gameState.players = temp
     }
     if (phase == "Combat")
       this.gameState["combat"] = this.combatEngine.generateCombatArray(this);

@@ -1,21 +1,18 @@
 class MovementEngine {
-  completeMovementPhase(game, numOfRounds) {
+  completeMovementRound(game, round) {
     if (game.canLog)
       game.logger.logSpecificText(`\nBEGINNING OF TURN ${game.turn} MOVEMENT PHASE\n`);
-    for (let round = 1; round < numOfRounds; round++) {
-      if (game.canLog)
-        var oldGameState = JSON.parse(JSON.stringify(game.gameState));
-      for (let player of game.players) {
-        for (let unit of player.units) {
-          if (unit.canMove)
-            this.move(game, unit, round, player)
-        }
+    if (game.canLog)
+      var oldGameState = JSON.parse(JSON.stringify(game.gameState));
+    for (let player of game.players) {
+      for (let unit of player.units) {
+        if (unit.canMove)
+          this.move(game, unit, round, player)
       }
-      if (game.canLog)
-        game.logger.simpleLogMovement(oldGameState, game.gameState, round, false, false)
-      game.generateState(true, "Movement");
-
     }
+    if (game.canLog)
+      game.logger.simpleLogMovement(oldGameState, game.gameState, round, false, false)
+    game.generateState(true, "Movement");
     if (game.canLog) {
       game.logger.endSimpleLogMovement(game.gameState)
       game.logger.logSpecificText(`\nEND OF TURN ${game.turn} MOVEMENT PHASE\n`)
@@ -23,17 +20,22 @@ class MovementEngine {
   }
 
   move(game, unit, round, player) {
-    if (unit.name == "Homeworld")
-      console.log('wtf')
-    for (let tech = 0; tech < unit.getMovementTechnology(unit.technology["movement"])[round]; tech++) {
+    let unitMovementTechnologyLevel = unit.technology["movement"];
+    let unitMovementTechnology = unit.getMovementTechnology(unitMovementTechnologyLevel);
+    let unitMovementTechnologyCurrentRound = unitMovementTechnology[round];
+    for (let tech = 0; tech < unitMovementTechnologyCurrentRound; tech++) {
       game.generateState(player, "Movement");
       let translation = player.strategy.decideUnitMovement(unit.index, game.gameState);
       // Units can only move like a king in chess
-      // But it's repeated multiple times a movement phase
-      if (Math.abs(translation["x"]) + Math.abs(translation["y"]) <= 1) {
-        // ^ If moving only 1 space ^
+      // But it's repeated multiple times a movement phase and it's numerous rounds
+      if (Math.abs(translation["x"]) + Math.abs(translation["y"]) <= 1) { // If moving only 1 space 
+
+        
+        let shipInSpace = this.isInSpace(unit.coords, translation);
         let currentHex = this.getCurrentHex(game, unit.coords);
-        if (this.isInSpace(unit.coords, translation) && !this.isEnemyInCurrentHex(currentHex, unit)) {
+        let enemyInCurrentHex = this.isEnemyInCurrentHex(currentHex, unit);
+
+        if (shipInSpace && !enemyInCurrentHex) {
           unit.coords[0] += translation["x"];
           unit.coords[1] += translation["y"];
           unit.lastMoved = {'turn': game.turn, 'round': round, 'playerIndex': player.playerIndex};
@@ -52,8 +54,8 @@ class MovementEngine {
     return 0 <= x && x <= 12 && 0 <= y && y <= 12;
   }
 
-  getCurrentHex(game, coord) {
-    return game.board.grid[String(coord)]
+  getCurrentHex(game, coords) {
+    return game.board.grid[coords[0] + ',' + coords[1]]
   }
 
   isEnemyInCurrentHex(hex, currentUnit) {
