@@ -15,10 +15,10 @@ class DefaultStrategy {
     return 0;
   } 
     
-  decideWhichUnitToAttack(combatState, attacking_index) {
-    for (let ship of combatState) {
-      if (this.playerIndex != ship["player_number"] && ship["type"] != "Home Base")
-        return combatState.indexOf(ship);
+  decideWhichUnitToAttack(combatState, attackingIndex) {
+    for (let unit of combatState) {
+      if (this.playerIndex != unit["playerNumber"] && unit["type"] != "Home Base")
+        return combatState.indexOf(unit);
     }
   }
 

@@ -5,7 +5,7 @@ const BoardObjects = require("./board.js");
 const Board = BoardObjects.Board;
 const Player = require("./player.js");
 const Unit = require("./units/unit.js");
-const ColonyShip = require("./units/colony-ship.js");
+const ColonyUnit = require("./units/colony-ship.js");
 const Destroyer = require("./units/destroyer.js");
 const Scout = require("./units/scout.js");
 const Logger = require("./logger.js");
@@ -180,6 +180,7 @@ class Game {
         exploration: [15]
       }
     }
+
     if(currentPlayer) {
       let temp = {}
       for (let playerNumber in this.players) {
@@ -195,9 +196,9 @@ class Game {
       } 
       this.gameState.players = temp
     }
+    if (phase == "Combat")
+      this.gameState["combat"] = this.combatEngine.generateCombatArray(this);
     return this.gameState
-    //if (phase == "Combat")
-      //this.gameState["combat"] = this.combat_engine.generateCombatArray()
   }
 }
 

@@ -38,9 +38,8 @@ class MovementEngine {
         if (shipInSpace && !enemyInCurrentHex) {
           unit.coords[0] += translation["x"];
           unit.coords[1] += translation["y"];
-          
           unit.lastMoved = {'turn': game.turn, 'round': round, 'playerIndex': player.playerIndex};
-          game.board.moveShip(unit, translation);
+          game.board.moveUnit(unit, translation);
         }
       } else {
         // Else the wanted move is invalid, it throws an exception defined as such:

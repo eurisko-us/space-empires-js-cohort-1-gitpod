@@ -2,7 +2,7 @@ const Colony = require("../src/units/colony.js")
 const Game = require("../src/game")
 const Scout = require("../src/units/scout")
 const Destroyer = require("../src/units/destroyer")
-const ColonyShip = require("../src/units/colony-ship")
+const ColonyUnit = require("../src/units/colony-ship")
 const DefaultStrategy = require("../src/strategies/default-strategy")
 
 class Player {
@@ -39,8 +39,8 @@ class Player {
 
   upgrade(game, tech) { // Tech is formmated as a string
     // Upgrade Attack Technology
-    let techMaxLevel = { "attack": 3, "defense": 3, "tactics": 3, "movement": 6, "shipyard": 2, "terraform": 2, "shipsize": 6 }
-    let techUpgradeValue = function(tech) { if (tech == "shipyard") { return 0.5 } else { return 1.0 }}
+    let techMaxLevel = { "attack": 3, "defense": 3, "tactics": 3, "movement": 6, "unityard": 2, "terraform": 2, "unitsize": 6 }
+    let techUpgradeValue = function(tech) { if (tech == "unityard") { return 0.5 } else { return 1.0 }}
     if (this.technology[tech] < techMaxLevel[tech]) {
         this.technology[tech] += techUpgradeValue(tech);
     }

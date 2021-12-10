@@ -20,16 +20,16 @@ class Unit {
     this.lastMoved = {"turn": -1, "round": -1, "playerIndex": playerIndex};
   }
 
-  getMovementTechnology(shipMovementLevel) {
-    if (shipMovementLevel == 1) {
+  getMovementTechnology(unitMovementLevel) {
+    if (unitMovementLevel == 1) {
       return [1, 1, 1]
-    } else if (shipMovementLevel == 2) {
+    } else if (unitMovementLevel == 2) {
       return [1, 1, 2]
-    } else if (shipMovementLevel == 3) {
+    } else if (unitMovementLevel == 3) {
       return [1, 2, 2]
-    } else if (shipMovementLevel == 4) {
+    } else if (unitMovementLevel == 4) {
       return [2, 2, 2]
-    } else if (shipMovementLevel == 5) {
+    } else if (unitMovementLevel == 5) {
       return [2, 2, 3]
     } else if (shipMovementLevel == 6) {
       return [2, 3, 3]
