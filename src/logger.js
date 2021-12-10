@@ -9,7 +9,7 @@ class Logger {
     this.activeFileName = `log-${newLogNumber}.txt`;
     this.activeFile = `${this.currentDirectory}/${this.activeFileName}`;
     // console.log(`active file ${this.activeFile}`);
-   fs.truncate(this.activeFile, 0, function(){console.log()});
+    fs.truncate(this.activeFile, 0, function(){console.log()});
   }
 
   simpleLogMovement(oldGameState, newGameState, movementRound) {
@@ -21,7 +21,7 @@ class Logger {
         let oldShipAttributes = oldPlayer['units'][shipIndex];
         let newShipAttributes = player['units'][shipIndex];
         if (!['Shipyard', 'Base', 'Home Base', 'Colony'].includes(newShipAttributes['type']) && (oldShipAttributes['coords'] != newShipAttributes['coords'])) {
-          let shipString = `\t\tPlayer ${playerNumber} ${newShipAttributes['type']} ${newShipAttributes['num']}: ${oldShipAttributes['coords']} -> ${newShipAttributes['coords']}\n`;
+          let shipString = `\t\tPlayer ${playerNumber} ${newShipAttributes['type']} ${newShipAttributes['id']}: ${oldShipAttributes['coords']} -> ${newShipAttributes['coords']}\n`;
           this.logSpecificText(shipString);
         }
       }
@@ -38,7 +38,7 @@ class Logger {
       this.logSpecificText(homeBaseString);
       for (let shipIndex in player['units']) {
         let shipAttributes = player['units'][shipIndex];
-        let shipString = `\t\t\t${shipAttributes['type']} ${shipAttributes['num']}: ${shipAttributes['coords']}\n`;
+        let shipString = `\t\t\t${shipAttributes['type']} ${shipAttributes['id']}: ${shipAttributes['coords']}\n`;
         this.logSpecificText(shipString);
       }
     }
@@ -51,7 +51,7 @@ class Logger {
       let locationString = `\n\t\t${location}\n\n`;
       this.logSpecificText(locationString);
       for (let shipAttributes of ships) {
-        let shipString = `\t\tPlayer ${shipAttributes['playerNumber']} ${shipAttributes['type']} ${shipAttributes['num']}`;
+        let shipString = `\t\tPlayer ${shipAttributes['playerNumber']} ${shipAttributes['type']} ${shipAttributes['id']}`;
         this.logSpecificText(shipString);
       }
     }
@@ -78,7 +78,7 @@ class Logger {
       let ships = gameState['combat'][location];
       this.logSpecificText(`\n\t${location}\n\n`);
       for (let shipAttributes of ships) {
-        let shipString = `\t\tPlayer ${shipAttributes['playerNumber']} ${shipAttributes['type']} ${shipAttributes['num']}: ${shipAttributes['coords']}\n`;
+        let shipString = `\t\tPlayer ${shipAttributes['playerNumber']} ${shipAttributes['type']} ${shipAttributes['id']}: ${shipAttributes['coords']}\n`;
         this.logSpecificText(shipString);
       }
     }

@@ -13,17 +13,10 @@ class Board {
 
   generateState() {
     let state = {};
-    for(let hex in this.grid) {
-      let hexObject = this.grid[hex];
-      state[hex] == {'planet':null, 'units':[]};
-      try{
-        state[hex]['planet'] = hexObject.planet.generateState();
-      }
-      catch(err){}
-
-      for(let unit in hexObject.units){
-        state[hex]['units'].push(unit.generateState());
-      }
+    for(let hexCoords in this.grid) {
+      let hex = this.grid[hexCoords];
+      let hexState = hex.generateState();
+      state[hexCoords] = hexState;
     };
     return state;
   }
@@ -113,6 +106,27 @@ class Hex {
   removeUnit(unit) {
     this.units.splice(this.units.indexOf(unit), 1)
   }
+
+  generateState() {
+    let planetState = null;
+    if (this.planet != null)
+      planetState = this.planet.generateState();
+
+    let asteriodState = null;
+    if (this.asteroid != null)
+      asteriodState = this.asteroid.generateState();
+
+    let unitState = [];
+    for (let unitIndex in this.units)
+      unitState.push(this.units[unitIndex].generateState());
+
+    return {
+      'coords': this.coords,
+      'planet': planetState,
+      'asteriod': asteriodState,
+      'units': unitState
+    };
+  }
 }
 
 class Planet {
@@ -123,11 +137,16 @@ class Planet {
   } 
 
   generateState() {
-    if(this.colony){
-       return {coord:this.coord, colony: this.colony.generateState()};
-    }else{
-      return {coord:this.coord, colony: null};
-    }
+    let colonyState = null;
+    if (this.colony != null)
+      colonyState = this.colony.generateState();
+      
+    let status = 'habitable';
+    if (this.barren)
+      status = 'barren';
+
+    return {'coords': this.coords, 'colony': colonyState, 'status': status};
+    
   }
 }
 
@@ -138,6 +157,13 @@ class Asteroid {
       this.value = 10;
     else 
       this.value = 5;
+  }
+
+  generateState() {
+    return {
+      'coords': this.coords,
+      'value': this.value
+    }
   }
 }
 

@@ -57,7 +57,7 @@ class Player {
         //'ship_yards': [ship_yard.generate_state(current_player, combat) for ship_yard in sorted([ship for ship in this..ships if ship.type == 'Shipyard'], key=lambda ship: (ship.technology['tactics'], -ship.player.player_number, -ship.ID), reverse=True)],
         technology: this.technology,
         homeworld: this.homeBase.generateState(isCurrentPlayer, inCombat),
-        num: this.playerNumber
+        num: this.playerIndex
       }
     } else {
       return {
@@ -66,7 +66,7 @@ class Player {
         //'colonies': [colony.generate_state(current_player, combat) for colony in sorted([ship for ship in this..ships if ship.type == 'Colony'], key=lambda ship: (ship.technology['tactics'], -ship.player.player_number, -ship.ID), reverse=True)],
         //'ship_yards': [ship_yard.generate_state(current_player, combat) for ship_yard in sorted([ship for ship in this..ships if ship.type == 'Shipyard'], key=lambda ship: (ship.technology['tactics'], -ship.player.player_number, -ship.ID), reverse=True)],
         homeworld: this.homeBase.generateState(isCurrentPlayer, inCombat),
-        num: this.playerNumber
+        num: this.playerIndex
       }
     }
   }

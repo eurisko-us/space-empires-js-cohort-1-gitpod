@@ -1,6 +1,7 @@
-const Game = require("./src/game")
-const Strategy1 = require("./src/strategies/default-strategy")
-const Strategy2 = require("./src/strategies/default-strategy")
+const Game = require("./src/game");
+const Strats = require("./src/strategies/game-testing-strategies.js");
+const StratOne = Strats.StratOne;
+const StratTwo = Strats.StratTwo;
 
 
 class Display {
@@ -9,50 +10,65 @@ class Display {
       this.state = null;
   }
 
-  socketEmit(game){
+  socketEmit(gameState){
     for(let socketId in this.clientSockets) {
         let socket = this.clientSockets[socketId];
         socket.emit('gameState', {
-            gameState: game.generateState()
+          gameState
         });
     }
   }
 
   start() {
-    let _ = setInterval(() => {
+    this.runGame();
+
+    /*
+    setInterval(() => {
       if(Object.keys(this.clientSockets).length != 0){
         this.runGame();
       }
-    }, 200);
+    }, 2000);
+    */
   }
 
   runGame() {
-    let strategies = [new Strategy1(0), new Strategy2(1)]
+    let strategies = [new StratOne(0), new StratTwo(1)]
 
-    let game = new Game(strategies, 13, { "Economic": null, "Movement": 3, "Combat": null }, 100, true)
+    this.game = new Game(strategies, 13, { "Economic": null, "Movement": 3, "Combat": null }, 100, true)
     
-    for(let turn = 0; turn < game.maxTurns; turn++) {
-      for (let phase in game.phaseStats) {
-        let value = game.phaseStats[phase];
-        if (phase == "Movement") {
-          game.generateState(null, "Movement");
-          for (let round = 1; round < value + 1; round++) {
-            game.movementEngine.completeMovementRound(game, round);
-            this.socketEmit(game);
-          }
+    this.interval = setInterval(this.runPhase.bind(this), 2000);
+  }
+
+  runPhase() {
+    console.log('Turn = ' + this.game.turn + ', Phase = ' + this.game.phase);
+
+    if (this.game.turn > this.game.maxTurns) { return; }
+    let value = this.game.phaseStats[this.game.phase];
+
+    switch (this.game.phase) {
+      case "Movement":
+        for (let round = 1; round < value + 1; round++) {
+          this.game.movementEngine.completeMovementRound(this.game, round);
+          this.game.generateState(null, this.phase);
+          this.socketEmit(this.game.gameState);
         }
-        if (phase == "Combat" && game.turn <= value) {
-          game.generateState(null, "Combat");
-          game.combatEngine.completeCombatPhase(game);
-          this.socketEmit(game)
-        }
-        if (phase == "Economic" && game.turn <= value) {
-          game.generateState(null, "Economic");
-          game.economicEngine.completeEconomicPhase(game);
-          this.socketEmit(game)
-        }
-      }
-      game.turn += 1;
+        break;
+      case "Combat":
+        this.game.combatEngine.completeCombatPhase(this.game);
+        this.game.generateState(null, this.phase);
+        this.socketEmit(this.game.gameState);
+        break;
+      case "Economic":
+        this.game.economicEngine.completeEconomicPhase(this.game);        
+        this.game.generateState(null, this.phase);
+        this.socketEmit(this.game.gameState);
+        break;
+    }
+
+    let done = this.game.next();
+
+    if (done) { 
+      clearInterval(this.interval);
     }
   }
 

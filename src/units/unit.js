@@ -3,7 +3,9 @@ class Unit {
     this.playerIndex = playerIndex
     this.technology = technology;
     this.coords = initialCoord;
-    this.id = id;
+    this.id = 0;
+    if (id != null)
+      this.id = id
     this.turnCreated = turnCreated;
     this.canMove = true;
     this.canFight = true;

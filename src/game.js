@@ -15,6 +15,7 @@ class Game {
     this.playerStrats = playerStrats;
     this.boardSize = boardSize;
     this.turn = 1;
+    this.phase = 'Economic';
     this.maxTurns = maxTurns;
     this.canLog = canLog;
     // `phaseStats` is when we want only 
@@ -35,6 +36,25 @@ class Game {
     this.initializePlayers();
     this.initializeBoard();
     this.initializeEngines();
+  }
+
+  next() {
+    if (this.turn > this.maxTurns) { return true; }
+
+    switch (this.phase) {
+      case "Movement":
+        this.phase = "Combat";
+        break;
+      case "Combat":
+        this.phase = "Economic";
+        break;
+      case "Economic":
+        this.phase = "Movement";
+        this.turn += 1;
+        break;
+    }
+
+    return false;
   }
 
   initializePlayers() {
@@ -126,7 +146,6 @@ class Game {
       phase: phase_,
       board: this.board.generateState(),
       round: movementState["round"],
-      planets: [this.board.grid].map(function (hex) { if(hex.planet != null) { return hex.coord; } }),
       unitData: {
         Battleship: { "cost": 20, "hullSize": 3, "shipsizeNeeded": 5, "tactics": 5, "attack": 5, "defense": 2, "maintenance": 3 },
         Battlecruiser: { "cost": 15, "hullSize": 2, "shipsizeNeeded": 4, "tactics": 4, "attack": 5, "defense": 1, "maintenance": 2 },
