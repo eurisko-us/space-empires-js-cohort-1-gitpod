@@ -17,8 +17,9 @@ class DefaultStrategy {
     
   decideWhichUnitToAttack(combatState, attackingIndex) {
     for (let unit of combatState) {
-      if (this.playerIndex != unit["playerNumber"] && unit["type"] != "Home Base")
+      if (this.playerIndex != unit["playerNumber"] && unit["type"] != "Home Base") {
         return combatState.indexOf(unit);
+      }
     }
   }
 
