@@ -196,7 +196,7 @@ class Game {
       } 
       this.gameState.players = temp
     }
-    if (phase == "Combat")
+    if (phase_ == "Combat")
       this.gameState["combat"] = this.combatEngine.generateCombatArray(this);
     return this.gameState
   }
