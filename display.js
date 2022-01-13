@@ -83,16 +83,15 @@ class Display {
   }
 
   runMovementPhase() {
+    if (this.movementValue >= this.phaseValue) {
+      clearInterval(this.movementInterval);
+    }
     this.game.movementEngine.completeMovementRound(this.game, this.movementValue);
     this.game.generateState(null, this.phase, this.movementValue);
     this.game.gameState.phase = this.phase;
     this.socketEmit(this.game.gameState);
 
-    this.movementValue += 1;
-
-    if (this.movementValue >= this.phaseValue) {
-      clearInterval(this.movementInterval);
-    }
+    this.movementValue +=1;
 
   }
 
