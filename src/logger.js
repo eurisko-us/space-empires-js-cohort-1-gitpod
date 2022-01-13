@@ -20,9 +20,8 @@ class Logger {
       for (let unitIndex in player['units']) {
         let oldUnitAttributes = oldPlayer['units'][unitIndex];
         let newUnitAttributes = player['units'][unitIndex];
-        if (!['Unityard', 'Base', 'Home Base', 'Colony'].includes(newUnitAttributes['type']) && (oldUnitAttributes['coords'] != newUnitAttributes['coords'])) {
-          this.logSpecificText(`\t\tPlayer ${playerNumber} ${newUnitAttributes['type']} ${newUnitAttributes['num']}: ${oldUnitAttributes['coords']} -> ${newUnitAttributes['coords']}\n`);
-          
+        if (!['Shipyard', 'Base', 'Homeworld', 'Colony'].includes(newUnitAttributes['type']) && (oldUnitAttributes['coords'] != newUnitAttributes['coords'])) {
+          this.logSpecificText(`\t\tPlayer ${playerNumber} ${newUnitAttributes['type']} ${newUnitAttributes['num']}: ${oldUnitAttributes['coords']} -> ${newUnitAttributes['coords']}\n`); 
         }
       }
     }

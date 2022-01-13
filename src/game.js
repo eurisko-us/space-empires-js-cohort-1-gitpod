@@ -98,14 +98,29 @@ class Game {
 
   completePhase() { // Iterate through the phases
     if (/*checkIfPlayerHasWon() && */this.turn > this.maxTurns) { return false; } // check if keep playing
-    this.phaseValue = this.game.phaseStats[this.game.phase];
+    this.phaseValue = this.phaseStats[this.phase];
 
     switch (this.phase) {
       case "Movement":
+
+        if (this.canLog)
+          this.logger.logSpecificText(`\nBEGINNING OF TURN ${this.turn} MOVEMENT PHASE\n`);
+        if (this.canLog)
+          var oldGameState = JSON.parse(JSON.stringify(this.gameState));
+
         for (let round = 1; round < this.phaseValue + 1; round++) {
           this.movementEngine.completeMovementRound(this, round);
           this.generateState(null, this.phase);
         }
+
+        if (this.canLog)
+          this.logger.simpleLogMovement(oldGameState, this.gameState, round, false, false);
+          this.generateState(true, "Movement");
+        if (this.canLog) {
+          this.logger.endSimpleLogMovement(this.gameState);
+          this.logger.logSpecificText(`\nEND OF TURN ${this.turn} MOVEMENT PHASE\n`);
+        }
+
         this.next();
         break;
       case "Combat":
@@ -181,7 +196,7 @@ class Game {
       }
     }
 
-    if(currentPlayer) {
+    if(currentPlayer || currentPlayer == null) {
       let temp = {}
       for (let playerNumber in this.players) {
         let player = this.players[playerNumber];
@@ -196,7 +211,7 @@ class Game {
       } 
       this.gameState.players = temp
     }
-    if (phase == "Combat")
+    if (phase_ == "Combat")
       this.gameState["combat"] = this.combatEngine.generateCombatArray(this);
     return this.gameState
   }

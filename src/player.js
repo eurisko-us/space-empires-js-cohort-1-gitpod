@@ -2,7 +2,7 @@ const Colony = require("../src/units/colony.js")
 const Game = require("../src/game")
 const Scout = require("../src/units/scout")
 const Destroyer = require("../src/units/destroyer")
-const ColonyUnit = require("../src/units/colony-ship")
+const ColonyShip = require("../src/units/colony-ship")
 const DefaultStrategy = require("../src/strategies/default-strategy")
 
 class Player {
@@ -11,7 +11,7 @@ class Player {
     this.creds = 20;
     this.boardSize = boardSize;
     this.technology = { "attack": 0, "defense": 0, "movement": 1, "shipsize": 1, "shipyard": 1, "terraform": 0, "tactics": 0, "exploration": 0 };
-    this.homeBase = new Colony(playerIndex, coords, null, this.technology, null, true);
+    this.homeBase = new Colony(playerIndex, JSON.parse(JSON.stringify(coords)), null, this.technology, null, true);
     this.playerIndex = playerIndex;
     this.playerColor = playerColor;
     this.units = [];
@@ -24,17 +24,18 @@ class Player {
     let possibleBuildPositions = this.getPossibleBuildCoords()
     let unitBuildCoords = unit[1][0] + ',' + unit[1][1]
 
-    if (!possibleBuildPositions.includes(unitBuildCoords))
+    if (!possibleBuildPositions.includes(unitBuildCoords)) {
       throw `Player ${this.playerIndex} tried to cheat by building a ${unit[0]} in an invalid hex at ${unit[1]}`; 
+    }
     
-    let newShip = new unitTypes[unit[0]](this.playerIndex, unit[1], this.id_number, this.technology, game.turn);
+    let newShip = new unitTypes[unit[0]](this.playerIndex, JSON.parse(JSON.stringify(unit[1])), this.idNumber, this.technology, game.turn);
     this.idNumber += 1;
     this.units.push(newShip);
     game.board.grid[unit[1][0] + ',' + unit[1][1]].appendUnit(newShip);
   }
 
   getPossibleBuildCoords() {
-    return [this.homeBase.coords[0] + ',' + this.homeBase.coords[1]];
+    return [this.homeBase.coords[0] + ',' + this.homeBase.coords[1]]; // and colonies
   }
 
   upgrade(game, tech) { // Tech is formmated as a string
@@ -48,7 +49,7 @@ class Player {
 
   generateState(isCurrentPlayer, inCombat) {
     let state = {
-      "name": this.strategy.name,
+      "name": this.strategy.type,
       "homeworld": this.homeBase.generateState(isCurrentPlayer, inCombat),
       "num": this.playerIndex
     };

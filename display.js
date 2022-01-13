@@ -36,7 +36,7 @@ class Display {
 
     this.game = new Game(strategies, 13, { "Economic": null, "Movement": 3, "Combat": null }, 100, true)
     
-    this.interval = setInterval(this.runPhase.bind(this), 2000); // 2 Second Delay for each Phase
+    this.interval = setInterval(this.runPhase.bind(this), 3000); // 3 Second Delay for each Phase
   }
 
   runPhase() {
@@ -47,19 +47,30 @@ class Display {
 
     switch (this.game.phase) {
       case "Movement":
+        if (this.game.canLog) {
+          this.game.logger.logSpecificText(`\nBEGINNING OF TURN ${this.game.turn} MOVEMENT PHASE\n`);
+          this.game.generateState(null, "Movement", 0);
+          this.game.oldGameState = JSON.parse(JSON.stringify(this.game.gameState));
+        }
         this.movementValue = 0;
         this.movementInterval = setInterval(this.runMovementPhase.bind(this), 1000); // 1 Second Delay for each Movment Round
+        this.game.generateState(null, "Movement", this.movementValue);
+        if (this.game.canLog) {
+          this.game.logger.simpleLogMovement(this.game.oldGameState, this.game.gameState, this.movementValue, false, false);
+          this.game.logger.endSimpleLogMovement(this.game.gameState);
+          this.game.logger.logSpecificText(`\nEND OF TURN ${this.game.turn} MOVEMENT PHASE\n`);
+        }
         break;
       case "Combat":
         this.game.combatEngine.completeCombatPhase(this.game);
         this.game.generateState(null, this.phase);
-        this.game.gameState.phase = this.phase
+        this.game.gameState.phase = this.phase;
         this.socketEmit(this.game.gameState);
         break;
       case "Economic":
         this.game.economicEngine.completeEconomicPhase(this.game);        
         this.game.generateState(null, this.phase);
-        this.game.gameState.phase = this.phase
+        this.game.gameState.phase = this.phase;
         this.socketEmit(this.game.gameState);
         break;
     }
@@ -73,14 +84,14 @@ class Display {
 
   runMovementPhase() {
     this.game.movementEngine.completeMovementRound(this.game, this.movementValue);
-    this.game.generateState(null, this.phase);
-    this.game.gameState.phase = this.phase
+    this.game.generateState(null, this.phase, this.movementValue);
+    this.game.gameState.phase = this.phase;
     this.socketEmit(this.game.gameState);
 
     this.movementValue += 1;
 
     if (this.movementValue >= this.phaseValue) {
-      clearInterval(this.movementInterval)
+      clearInterval(this.movementInterval);
     }
 
   }

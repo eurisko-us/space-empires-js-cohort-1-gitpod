@@ -1,17 +1,16 @@
 const Unit = require("../../src/units/unit.js");
 class Colony extends Unit {
-  constructor(playerIndex, initialCoord, id, technology, turnCreated = null, homeBase = false) {
-    super(playerIndex, initialCoord, id, technology, turnCreated);
-    this.homeBase = homeBase;
+  constructor(playerIndex, initialCoord, id, technology, turnCreated, homeBase) {
+    super(playerIndex, initialCoord, id, technology, turnCreated, homeBase);
     if (this.homeBase) {
-      this.name = "Homeworld"
+      this.type = 'Homeworld';
       this.income = 20;
     } else {
-      this.name = "Colony"
+      this.type = 'Colony';
       this.income = 5;
     }
-    this.canMove = false
-    const coords = initialCoord
+    this.canMove = false;
+    this.coords = initialCoord;
   }
 }
 

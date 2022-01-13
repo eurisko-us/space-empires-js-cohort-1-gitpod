@@ -5,6 +5,7 @@ const orderWithGameState = Board.orderWithGameState;
 class DefaultStrategy {
   constructor(playerIndex) {
     this.playerIndex = playerIndex;
+    this.name = 'Default Strategy';
   }
 
   decidePurchases(hiddenGameState) {

@@ -86,7 +86,7 @@
   income(player) {
     let income = player.homeBase.income;
     for (let unit of player.units) {
-      if (unit.name == "Colony") {
+      if (unit.type == "Colony") {
         income += unit.income;
       }
     }
