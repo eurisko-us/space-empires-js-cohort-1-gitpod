@@ -36,9 +36,9 @@ class Logger {
       for (let unitIndex in player['units']) {
         let unitAttributes = player['units'][unitIndex];
         this.logSpecificText(`\t\t\t${unitAttributes['type']} ${unitAttributes['num']}: ${unitAttributes['coords']}\n`);
-        
       }
     }
+    this.logSpecificText(`\nEND OF TURN ${gameState['turn']} MOVEMENT PHASE\n`);
   }
 
   simpleLogCombatInitialization(gameState) {

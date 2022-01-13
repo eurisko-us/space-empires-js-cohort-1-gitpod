@@ -1,7 +1,6 @@
   class EconomicEngine {
   completeEconomicPhase(game) {
-    if (game.canLog)
-      game.logger.logSpecificText(`\nBEGINNING OF TURN ${game.turn} ECONOMIC PHASE\n`)
+    game.logger.logSpecificText(`\nBEGINNING OF TURN ${game.turn} ECONOMIC PHASE\n`)
     for (let player of game.players) {
       let playerStartingCreds = player.creds;
       game.logger.logSpecificText(`\nStarting Phase for Player ${player.playerIndex}`);
@@ -40,11 +39,9 @@
         
       }
       game.generateState(true, false);
-      if (game.canLog)
-        game.logger.simpleLogEconomic(taxes, income, playerStartingCreds, player.creds, correctedPurchases)
+      game.logger.simpleLogEconomic(taxes, income, playerStartingCreds, player.creds, correctedPurchases)
     }
-    if (game.canLog)
-      game.logger.logSpecificText(`\nEND OF TURN ${game.turn} ECONOMIC PHASE\n`)
+    game.logger.logSpecificText(`\nEND OF TURN ${game.turn} ECONOMIC PHASE\n`)
 
   }
 

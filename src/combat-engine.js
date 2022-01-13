@@ -1,11 +1,9 @@
 class CombatEngine {
   completeCombatPhase(game) {
     let possibleCombats = this.findPossibleCombats(game);
-    if (game.canLog) {
-      game.logger.logSpecificText(`\nBEGINNING OF TURN ${game.turn} COMBAT PHASE\n`)
-      if (possibleCombats.length > 0)
-        game.logger.simpleLogCombatInitialization(game.gameState);
-    }
+    game.logger.logSpecificText(`\nBEGINNING OF TURN ${game.turn} COMBAT PHASE\n`)
+    if (possibleCombats.length > 0)
+      game.logger.simpleLogCombatInitialization(game.gameState);
     for (let combatHex of possibleCombats) {
       //Gets all units that can fight
       let unitsInCombat = [];
@@ -15,11 +13,8 @@ class CombatEngine {
       }
 
 
-      if (game.canLog) {
-        let combatString = `\n\tCombat at (${combatHex.coords})\n`;
-        game.logger.logSpecificText(combatString);
-      }
-
+      let combatString = `\n\tCombat at (${combatHex.coords})\n`;
+      game.logger.logSpecificText(combatString);
       //Takes the units in a certain space and sorts them
       let combatOrder = combatHex.sortForCombat();
 
@@ -64,16 +59,14 @@ class CombatEngine {
         game.generateState(false, "Combat");
       }
     }
-    if (game.canLog)
-      game.logger.logSpecificText(`\nEND OF TURN ${game.turn} COMBAT PHASE\n`);
+    game.logger.logSpecificText(`\nEND OF TURN ${game.turn} COMBAT PHASE\n`);
     
   }
 
   handleDuelResult(game, combatOrder, attackingUnit, defendingUnit, duelResult, diceRoll, hitThreshold) {
     if (duelResult) { // If the attacker hits the defender
       if (defendingUnit.armor - defendingUnit.damage - attackingUnit.attack < 0) {  // If the attacker kills the defender
-        if (game.canLog)
-          game.logger.simpleLogCombat(attackingUnit.playerIndex, attackingUnit.generateState(false, true), defendingUnit.playerIndex, defendingUnit.generateState(false, true), duelResult, hitThreshold, diceRoll);
+        game.logger.simpleLogCombat(attackingUnit.playerIndex, attackingUnit.generateState(false, true), defendingUnit.playerIndex, defendingUnit.generateState(false, true), duelResult, hitThreshold, diceRoll);
         //I think the problem is somewhere in these 3 lines:
         game.board.removeUnit(defendingUnit, game);
         defendingUnit.destroy(game);

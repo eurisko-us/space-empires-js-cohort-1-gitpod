@@ -1,5 +1,5 @@
-const Game = require("./src/game");
-const Strats = require("./src/strategies/game-testing-strategies.js");
+const Game = require('./src/game');
+const Strats = require('./src/strategies/game-testing-strategies.js');
 const StratOne = Strats.StratOne;
 const StratTwo = Strats.StratTwo;
 
@@ -32,45 +32,45 @@ class Display {
   }
 
   runGame() {
-    let strategies = [new StratOne(0), new StratTwo(1)]
+    let strategies = [new StratOne(0), new StratTwo(1)];
 
-    this.game = new Game(strategies, 13, { "Economic": null, "Movement": 3, "Combat": null }, 100, true)
+    this.game = new Game(strategies, 13, { 'Economic': null, 'Movement': 3, 'Combat': null }, 100, true);
+
+    this.economicPhaseValue = this.game.phaseStats['Economic'];
+    this.movementPhaseValue = this.game.phaseStats['Movement'];
+    this.combatPhaseValue = this.game.phaseStats['Combat'];
     
-    this.interval = setInterval(this.runPhase.bind(this), 3000); // 3 Second Delay for each Phase
+    this.interval = setInterval(this.runPhase.bind(this), 4000); // 3 Second Delay for each Phase
   }
 
   runPhase() {
     console.log('Turn = ' + this.game.turn + ', Phase = ' + this.game.phase);
 
     if (this.game.turn > this.game.maxTurns) { return; }
-    this.phaseValue = this.game.phaseStats[this.game.phase];
 
     switch (this.game.phase) {
-      case "Movement":
-        if (this.game.canLog) {
-          this.game.logger.logSpecificText(`\nBEGINNING OF TURN ${this.game.turn} MOVEMENT PHASE\n`);
-          this.game.generateState(null, "Movement", 0);
-          this.game.oldGameState = JSON.parse(JSON.stringify(this.game.gameState));
-        }
+      
+      case 'Movement':
+        this.game.logger.logSpecificText(`\nBEGINNING OF TURN ${this.game.turn} MOVEMENT PHASE\n`);
         this.movementValue = 0;
         this.movementInterval = setInterval(this.runMovementPhase.bind(this), 1000); // 1 Second Delay for each Movment Round
-        this.game.generateState(null, "Movement", this.movementValue);
-        if (this.game.canLog) {
-          this.game.logger.simpleLogMovement(this.game.oldGameState, this.game.gameState, this.movementValue, false, false);
-          this.game.logger.endSimpleLogMovement(this.game.gameState);
-          this.game.logger.logSpecificText(`\nEND OF TURN ${this.game.turn} MOVEMENT PHASE\n`);
-        }
+        this.game.generateState(null, 'Movement', this.movementValue + 1);
+        this.game.logger.endSimpleLogMovement(this.game.gameState);
         break;
-      case "Combat":
+      
+      case 'Combat':
+        if (this.game.turn >= this.combatPhaseValue) { break; }
         this.game.combatEngine.completeCombatPhase(this.game);
-        this.game.generateState(null, this.phase);
-        this.game.gameState.phase = this.phase;
+        this.game.generateState(null, 'Combat');
+        this.game.gameState.phase = 'Combat';
         this.socketEmit(this.game.gameState);
         break;
-      case "Economic":
+      
+      case 'Economic':
+        if (this.game.turn >= this.economicPhaseValue) { break; }
         this.game.economicEngine.completeEconomicPhase(this.game);        
-        this.game.generateState(null, this.phase);
-        this.game.gameState.phase = this.phase;
+        this.game.generateState(null, 'Economic');
+        this.game.gameState.phase = 'Economic';
         this.socketEmit(this.game.gameState);
         break;
     }
@@ -83,15 +83,22 @@ class Display {
   }
 
   runMovementPhase() {
-    if (this.movementValue >= this.phaseValue) {
+    if (this.movementValue >= this.movementPhaseValue) {
       clearInterval(this.movementInterval);
+      return;
     }
+
+    console.log('Turn = ' + this.game.turn + ', Phase = Movement, Round = ' + this.movementValue);
+
+    this.game.oldGameState = JSON.parse(JSON.stringify(this.game.gameState));
     this.game.movementEngine.completeMovementRound(this.game, this.movementValue);
-    this.game.generateState(null, this.phase, this.movementValue);
-    this.game.gameState.phase = this.phase;
+    this.game.generateState(null, 'Movement', this.movementValue + 1);
+    this.game.logger.simpleLogMovement(this.game.oldGameState, this.game.gameState, this.movementValue);
+    this.game.gameState.phase = 'Movement';
+
     this.socketEmit(this.game.gameState);
 
-    this.movementValue +=1;
+    this.movementValue += 1;
 
   }
 

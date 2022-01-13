@@ -11,13 +11,12 @@ const Scout = require("./units/scout.js");
 const Logger = require("./logger.js");
 
 class Game {
-  constructor(playerStrats, boardSize = 13, phaseStats = { "Economic": null, "Movement": 3, "Combat": null }, maxTurns = 100, canLog = false) {
+  constructor(playerStrats, boardSize = 13, phaseStats = { "Economic": null, "Movement": 3, "Combat": null }, maxTurns = 100) {
     this.playerStrats = playerStrats;
     this.boardSize = boardSize;
     this.turn = 1;
     this.phase = 'Economic';
     this.maxTurns = maxTurns;
-    this.canLog = canLog;
     // `phaseStats` is when we want only 
     // For example 1 economic phase for the whole game,
     // We would pass in `"economic": 1` in phase stats
@@ -26,10 +25,11 @@ class Game {
     this.phaseStats = {};
     for (let phase of Object.keys(phaseStats)) {
       let value = phaseStats[phase]
-      if (value == null)
+      if (value == null) {
         this.phaseStats[phase] = maxTurns;
-      else
+      } else {
         this.phaseStats[phase] = value;
+      }
     }
     // Doing exactly what they say
     this.initializeLogger();
@@ -102,39 +102,27 @@ class Game {
 
     switch (this.phase) {
       case "Movement":
-
-        if (this.canLog)
-          this.logger.logSpecificText(`\nBEGINNING OF TURN ${this.turn} MOVEMENT PHASE\n`);
-        if (this.canLog)
-          var oldGameState = JSON.parse(JSON.stringify(this.gameState));
-
-        for (let round = 1; round < this.phaseValue + 1; round++) {
+        this.logger.logSpecificText(`\nBEGINNING OF TURN ${this.turn} MOVEMENT PHASE\n`);
+        for (let round = 1; round <= this.phaseValue; round++) {
+          this.oldGameState = JSON.parse(JSON.stringify(this.gameState));
           this.movementEngine.completeMovementRound(this, round);
-          this.generateState(null, this.phase);
+          this.generateState(null, 'Movement', round);
+          this.logger.simpleLogMovement(this.oldGameState, this.gameState, round);
         }
-
-        if (this.canLog)
-          this.logger.simpleLogMovement(oldGameState, this.gameState, round, false, false);
-          this.generateState(true, "Movement");
-        if (this.canLog) {
-          this.logger.endSimpleLogMovement(this.gameState);
-          this.logger.logSpecificText(`\nEND OF TURN ${this.turn} MOVEMENT PHASE\n`);
-        }
-
+        this.logger.endSimpleLogMovement(this.gameState);
         this.next();
         break;
       case "Combat":
         this.combatEngine.completeCombatPhase(this);
-        this.generateState(null, this.phase);
+        this.generateState(null, 'Combat');
         this.next();
         break;
       case "Economic":
         this.economicEngine.completeEconomicPhase(this);        
-        this.generateState(null, this.phase);
+        this.generateState(null, 'Economic');
         this.next();
         break;
     }
-
     return true;
   }
 
