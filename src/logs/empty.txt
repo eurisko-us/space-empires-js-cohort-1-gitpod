@@ -1,1 +1,0 @@
-This was needed to create the logs folder on github

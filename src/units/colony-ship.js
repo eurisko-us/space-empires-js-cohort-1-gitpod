@@ -1,10 +1,10 @@
 const Unit = require("../../src/units/unit.js");
-class ColonyUnit extends Unit{
+class ColonyShip extends Unit{
   constructor(playerIndex, initialCoord, id, technology, turnCreated, homeBase) {
     super(playerIndex, initialCoord, id, technology, turnCreated, homeBase);
     this.cost = 8;
-    this.type = "Colonyunit";
+    this.type = "ColonyShip";
   }
 }
 
-module.exports = ColonyUnit;
+module.exports = ColonyShip;
