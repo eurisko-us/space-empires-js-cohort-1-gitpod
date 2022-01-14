@@ -57,6 +57,7 @@ class Player {
     for (let unitIndex in this.units)
       units.push(this.units[unitIndex].generateState(isCurrentPlayer, inCombat));
     state["units"] = units;
+    state["playerColor"] = this.playerColor;
     if (isCurrentPlayer || inCombat) {
       state["cp"] = this.creds;
       state["technology"] = this.technology;

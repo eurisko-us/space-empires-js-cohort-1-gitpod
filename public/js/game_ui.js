@@ -52,7 +52,8 @@ function updateBoard(gameState) {
                     hex.style.backgroundColor = "green";
                     hex.innerHTML = "Num Ships: " + hex_attributes["units"].length;
                 } else if (hex_attributes["units"].length > 0) { // no planet and has ships
-                    hex.style.backgroundColor = "blue";
+                    playerIndex = hex_attributes["units"][0]["playerIndex"];
+                    hex.style.backgroundColor = gameState["players"][playerIndex]["playerColor"];
                     hex.innerHTML = "Num Ships: " + hex_attributes["units"].length;
                     // this will be made with more detail later so 
                     // individual ships will be shown and colored independently
