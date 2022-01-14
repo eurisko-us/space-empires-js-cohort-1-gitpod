@@ -1,21 +1,11 @@
 class MovementEngine {
   completeMovementRound(game, round) {
-    if (game.canLog)
-      game.logger.logSpecificText(`\nBEGINNING OF TURN ${game.turn} MOVEMENT PHASE\n`);
-    if (game.canLog)
-      var oldGameState = JSON.parse(JSON.stringify(game.gameState));
     for (let player of game.players) {
       for (let unit of player.units) {
-        if (unit.canMove)
-          this.move(game, unit, round, player)
+        if (!['Shipyard', 'Base', 'Homeworld', 'Colony'].includes(unit.type) && !unit.homeBase && unit.canMove) {
+          this.move(game, unit, round, player);
+        }
       }
-    }
-    if (game.canLog)
-      game.logger.simpleLogMovement(oldGameState, game.gameState, round, false, false)
-    game.generateState(true, "Movement");
-    if (game.canLog) {
-      game.logger.endSimpleLogMovement(game.gameState)
-      game.logger.logSpecificText(`\nEND OF TURN ${game.turn} MOVEMENT PHASE\n`)
     }
   }
 
@@ -39,7 +29,7 @@ class MovementEngine {
           unit.coords[0] += translation["x"];
           unit.coords[1] += translation["y"];
           unit.lastMoved = {'turn': game.turn, 'round': round, 'playerIndex': player.playerIndex};
-          game.board.moveUnit(unit, translation);
+          game.board.moveShip(unit, translation);
         }
       } else {
         // Else the wanted move is invalid, it throws an exception defined as such:

@@ -1,11 +1,9 @@
 class CombatEngine {
   completeCombatPhase(game) {
     let possibleCombats = this.findPossibleCombats(game);
-    if (game.canLog) {
-      game.logger.logSpecificText(`\nBEGINNING OF TURN ${game.turn} COMBAT PHASE\n`)
-      if (possibleCombats.length > 0)
-        game.logger.simpleLogCombatInitialization(game.gameState);
-    }
+    game.logger.logSpecificText(`\nBEGINNING OF TURN ${game.turn} COMBAT PHASE\n`)
+    if (possibleCombats.length > 0)
+      game.logger.simpleLogCombatInitialization(game.gameState);
     for (let combatHex of possibleCombats) {
       //Gets all units that can fight
       let unitsInCombat = [];
@@ -14,12 +12,8 @@ class CombatEngine {
           unitsInCombat.push(unit);
       }
 
-
-      if (game.canLog) {
-        let combatString = `\n\tCombat at (${combatHex.coords})\n`;
-        game.logger.logSpecificText(combatString);
-      }
-
+      let combatString = `\n\tCombat at (${combatHex.coords})\n`;
+      game.logger.logSpecificText(combatString);
       //Takes the units in a certain space and sorts them
       let combatOrder = combatHex.sortForCombat();
 
@@ -31,7 +25,8 @@ class CombatEngine {
         let attackingUnit = combatOrder[attackingUnitIndex];
         // Set up an info-only combat order for strategies
         let combatOrderGameState = [];
-        for(unit of combatOrder){
+        
+        for(let unit of combatOrder) {
           let unitState = unit.generateState(game.players[unit.playerIndex], true);
           combatOrderGameState.push(unitState);
         }
@@ -54,7 +49,7 @@ class CombatEngine {
         const diceRoll = duel.diceRoll;
         const hitThreshold = duel.hitThreshold; 
 
-        this.handleDuelResult(game, attackingUnit, defendingUnit, duelResult, diceRoll, hitThreshold)
+        this.handleDuelResult(game, combatOrder, attackingUnit, defendingUnit, duelResult, diceRoll, hitThreshold)
 
         //move to the next attacking unit in the order or loop back to the begining
         if (attackingUnitIndex == combatOrder.length-1)
@@ -64,21 +59,18 @@ class CombatEngine {
         game.generateState(false, "Combat");
       }
     }
-    if (game.canLog)
-      game.logger.logSpecificText(`\nEND OF TURN ${game.turn} COMBAT PHASE\n`);
+    game.logger.logSpecificText(`\nEND OF TURN ${game.turn} COMBAT PHASE\n`);
     
   }
 
-  handleDuelResult(game, attackingUnit, defendingUnit, duelResult, diceRoll, hitThreshold) {
+  handleDuelResult(game, combatOrder, attackingUnit, defendingUnit, duelResult, diceRoll, hitThreshold) {
     if (duelResult) { // If the attacker hits the defender
       if (defendingUnit.armor - defendingUnit.damage - attackingUnit.attack < 0) {  // If the attacker kills the defender
-        if (game.canLog)
-          game.logger.simpleLogCombat(attackingUnit.playerIndex, attackingUnit.generateState(false, true), defendingUnit.playerIndex, defendingUnit.generateState(false, true), duelResult, hitThreshold, diceRoll);
+        game.logger.simpleLogCombat(attackingUnit.playerIndex, attackingUnit.generateState(false, true), defendingUnit.playerIndex, defendingUnit.generateState(false, true), duelResult, hitThreshold, diceRoll);
         //I think the problem is somewhere in these 3 lines:
         game.board.removeUnit(defendingUnit, game);
         defendingUnit.destroy(game);
-        combatOrder.splice(defendingUnitIndex, 1)
-        attackingUnitIndex = combatOrder.indexOf(attackingUnit);
+        combatOrder.splice(combatOrder.indexOf(defendingUnit), 1)
       }
       else // If the attacker doesn't kill, but hits the defender
         defendingUnit.damage += attackingUnit.damage; 
@@ -99,9 +91,9 @@ class CombatEngine {
   generateCombatArray(game) {
     let possibleCombats = this.findPossibleCombats(game);
     let combatArray = {};
-    for (let coords in possibleCombats) {
-      let units = possibleCombats[coords].units;
-      combatArray[possibleCombats[coords].coords] = units.map(function (unit) { return unit.generateState(false, true); });
+    for (let index in possibleCombats) {
+      let units = possibleCombats[index].units;
+      combatArray[possibleCombats[index].coords] = units.map(function (unit) { return unit.generateState(false, true); });
     }
     return combatArray
   }
@@ -109,7 +101,7 @@ class CombatEngine {
   duel(attackingUnit, defendingUnit) {
     let roll = Math.round(Math.random() * 10);
     let hitThresh = attackingUnit.attack + attackingUnit.technology["attack"] - defendingUnit.defense + defendingUnit.technology["defense"];
-    return {result: (roll == 1 || roll <= hitThresh),diceRoll: Roll, hitThreshold: hitThresh};
+    return {result: (roll == 1 || roll <= hitThresh), diceRoll: roll, hitThreshold: hitThresh};
   }
 
   moreThanTwoPlayersInSpace(ships) {

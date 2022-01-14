@@ -3,7 +3,8 @@ const DefaultStrategy = require("../strategies/default-strategy.js")
 class SingleBuyStrategy extends DefaultStrategy {
 
     constructor(playerIndex) {
-        super(playerIndex)
+      super(playerIndex);
+      this.name = 'Single Buy Strategy';
     }
     
     decidePurchases(hiddenGameState) {

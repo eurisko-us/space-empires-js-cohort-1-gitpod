@@ -3,6 +3,7 @@ const DefaultStrategy = require("../strategies/default-strategy.js")
 class StratOne extends DefaultStrategy {
   constructor(playerIndex) {
     super(playerIndex);
+    this.name = 'Strategy One';
   }
 
   decideUnitMovement(unitIndex, gameState) {
@@ -19,6 +20,7 @@ class StratOne extends DefaultStrategy {
 class StratTwo extends DefaultStrategy {
   constructor(playerIndex) {
     super(playerIndex);
+    this.name = 'Strategy Two';
   }
 
   decideUnitMovement(unitIndex, gameState) {

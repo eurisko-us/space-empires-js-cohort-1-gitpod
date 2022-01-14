@@ -4,6 +4,7 @@ const DefaultStrategy = require("../strategies/default-strategy.js")
 class MoveRightStrat extends DefaultStrategy {
   constructor(playerIndex) {
     super(playerIndex);
+    this.name = 'Move Right Strategy';
   }
 
   decideUnitMovement(unitIndex, gameState) {
@@ -14,6 +15,7 @@ class MoveRightStrat extends DefaultStrategy {
 class MoveDownStrat extends DefaultStrategy {
   constructor(playerIndex) {
     super(playerIndex);
+    this.name = 'Move Down Strategy';
   }
 
   decideUnitMovement(unitIndex, gameState) {
@@ -24,6 +26,7 @@ class MoveDownStrat extends DefaultStrategy {
 class MoveLeftStrat extends DefaultStrategy {
   constructor(playerIndex) {
     super(playerIndex);
+    this.name = 'Move Left Strategy';
   }
 
   decideUnitMovement(unitIndex, gameState) {
@@ -34,6 +37,7 @@ class MoveLeftStrat extends DefaultStrategy {
 class MoveUpStrat extends DefaultStrategy {
   constructor(playerIndex) {
     super(playerIndex);
+    this.name = 'Move Up Strategy';
   }
 
   decideUnitMovement(unitIndex, gameState) {
