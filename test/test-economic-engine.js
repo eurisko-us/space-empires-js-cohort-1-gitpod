@@ -33,5 +33,5 @@ console.log('complete')
 
 
 //2 players. Player 1 tactics 0, Player 2 tactics 1
-//(0,0) P1 1 scout, 1 destroyer, 1 colony unit; P2 2 scouts, 1 ColonyUnit
+//(0,0) P1 1 scout, 1 destroyer, 1 colony unit; P2 2 scouts, 1 ColonyShip
 //(2,1) P1 3 scouts; P2 1 scout, 1 colony unit

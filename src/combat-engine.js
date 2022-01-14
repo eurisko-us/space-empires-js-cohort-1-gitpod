@@ -69,7 +69,6 @@ class CombatEngine {
         game.logger.simpleLogCombat(attackingUnit.playerIndex, attackingUnit.generateState(false, true), defendingUnit.playerIndex, defendingUnit.generateState(false, true), duelResult, hitThreshold, diceRoll);
         //I think the problem is somewhere in these 3 lines:
         game.board.removeUnit(defendingUnit, game);
-        defendingUnit.destroy(game);
         combatOrder.splice(combatOrder.indexOf(defendingUnit), 1)
       }
       else // If the attacker doesn't kill, but hits the defender

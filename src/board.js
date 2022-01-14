@@ -98,7 +98,7 @@ class Hex {
 
   sortForCombat() {
     this.units = this.units.sort(order);
-    return this.units
+    return this.units.map(x => x)
   }
 
   appendUnit(unit) {
