@@ -12,7 +12,6 @@ class CombatEngine {
           unitsInCombat.push(unit);
       }
 
-
       let combatString = `\n\tCombat at (${combatHex.coords})\n`;
       game.logger.logSpecificText(combatString);
       //Takes the units in a certain space and sorts them
@@ -26,7 +25,8 @@ class CombatEngine {
         let attackingUnit = combatOrder[attackingUnitIndex];
         // Set up an info-only combat order for strategies
         let combatOrderGameState = [];
-        for(let unit of combatOrder){
+        
+        for(let unit of combatOrder) {
           let unitState = unit.generateState(game.players[unit.playerIndex], true);
           combatOrderGameState.push(unitState);
         }

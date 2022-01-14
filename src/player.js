@@ -20,7 +20,7 @@ class Player {
   }
 
   build(game, unit) { // Unit is formatted as ["string of ship type", (tuple of coords)]
-    let unitTypes = {"Scout": Scout, "Destroyer": Destroyer,/*, more fighting ships later */ "Colony Ship": ColonyShip}
+    let unitTypes = {"Scout": Scout, "Destroyer": Destroyer,/*, more fighting ships later */ "Colony Ship": ColonyUnit}
     let possibleBuildPositions = this.getPossibleBuildCoords()
     let unitBuildCoords = unit[1][0] + ',' + unit[1][1]
 
