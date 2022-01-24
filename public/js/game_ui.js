@@ -52,7 +52,24 @@ function updateBoard(gameState) {
                     hex.innerHTML = "Num Ships: " + hex_attributes["units"].length;
                 } else if (hex_attributes["units"].length > 0) { // no planet and has ships
                     playerIndex = hex_attributes["units"][0]["playerIndex"];
-                    hex.style.backgroundColor = gameState["players"][playerIndex]["playerColor"];
+                    let players = [];
+                    let playerColors = []
+                    for (let unit of hex_attributes["units"]){
+                        if (!players.includes(unit["playerIndex"])){
+                            let index = unit["playerIndex"]
+                            players.push(index);
+                            playerColors.push(gameState["players"][index]["playerColor"])
+                        };
+                    };
+                    let size = 100/playerColors.length;
+                    let coloring = `linear-gradient(to right`;
+                    for(let i in playerColors){
+                        coloring = coloring.concat(`, ${playerColors[i]} ${size*i}%, ${playerColors[i]} ${size*(i+1)}%`);
+                    }
+                    coloring = coloring.concat(`)`);
+                    hex.style.background = coloring;
+
+
                     hex.innerHTML = "Num Ships: " + hex_attributes["units"].length;
                     // this will be made with more detail later so 
                     // individual ships will be shown and colored independently
