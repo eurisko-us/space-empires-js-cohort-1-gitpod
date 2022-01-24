@@ -15,7 +15,7 @@ class Game {
     this.playerStrats = playerStrats;
     this.boardSize = boardSize;
     this.turn = 1;
-    this.phase = 'Economic';
+    this.phase = 'Movement';
     this.maxTurns = maxTurns;
     // `phaseStats` is when we want only 
     // For example 1 economic phase for the whole game,
