@@ -20,7 +20,7 @@ class Game {
     this.playerStrats = playerStrats;
     this.boardSize = boardSize;
     this.turn = 1;
-    this.phase = "Economic";
+    this.phase = "Movement";
     this.movementStep = 0;
     this.maxTurns = maxTurns;
     // `phaseStats` is when we want only
@@ -42,6 +42,7 @@ class Game {
     this.initializePlayers();
     this.initializeBoard();
     this.initializeEngines();
+    this.generateState(null, 'Movement', 1);
   }
 
   initializePlayers() {

@@ -55,6 +55,7 @@ class Display {
           this.game.logger.endSimpleLogMovement(this.game.gameState);
         }
         
+        this.socketEmit(this.game.gameState);
         break;
       
       case 'Combat':
@@ -64,8 +65,10 @@ class Display {
         console.log('Turn = ' + this.game.turn + ', Phase = ' + this.game.phase);
  
         this.runCombatPhase();
+
         this.game.generateState(null, 'Combat');
         this.game.gameState.phase = 'Combat'; // double checking for display
+
         this.socketEmit(this.game.gameState);
         break;
       
@@ -76,8 +79,10 @@ class Display {
         console.log('Turn = ' + this.game.turn + ', Phase = ' + this.game.phase);
       
         this.runEconomicPhase();
+
         this.game.generateState(null, 'Economic');
         this.game.gameState.phase = 'Economic'; // double checking for display
+
         this.socketEmit(this.game.gameState);
         break;
     }
