@@ -1,6 +1,6 @@
 const socket = io();
 
-socket.on('gameState', function(data){
+socket.on("gameState", function(data){
     updateBoard(data.gameState);
 
 });
@@ -23,32 +23,33 @@ function updateBoard(gameState) {
         testOutput.innerHTML = "TURN " + gameState.turn + " ECONOMIC";
         break;
     }
-    let boardTable = document.getElementById('board');
+
+    let boardTable = document.getElementById("board");
     if (boardTable) {
-        document.body.removeChild(boardTable);
+        document.getElementById("board-div").removeChild(boardTable);
     }
 
-    boardTable = document.createElement('table');
-    boardTable.id = 'board';
-    document.body.appendChild(boardTable);
+    boardTable = document.createElement("table");
+    boardTable.id = "board";
+    document.getElementById("board-div").appendChild(boardTable);
 
     for(let y = 0; y < 13; y++) {
         let row = boardTable.insertRow();
 
         for(let x = 0; x < 13; x++) {
             let hex = row.insertCell();
-            hex.className = 'boardSpace';
-            hex.style.backgroundColor = 'black';
+            hex.className = "boardHex";
+            hex.style.backgroundColor = "black";
 
-            let hexIndex = x + ',' + y;
+            let hexIndex = x + "," + y;
             let hex_attributes = board[hexIndex];
 
             if (hex_attributes) {
                 if ((hex_attributes["planet"] == null) && (hex_attributes["units"].length == 0)) { // empty
-                    hex.style.backgroundColor = 'grey';
+                    hex.style.backgroundColor = "grey";
                 }
                 if ((hex_attributes["planet"] != null))  { // has planet
-                    hex.style.backgroundColor = 'green';
+                    hex.style.backgroundColor = "green";
                     hex.innerHTML = "Num Ships: " + hex_attributes["units"].length;
                 } else if (hex_attributes["units"].length > 0) { // no planet and has ships
                     playerIndex = hex_attributes["units"][0]["playerIndex"];
@@ -79,6 +80,17 @@ function updateBoard(gameState) {
             }
         }
     }
+
+    let logs = document.getElementById("logs");
+    if (boardTable) {
+        document.getElementById("logs-div").removeChild(logs);
+    }
+
+    var logs = document.createElement("p");
+    logs.id = "logs"
+    var text = document.createTextNode("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec porta nisl in libero interdum, in dictum libero maximus. Etiam id metus metus. Vivamus turpis tellus, pretium eget scelerisque et, pretium non lorem. Sed cursus suscipit neque, et sagittis enim gravida et. Nulla tincidunt eget elit vitae luctus. Sed urna risus, molestie ac neque at, tristique pulvinar metus. Morbi in rhoncus tellus. Integer non dignissim risus. Nullam lobortis finibus ipsum et aliquet. Mauris a eros elementum, facilisis urna vel, tristique purus.");
+    logs.appendChild(text);
+    document.getElementById("logs-div").appendChild(logs);
     
     
 }

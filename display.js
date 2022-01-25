@@ -13,92 +13,121 @@ class Display {
   socketEmit(gameState){
     for(let socketId in this.clientSockets) {
         let socket = this.clientSockets[socketId];
-        socket.emit('gameState', {
-          gameState
-        });
+        socket.emit('gameState', { gameState });
     }
   }
 
   start() {
     this.runGame();
-
-    /*
-    setInterval(() => {
-      if(Object.keys(this.clientSockets).length != 0){
-        this.runGame();
-      }
-    }, 2000);
-    */
   }
 
   runGame() {
     let strategies = [new StratOne(0), new StratTwo(1)];
 
-    this.game = new Game(strategies, 13, { 'Economic': null, 'Movement': 3, 'Combat': null }, 100, true);
+    this.game = new Game(strategies, 13, { 'Movement': 3, 'Combat': null, 'Economic': null }, 100, true);
 
-    this.economicPhaseValue = this.game.phaseStats['Economic'];
     this.movementPhaseValue = this.game.phaseStats['Movement'];
+    this.economicPhaseValue = this.game.phaseStats['Economic'];
     this.combatPhaseValue = this.game.phaseStats['Combat'];
+
+    this.runPhase();
     
-    this.interval = setInterval(this.runPhase.bind(this), 4000); // 3 Second Delay for each Phase
+    //this.interval = setInterval(this.runPhase.bind(this), 4000); // 4 Second Delay for each Phase
   }
 
   runPhase() {
-    console.log('Turn = ' + this.game.turn + ', Phase = ' + this.game.phase);
 
     if (this.game.turn > this.game.maxTurns) { return; }
 
     switch (this.game.phase) {
       
       case 'Movement':
-        this.game.logger.logSpecificText(`\nBEGINNING OF TURN ${this.game.turn} MOVEMENT PHASE\n`);
-        this.movementValue = 0;
-        this.movementInterval = setInterval(this.runMovementPhase.bind(this), 1000); // 1 Second Delay for each Movment Round
-        this.game.generateState(null, 'Movement', this.movementValue + 1);
-        this.game.logger.endSimpleLogMovement(this.game.gameState);
+
+        if (this.game.movementStep == 0) { 
+          this.game.logger.logSpecificText(`\nBEGINNING OF TURN ${this.game.turn} MOVEMENT PHASE\n`);
+        }
+
+        this.runMovementPhase();
+        this.game.generateState(null, 'Movement', this.game.movementStep + 1);
+        this.game.gameState.phase = 'Movement' // double checking for display
+
+        if (this.game.movementStep > 2) { 
+          this.game.logger.endSimpleLogMovement(this.game.gameState);
+        }
+        
+        this.socketEmit(this.game.gameState);
         break;
       
       case 'Combat':
+
         if (this.game.turn >= this.combatPhaseValue) { break; }
-        this.game.combatEngine.completeCombatPhase(this.game);
+
+        console.log('Turn = ' + this.game.turn + ', Phase = ' + this.game.phase);
+ 
+        this.runCombatPhase();
+
         this.game.generateState(null, 'Combat');
-        this.game.gameState.phase = 'Combat';
+        this.game.gameState.phase = 'Combat'; // double checking for display
+
         this.socketEmit(this.game.gameState);
         break;
       
       case 'Economic':
+
         if (this.game.turn >= this.economicPhaseValue) { break; }
-        this.game.economicEngine.completeEconomicPhase(this.game);        
+
+        console.log('Turn = ' + this.game.turn + ', Phase = ' + this.game.phase);
+      
+        this.runEconomicPhase();
+
         this.game.generateState(null, 'Economic');
-        this.game.gameState.phase = 'Economic';
+        this.game.gameState.phase = 'Economic'; // double checking for display
+
         this.socketEmit(this.game.gameState);
         break;
     }
 
+    let prevPhase = this.game.phase;
+
     let continuePlaying = this.game.next();
 
-    if (!continuePlaying) { 
-      clearInterval(this.interval);
+    if (continuePlaying) {
+      if (prevPhase != this.game.phase) {
+        if (this.game.phase == 'Movement') {
+          this.game.movementStep = 0;
+        }
+      }
+      setTimeout(this.runPhase.bind(this), 1000); // 1 Second Delay for each Phase/Round
     }
   }
 
   runMovementPhase() {
-    if (this.movementValue >= this.movementPhaseValue) {
-      clearInterval(this.movementInterval);
-      return;
-    }
+    if (this.game.movementStep >= this.movementPhaseValue) { return; }
 
-    console.log('Turn = ' + this.game.turn + ', Phase = Movement, Round = ' + this.movementValue);
+    console.log('Turn = ' + this.game.turn + ', Phase = Movement, Round = ' + (this.game.movementStep + 1));
 
     this.game.oldGameState = JSON.parse(JSON.stringify(this.game.gameState));
-    this.game.movementEngine.completeMovementRound(this.game, this.movementValue);
-    this.game.generateState(null, 'Movement', this.movementValue + 1);
-    this.game.logger.simpleLogMovement(this.game.oldGameState, this.game.gameState, this.movementValue);
+    this.game.movementEngine.completeMovementRound(this.game, this.game.movementStep);
+    this.game.generateState(null, 'Movement', this.game.movementStep + 1);
+    this.game.logger.simpleLogMovement(this.game.oldGameState, this.game.gameState, this.game.movementStep + 1);
     this.game.gameState.phase = 'Movement';
 
     this.socketEmit(this.game.gameState);
 
-    this.movementValue += 1;
+    this.game.movementStep += 1;
+
+  }
+
+  runCombatPhase() {
+    this.game.combatEngine.completeCombatPhase(this.game);  
+    this.combatTimeoutValue += 1;
+  }
+
+  runEconomicPhase() {
+    this.game.economicEngine.completeEconomicPhase(this.game);  
+    this.economicTimeoutValue += 1;
+
+    
 
   }
 
