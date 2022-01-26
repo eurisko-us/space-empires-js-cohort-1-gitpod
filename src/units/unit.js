@@ -6,6 +6,8 @@ class Unit {
     this.id = 0;
     if (id != null) {
       this.id = id;
+    } else {
+      this.id = -1
     }
     this.turnCreated = turnCreated;
     this.canMove = true;
