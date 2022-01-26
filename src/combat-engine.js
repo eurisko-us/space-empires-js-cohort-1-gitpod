@@ -5,7 +5,7 @@ class CombatEngine {
     if (possibleCombats.length > 0)
       game.logger.simpleLogCombatInitialization(game.gameState);
     for (let combatHex of possibleCombats) {
-      //Gets all units that can fight
+      // Gets all units that can fight
       let unitsInCombat = [];
       for (let unit of combatHex.units) {
         if (unit.canFight)
@@ -14,7 +14,7 @@ class CombatEngine {
 
       let combatString = `\n\tCombat at (${combatHex.coords})\n`;
       game.logger.logSpecificText(combatString);
-      //Takes the units in a certain space and sorts them
+      // Takes the units in a certain space and sorts them
       let combatOrder = combatHex.sortForCombat();
 
       let attackingUnitIndex = 0;
@@ -31,9 +31,9 @@ class CombatEngine {
           combatOrderGameState.push(unitState);
         }
         // the long winded process of getting the defending unit
-        //Goes through the game to get the strategy
-        //The strategy picks an a unit from the info only combat order and returns its index
-        //we use that index to get the actual unit from the actual combat order
+        // Goes through the game to get the strategy
+        // The strategy picks an a unit from the info only combat order and returns its index
+        // we use that index to get the actual unit from the actual combat order
         let attackingPlayerStrat = game.players[attackingUnit.playerIndex].strategy;
         let defendingUnitIndex = attackingPlayerStrat.decideWhichUnitToAttack(combatOrderGameState, attackingUnitIndex);
         let defendingUnit = combatOrder[defendingUnitIndex];
@@ -49,14 +49,18 @@ class CombatEngine {
         const diceRoll = duel.diceRoll;
         const hitThreshold = duel.hitThreshold; 
 
-        this.handleDuelResult(game, combatOrder, attackingUnit, defendingUnit, duelResult, diceRoll, hitThreshold)
+        this.handleDuelResult(game, combatOrder, attackingUnit, defendingUnit, duelResult, diceRoll, hitThreshold);
 
-        //move to the next attacking unit in the order or loop back to the begining
-        if (attackingUnitIndex == combatOrder.length-1)
-          attackingUnitIndex = 0;
-        else
-          attackingUnitIndex += 1;
         game.generateState(false, "Combat");
+
+        // Move to the next attacking unit in the order or loop back to the begining
+        if (attackingUnitIndex >= (combatOrder.length - 1)) {
+          attackingUnitIndex = 0;
+          continue;
+        } else {
+          attackingUnitIndex += 1;
+          continue;
+        }
       }
     }
     game.logger.logSpecificText(`\nEND OF TURN ${game.turn} COMBAT PHASE\n`);
@@ -67,7 +71,7 @@ class CombatEngine {
     if (duelResult) { // If the attacker hits the defender
       if (defendingUnit.armor - defendingUnit.damage - attackingUnit.attack < 0) {  // If the attacker kills the defender
         game.logger.simpleLogCombat(attackingUnit.playerIndex, attackingUnit.generateState(false, true), defendingUnit.playerIndex, defendingUnit.generateState(false, true), duelResult, hitThreshold, diceRoll);
-        //I think the problem is somewhere in these 3 lines:
+        // I think the problem is somewhere in these 3 lines:
         game.board.removeUnit(defendingUnit, game);
         combatOrder.splice(combatOrder.indexOf(defendingUnit), 1)
       }
