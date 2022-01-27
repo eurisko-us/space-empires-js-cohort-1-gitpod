@@ -82,13 +82,13 @@ function updateBoard(gameState) {
     }
 
     let logs = document.getElementById("logs");
-    if (boardTable) {
+    if (logs) {
         document.getElementById("logs-div").removeChild(logs);
     }
 
-    var logs = document.createElement("p");
-    logs.id = "logs"
-    var text = document.createTextNode("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec porta nisl in libero interdum, in dictum libero maximus. Etiam id metus metus. Vivamus turpis tellus, pretium eget scelerisque et, pretium non lorem. Sed cursus suscipit neque, et sagittis enim gravida et. Nulla tincidunt eget elit vitae luctus. Sed urna risus, molestie ac neque at, tristique pulvinar metus. Morbi in rhoncus tellus. Integer non dignissim risus. Nullam lobortis finibus ipsum et aliquet. Mauris a eros elementum, facilisis urna vel, tristique purus.");
+    logs = document.createElement("p");
+    logs.id = "logs";
+    let text = document.createTextNode("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec porta nisl in libero interdum, in dictum libero maximus. Etiam id metus metus. Vivamus turpis tellus, pretium eget scelerisque et, pretium non lorem. Sed cursus suscipit neque, et sagittis enim gravida et. Nulla tincidunt eget elit vitae luctus. Sed urna risus, molestie ac neque at, tristique pulvinar metus. Morbi in rhoncus tellus. Integer non dignissim risus. Nullam lobortis finibus ipsum et aliquet. Mauris a eros elementum, facilisis urna vel, tristique purus.");
     logs.appendChild(text);
     document.getElementById("logs-div").appendChild(logs);
     
