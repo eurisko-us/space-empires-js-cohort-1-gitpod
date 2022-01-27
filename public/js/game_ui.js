@@ -14,7 +14,7 @@ function updateBoard(gameState) {
 
     switch (gameState.phase) {
       case "Movement":
-        testOutput.innerHTML = "TURN " + gameState.turn + " MOVEMENT ROUND " + gameState.round;
+        testOutput.innerHTML = "TURN " + gameState.turn + " MOVEMENT ROUND " + (gameState.round - 1);
         break;
       case "Combat":
         testOutput.innerHTML = "TURN " + gameState.turn + " COMBAT";
