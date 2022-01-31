@@ -7,20 +7,20 @@ socket.on("gameState", function(data){
 
 function updateBoard(gameState) {
 
-    let testOutput = document.getElementById("test");
+    let phaseOutput = document.getElementById("test");
 
     // Delete board table if it already exists because we're just going to recreate it
     let board = gameState.board;
 
     switch (gameState.phase) {
       case "Movement":
-        testOutput.innerHTML = "TURN " + gameState.turn + " MOVEMENT ROUND " + (gameState.round - 1);
+        phaseOutput.innerHTML = "TURN " + gameState.turn + " MOVEMENT ROUND " + (gameState.round - 1);
         break;
       case "Combat":
-        testOutput.innerHTML = "TURN " + gameState.turn + " COMBAT";
+        phaseOutput.innerHTML = "TURN " + gameState.turn + " COMBAT";
         break;
       case "Economic":
-        testOutput.innerHTML = "TURN " + gameState.turn + " ECONOMIC";
+        phaseOutput.innerHTML = "TURN " + gameState.turn + " ECONOMIC";
         break;
     }
 
@@ -82,16 +82,8 @@ function updateBoard(gameState) {
     }
 
     let logs = document.getElementById("logs");
-    if (logs) {
-        document.getElementById("logs-div").removeChild(logs);
-    }
-
-    logs = document.createElement("p");
-    logs.id = "logs";
-    let text = document.createTextNode("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec porta nisl in libero interdum, in dictum libero maximus. Etiam id metus metus. Vivamus turpis tellus, pretium eget scelerisque et, pretium non lorem. Sed cursus suscipit neque, et sagittis enim gravida et. Nulla tincidunt eget elit vitae luctus. Sed urna risus, molestie ac neque at, tristique pulvinar metus. Morbi in rhoncus tellus. Integer non dignissim risus. Nullam lobortis finibus ipsum et aliquet. Mauris a eros elementum, facilisis urna vel, tristique purus.");
-    logs.appendChild(text);
-    document.getElementById("logs-div").appendChild(logs);
-    
+    logText = gameState["logs"];
+    logs.innerHTML = logText;    
     
 }
 

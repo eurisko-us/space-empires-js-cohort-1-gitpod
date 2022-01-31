@@ -1,9 +1,10 @@
 class CombatEngine {
   completeCombatPhase(game) {
+    this.logs = '';
     let possibleCombats = this.findPossibleCombats(game);
     game.logger.logSpecificText(`\nBEGINNING OF TURN ${game.turn} COMBAT PHASE\n`)
     if (possibleCombats.length > 0)
-      game.logger.simpleLogCombatInitialization(game.gameState);
+      this.logs += game.logger.simpleLogCombatInitialization(game.gameState);
     for (let combatHex of possibleCombats) {
       // Gets all units that can fight
       let unitsInCombat = [];
@@ -11,9 +12,11 @@ class CombatEngine {
         if (unit.canFight)
           unitsInCombat.push(unit);
       }
-
-      let combatString = `\n\tCombat at (${combatHex.coords})\n`;
-      game.logger.logSpecificText(combatString);
+      
+      this.logs += '\n';
+      game.logger.logSpecificText(`\t`);
+      let combatString = `Combat at (${combatHex.coords})\n`;
+      this.logs += game.logger.logSpecificText(combatString) + '\n';
       // Takes the units in a certain space and sorts them
       let combatOrder = combatHex.sortForCombat();
 
@@ -64,19 +67,20 @@ class CombatEngine {
       }
     }
     game.logger.logSpecificText(`\nEND OF TURN ${game.turn} COMBAT PHASE\n`);
-    
+    return this.logs;
   }
 
   handleDuelResult(game, combatOrder, attackingUnit, defendingUnit, duelResult, diceRoll, hitThreshold) {
     if (duelResult) { // If the attacker hits the defender
       if (defendingUnit.armor - defendingUnit.damage - attackingUnit.attack < 0) {  // If the attacker kills the defender
-        game.logger.simpleLogCombat(attackingUnit.playerIndex, attackingUnit.generateState(false, true), defendingUnit.playerIndex, defendingUnit.generateState(false, true), duelResult, hitThreshold, diceRoll);
+        defendingUnit.damage += attackingUnit.attack; 
+        this.logs += game.logger.simpleLogCombat(attackingUnit.playerIndex, attackingUnit.generateState(false, true), defendingUnit.playerIndex, defendingUnit.generateState(false, true), duelResult, hitThreshold, diceRoll);
         // I think the problem is somewhere in these 3 lines:
         game.board.removeUnit(defendingUnit, game);
         combatOrder.splice(combatOrder.indexOf(defendingUnit), 1)
       }
       else // If the attacker doesn't kill, but hits the defender
-        defendingUnit.damage += attackingUnit.damage; 
+        defendingUnit.damage += attackingUnit.attack; 
     }
   }
 

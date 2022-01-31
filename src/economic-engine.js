@@ -1,9 +1,15 @@
   class EconomicEngine {
   completeEconomicPhase(game) {
+    this.logs = '';
     game.logger.logSpecificText(`\nBEGINNING OF TURN ${game.turn} ECONOMIC PHASE\n`)
-    for (let player of game.players) {
+    for (let index in game.players) {
+      let player = game.players[index];
       let playerStartingCreds = player.creds;
-      game.logger.logSpecificText(`\nStarting Phase for Player ${player.playerIndex}`);
+      let newLine = '';
+      if (index > 0) {
+        newLine = '\n';
+      }
+      this.logs += newLine + game.logger.logSpecificText(`\nStarting Phase for Player ${player.playerIndex + 1}`);
       let income = this.income(player);
       player.creds += income;
       let taxes = this.taxes(player);
@@ -39,9 +45,11 @@
         
       }
       game.generateState(true, false);
-      game.logger.simpleLogEconomic(taxes, income, playerStartingCreds, player.creds, correctedPurchases)
+      
+      this.logs += game.logger.simpleLogEconomic(taxes, income, playerStartingCreds, player.creds, correctedPurchases)
     }
-    game.logger.logSpecificText(`\nEND OF TURN ${game.turn} ECONOMIC PHASE\n`)
+    game.logger.logSpecificText(`\nEND OF TURN ${game.turn} ECONOMIC PHASE\n`);
+    return this.logs;
 
   }
 

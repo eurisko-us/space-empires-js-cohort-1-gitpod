@@ -46,7 +46,7 @@ class Unit {
         "num": this.id,
         "coords": this.coords,
         "type": this.type,
-        "hitsLeft": this.hitsLeft,
+        "hitsLeft": this.armor - this.damage,
         "technology": this.technology,
         "playerIndex": this.playerIndex,
         "turnCreated": this.turnCreated,

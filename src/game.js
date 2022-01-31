@@ -20,7 +20,7 @@ class Game {
     this.playerStrats = playerStrats;
     this.boardSize = boardSize;
     this.turn = 1;
-    this.phase = "Movement";
+    this.phase = "Economic";
     this.movementStep = 0;
     this.maxTurns = maxTurns;
     // `phaseStats` is when we want only
