@@ -11,14 +11,12 @@ const Scout = require("./units/scout.js");
 const Logger = require("./logger.js");
 
 class Game {
-  constructor(
-    playerStrats,
-    boardSize = 13,
-    phaseStats = { Economic: null, Movement: 3, Combat: null },
-    maxTurns = 100
-  ) {
+  constructor(playerStrats, boardSize = 13, phaseStats = { Economic: null, Movement: 3, Combat: null }, maxTurns = 100, numPlanetsPerPlayer = 8, numAsteroidsPerPlayer = 11) {
     this.playerStrats = playerStrats;
     this.boardSize = boardSize;
+    this.numPlanetsPerPlayer = numPlanetsPerPlayer;
+    this.barrenPlanetsPerPlayer = 1;
+    this.numAsteroidsPerPlayer = numAsteroidsPerPlayer;
     this.turn = 1;
     this.phase = "Economic";
     this.movementStep = 0;
@@ -47,21 +45,20 @@ class Game {
 
   initializePlayers() {
     this.players = [];
-    this.playerHomeBaseCoords = [
+    this.playerHomeBaseCoords = /*[
       // These are the incorrect initial coords of the players, their supposed to be in the corners not the center of the sides of the board
       [Math.floor(this.boardSize / 2), 0],
       [Math.floor(this.boardSize / 2), this.boardSize - 1],
       //[0,  Math.floor(this.boardSize / 2)],
       //[this.boardSize - 1,  Math.floor(this.boardSize / 2)]
-    ];
-    /* These are the correct coords for the player home worlds but since diagonals are stoopid, not yet
+    ];*/
+    // These are the correct coords for the player home worlds but since diagonals are stoopid, not yet
     [
         [1, 1],
-        [this.boardSize - 1,  1],
-        [1,  this.boardSize - 1],
-        [this.boardSize - 1,  this.boardSize - 1]
-    ]
-    */
+        [1,  this.boardSize - 2],
+        [this.boardSize - 2,  1],
+        [this.boardSize - 2,  this.boardSize - 2]
+    ];
     this.playerColors = [
       // These are the colors of the actual game for the four players
       "rgb(255, 100, 70)" /* Red */,
@@ -89,16 +86,57 @@ class Game {
 
   initializeBoard() {
     this.board = new Board(); // Will probs need more args, but thats for later
-    let planetCoords = [
-      Math.floor(this.boardSize / 2) + "," + 0,
-      Math.floor(this.boardSize / 2) + "," + (this.boardSize - 1),
-    ];
-    this.board.generateBoard(planetCoords, this.boardSize);
-    for (let player of this.players) {
-      this.board.grid[
-        player.startingCoords[0] + "," + player.startingCoords[1]
-      ].planet.colony = player.homeBase;
+    let planetCoords = [];
+    let asteroidCoords = [];
+
+    for (let coords of this.playerHomeBaseCoords) {
+      let temp = coords[0] + "," + coords[1];
+      planetCoords.push(temp);
     }
+    
+    for (let player of this.players) {
+
+      let ranges = this.findPlayerMinMaxCoordsForPlanetsAndAsteroids(player);
+      let xRange = ranges[0];
+      let yRange = ranges[1];
+      let possibleCoords = [];
+      for (let x = xRange[0]; x < xRange[1]; x++) {
+        for (let y = yRange[0]; y < yRange[1]; y++) {
+          let temp = x + "," + y;
+          if (!planetCoords.includes(temp)) {
+            possibleCoords.push(temp);
+          }
+        }
+      }
+
+      for (let index = 0; index < this.numPlanetsPerPlayer; index++) {
+
+        let randomChoiceIndex = Math.floor(Math.random() * possibleCoords.length);
+        let coords = possibleCoords[randomChoiceIndex];
+  
+        planetCoords.push(coords);
+        possibleCoords.splice(randomChoiceIndex, 1);
+  
+      }
+
+      for (let index = 0; index < this.numAsteroidsPerPlayer; index++) {
+
+        let randomChoiceIndex = Math.floor(Math.random() * possibleCoords.length);
+        let coords = possibleCoords[randomChoiceIndex];
+  
+        asteroidCoords.push(coords);
+        possibleCoords.splice(randomChoiceIndex, 1);
+  
+      }
+
+    }
+    
+    this.board.generateBoard(planetCoords, asteroidCoords, this.boardSize);
+
+    for (let player of this.players) {
+      this.board.grid[player.startingCoords[0] + "," + player.startingCoords[1]].planet.colony = player.homeBase;
+    }
+
   }
 
   initializeEngines() {
@@ -106,6 +144,49 @@ class Game {
     this.movementEngine = new MovementEngine();
     this.combatEngine = new CombatEngine();
     this.economicEngine = new EconomicEngine();
+  }
+
+  generateObjectCoords(amountOfObjects, objectCoords, possibleCoords) {
+
+    for (let index = 0; index < amountOfObjects; index++) {
+
+      let randomChoiceIndex = Math.floor(Math.random() * possibleCoords.length);
+      let coords = possibleCoords[randomChoiceIndex];
+
+      objectCoords.push(coords);
+      possibleCoords.splice(randomChoiceIndex, 1);
+
+    }
+
+    return {"objectCoords": objectCoords, "possibleCoords": possibleCoords};
+  }
+
+  findPlayerMinMaxCoordsForPlanetsAndAsteroids(player) {
+    let coords = []
+
+    switch (JSON.stringify(player.startingCoords)) {
+      case JSON.stringify([1, 1]):
+        coords = [[0, 5], [0, 5]];
+        break;
+      case JSON.stringify([this.boardSize - 2,  1]):
+        coords = [[this.boardSize - 4, this.boardSize - 1], [0, 5]];
+        break;
+      case JSON.stringify([1, this.boardSize - 2]):
+        coords = [[0, 5], [this.boardSize - 5, this.boardSize - 1]];
+        break;
+      case JSON.stringify([this.boardSize - 2,  this.boardSize - 2]):
+        coords = [[this.boardSize - 5, this.boardSize - 1], [this.boardSize - 5, this.boardSize - 1]];
+        break;
+    }
+
+    return coords;
+  }
+
+  getRandomInteger(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+
+    return Math.floor(Math.random() * (max - min + 1) + min);
   }
 
   play() {

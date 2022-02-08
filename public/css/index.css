@@ -7,8 +7,8 @@ h1, h3, #logs-title, #test{
 }
 
 td {
-  width: 55px;
-  height: 55px;
+  width: 85px;
+  height: 85px;
   padding: 5px;
   border-radius: 10%;
 }
@@ -23,7 +23,7 @@ td.boardspace {
   display: flex;
   flex-wrap: nowrap;
   background-color: DodgerBlue;
-  width: 1310px;
+  width: 1630px;
   height: auto;
 }
 

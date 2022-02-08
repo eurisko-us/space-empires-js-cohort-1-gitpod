@@ -42,36 +42,65 @@ function updateBoard(gameState) {
             hex.style.backgroundColor = "black";
 
             let hexIndex = x + "," + y;
-            let hex_attributes = board[hexIndex];
+            let hexAttributes = board[hexIndex];
 
-            if (hex_attributes) {
-                if ((hex_attributes["planet"] == null) && (hex_attributes["units"].length == 0)) { // empty
+            if (hexAttributes) {
+                if (hexAttributes["planet"] == null && hexAttributes["asteroid"] == null && hexAttributes["units"].length == 0) { // empty
                     hex.style.backgroundColor = "grey";
-                }
-                if ((hex_attributes["planet"] != null))  { // has planet
-                    hex.style.backgroundColor = "green";
-                    hex.innerHTML = "Num Ships: " + hex_attributes["units"].length;
-                } else if (hex_attributes["units"].length > 0) { // no planet and has ships
-                    playerIndex = hex_attributes["units"][0]["playerIndex"];
+                } else if (hexAttributes["planet"] != null)  { // has planet and no ships
+
+                    let planetColor = "rgb(96,96,192)";
+                    hex.innerHTML = "Planet";
+                    let currentPlanet = hexAttributes["planet"];
+
+                    if (currentPlanet["colony"] != null) {
+                        playerIndex = currentPlanet["colony"]["playerIndex"];
+                        planetColor = gameState["players"][playerIndex]["playerColor"];
+                        hex.innerHTML = currentPlanet["colony"]["type"];
+                    }
+
+                    if (hexAttributes["units"].length > 0) {
+                        hex.innerHTML += "<br>Ships: " + hexAttributes["units"].length;
+                    }
+                    
+                    hex.style.backgroundColor = planetColor;
+
+                } else if (hexAttributes["asteroid"] != null)  { // has asteroid and no ships
+
+                    let asteroidColor = "rgb(192,192,192)";
+                    hex.innerHTML = "Asteroid";
+                    hex.style.backgroundColor = asteroidColor;
+
+                    if (hexAttributes["units"].length > 0) {
+                        hex.innerHTML += "<br>Ships: " + hexAttributes["units"].length;
+                    }
+
+                } else if (hexAttributes["planet"] == null && hexAttributes["units"].length > 0) { // no planet and has ships
+
+                    playerIndex = hexAttributes["units"][0]["playerIndex"];
                     let players = [];
                     let playerColors = []
-                    for (let unit of hex_attributes["units"]){
+
+                    for (let unit of hexAttributes["units"]){
                         if (!players.includes(unit["playerIndex"])){
                             let index = unit["playerIndex"]
                             players.push(index);
                             playerColors.push(gameState["players"][index]["playerColor"])
                         };
                     };
+                    
                     let size = 100/playerColors.length;
                     let coloring = `linear-gradient(to right`;
+
                     for(let i in playerColors){
                         coloring = coloring.concat(`, ${playerColors[i]} ${size*i}%, ${playerColors[i]} ${size*(i+1)}%`);
                     }
+                    
                     coloring = coloring.concat(`)`);
                     hex.style.background = coloring;
 
 
-                    hex.innerHTML = "Num Ships: " + hex_attributes["units"].length;
+                    hex.innerHTML = "Ships: " + hexAttributes["units"].length;
                     // this will be made with more detail later so 
                     // individual ships will be shown and colored independently
                     // so be prepared future colby i will curse you with this
@@ -130,18 +159,18 @@ function updateBoard(gameState) {
             hex.style.backgroundColor = 'black';
 
             let hexIndex = x + ',' + y;
-            let hex_attributes = board[hexIndex];
+            let hexAttributes = board[hexIndex];
             
             let color = 'grey';
-            let text = `Num Ships: ${hex_attributes["units"].length}`;
+            let text = `Num Ships: ${hexAttributes["units"].length}`;
 
-            if (hex_attributes) {
-                if ((hex_attributes["planet"] != null))  { // has planet
+            if (hexAttributes) {
+                if ((hexAttributes["planet"] != null))  { // has planet
                     color = 'green';
-                } else if (hex_attributes["units"].length > 0) { // no planet and has ships
-                    if (hex_attributes.coords in Object.keys(gameState.combat)) {
+                } else if (hexAttributes["units"].length > 0) { // no planet and has ships
+                    if (hexAttributes.coords in Object.keys(gameState.combat)) {
                         color = 'red';
-                        text = `COMBAT!\nNum Ships: ${hex_attributes["units"].length}`
+                        text = `COMBAT!\nNum Ships: ${hexAttributes["units"].length}`
                     } else {
                         color = 'blue';
                     }

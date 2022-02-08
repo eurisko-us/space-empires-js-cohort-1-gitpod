@@ -51,11 +51,11 @@ class Logger {
   simpleLogCombatInitialization(gameState) {
     let logs = '';
     this.logSpecificText('\n\t');
-    logs += this.logSpecificText(`Combat Locations:\n`);
+    //logs += this.logSpecificText(`Combat Locations:\n`);
     for (let location in gameState['combat']) {
       let units = gameState['combat'][location];
       this.logSpecificText('\t');
-      logs += this.logSpecificText(`\t(${location})\n`);
+      //logs += this.logSpecificText(`\t(${location})\n`);
       for (let unitAttributes of units) {
         this.logSpecificText('\t');
         logs += this.logSpecificText(`\t\tPlayer ${(unitAttributes['playerIndex'] + 1)} ${unitAttributes['type']} ${(unitAttributes['num'] + 1)}`);

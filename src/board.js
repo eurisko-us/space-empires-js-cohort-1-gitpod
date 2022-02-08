@@ -1,14 +1,17 @@
 class Board {
-  generateBoard(planetCoords, boardSize) {
+  generateBoard(planetCoords, asteroidCoords, boardSize) {
     this.grid = {};
     for (let y = 0; y < boardSize; y++) {
       for (let x = 0; x < boardSize; x++) {
         let currentCoords = x + ',' + y;
         let planetHere = false;
-        if (planetCoords.includes(currentCoords))
+        let asteroidHere = false;
+        if (planetCoords.includes(currentCoords)) {
           planetHere = true;
-        let asteriodHere = false;
-        this.grid[currentCoords] = new Hex(x + ',' + y, planetHere, asteriodHere);
+        } else if (asteroidCoords.includes(currentCoords)) {
+          asteroidHere = true;
+        }
+        this.grid[currentCoords] = new Hex(x + ',' + y, planetHere, asteroidHere);
       }
     }
   }
@@ -114,9 +117,9 @@ class Hex {
     if (this.planet != null)
       planetState = this.planet.generateState();
 
-    let asteriodState = null;
+    let asteroidState = null;
     if (this.asteroid != null)
-      asteriodState = this.asteroid.generateState();
+      asteroidState = this.asteroid.generateState();
 
     let unitState = [];
     for (let unitIndex in this.units)
@@ -125,7 +128,7 @@ class Hex {
     return {
       'coords': this.coords,
       'planet': planetState,
-      'asteriod': asteriodState,
+      'asteroid': asteroidState,
       'units': unitState
     };
   }
@@ -141,7 +144,7 @@ class Planet {
   generateState() {
     let colonyState = null;
     if (this.colony != null)
-      colonyState = this.colony.generateState();
+      colonyState = this.colony.generateState(true); // need to change the true to something else
       
     let status = 'habitable';
     if (this.barren)

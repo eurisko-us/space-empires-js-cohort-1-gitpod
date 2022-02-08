@@ -22,9 +22,9 @@ class Display {
   }
 
   runGame() {
-    let strategies = [new StratOne(0), new StratTwo(1)];
+    let strategies = [new StratOne(0), new StratTwo(1), new StratOne(2), new StratTwo(3)];
 
-    this.game = new Game(strategies, 13, { 'Movement': 3, 'Combat': null, 'Economic': null }, 100, true);
+    this.game = new Game(strategies, 13, { 'Movement': 3, 'Combat': null, 'Economic': null }, 100, 3, 5);
 
     this.movementPhaseValue = this.game.phaseStats['Movement'];
     this.economicPhaseValue = this.game.phaseStats['Economic'];
@@ -125,7 +125,7 @@ class Display {
 
       let timeout = 4000;
       if (prevPhase == 'Movement') {
-        timeout = 1000;
+        timeout = 1500;
       }
 
       setTimeout(this.runPhase.bind(this), timeout); // 2 Second Delay for each Phase/Round
