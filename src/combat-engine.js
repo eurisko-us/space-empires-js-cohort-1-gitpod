@@ -13,7 +13,7 @@ class CombatEngine {
           unitsInCombat.push(unit);
       }
       
-      //this.logs += '\n';
+      this.logs += '\n';
       game.logger.logSpecificText(`\t`);
       let combatString = `Combat at (${combatHex.coords})\n`;
       this.logs += game.logger.logSpecificText(combatString) + '\n';
