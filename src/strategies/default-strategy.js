@@ -1,7 +1,5 @@
 const Board = require("../../src/board");
 
-const orderWithGameState = Board.orderWithGameState;
-
 class DefaultStrategy {
   constructor(playerIndex) {
     this.playerIndex = playerIndex;

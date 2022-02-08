@@ -47,7 +47,7 @@ function updateBoard(gameState) {
             if (hexAttributes) {
                 if (hexAttributes["planet"] == null && hexAttributes["asteroid"] == null && hexAttributes["units"].length == 0) { // empty
                     hex.style.backgroundColor = "grey";
-                } else if (hexAttributes["planet"] != null)  { // has planet and no ships
+                } else if (hexAttributes["planet"] != null)  { // has planet
 
                     let planetColor = "rgb(96,96,192)";
                     hex.innerHTML = "Planet";
@@ -65,7 +65,7 @@ function updateBoard(gameState) {
                     
                     hex.style.backgroundColor = planetColor;
 
-                } else if (hexAttributes["asteroid"] != null)  { // has asteroid and no ships
+                } else if (hexAttributes["asteroid"] != null)  { // has asteroid
 
                     let asteroidColor = "rgb(192,192,192)";
                     hex.innerHTML = "Asteroid";

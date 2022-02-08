@@ -11,14 +11,14 @@ const Scout = require("./units/scout.js");
 const Logger = require("./logger.js");
 
 class Game {
-  constructor(playerStrats, boardSize = 13, phaseStats = { Economic: null, Movement: 3, Combat: null }, maxTurns = 100, numPlanetsPerPlayer = 8, numAsteroidsPerPlayer = 11) {
+  constructor(playerStrats, boardSize = 13, phaseStats = { Movement: 3, Combat: null, Economic: null }, maxTurns = 100, numPlanetsPerPlayer = 8, numAsteroidsPerPlayer = 11) {
     this.playerStrats = playerStrats;
     this.boardSize = boardSize;
     this.numPlanetsPerPlayer = numPlanetsPerPlayer;
     this.barrenPlanetsPerPlayer = 1;
     this.numAsteroidsPerPlayer = numAsteroidsPerPlayer;
     this.turn = 1;
-    this.phase = "Economic";
+    this.phase = "Movement";
     this.movementStep = 0;
     this.maxTurns = maxTurns;
     // `phaseStats` is when we want only
@@ -85,13 +85,16 @@ class Game {
   }
 
   initializeBoard() {
+
     this.board = new Board(); // Will probs need more args, but thats for later
     let planetCoords = [];
     let asteroidCoords = [];
 
     for (let coords of this.playerHomeBaseCoords) {
+
       let temp = coords[0] + "," + coords[1];
       planetCoords.push(temp);
+
     }
     
     for (let player of this.players) {
@@ -100,11 +103,17 @@ class Game {
       let xRange = ranges[0];
       let yRange = ranges[1];
       let possibleCoords = [];
+
       for (let x = xRange[0]; x < xRange[1]; x++) {
+
         for (let y = yRange[0]; y < yRange[1]; y++) {
+
           let temp = x + "," + y;
+
           if (!planetCoords.includes(temp)) {
+
             possibleCoords.push(temp);
+
           }
         }
       }
@@ -131,7 +140,7 @@ class Game {
 
     }
     
-    this.board.generateBoard(planetCoords, asteroidCoords, this.boardSize);
+    this.board.generateBoard(planetCoords, asteroidCoords, this.playerHomeBaseCoords, this.boardSize);
 
     for (let player of this.players) {
       this.board.grid[player.startingCoords[0] + "," + player.startingCoords[1]].planet.colony = player.homeBase;
