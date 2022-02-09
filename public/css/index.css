@@ -21,9 +21,10 @@ td.boardspace {
 .flex-container {
   margin: auto;
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
+  justify-content: center;
   background-color: DodgerBlue;
-  width: 1630px;
+  width: auto;/*1990px;*/
   height: auto;
 }
 

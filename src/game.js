@@ -173,21 +173,13 @@ class Game {
 
     switch (JSON.stringify(player.startingCoords)) {
 
-      case JSON.stringify([1, 1]):
-        coords = [[0, 5], [0, 5]];
-        break;
+      case JSON.stringify([1, 1]): return [[0, Math.ceil(this.boardSize / 3)], [0, Math.ceil(this.boardSize / 3)]];
 
-      case JSON.stringify([this.boardSize - 2,  1]):
-        coords = [[this.boardSize - 5, this.boardSize], [0, 5]];
-        break;
+      case JSON.stringify([this.boardSize - 2,  1]): return [[2 * Math.floor(this.boardSize / 3), this.boardSize], [0, Math.ceil(this.boardSize / 3)]];
 
-      case JSON.stringify([1, this.boardSize - 2]):
-        coords = [[0, 5], [this.boardSize - 5, this.boardSize]];
-        break;
+      case JSON.stringify([1, this.boardSize - 2]): return [[0, Math.ceil(this.boardSize / 3)], [2 * Math.floor(this.boardSize / 3), this.boardSize]];
 
-      case JSON.stringify([this.boardSize - 2,  this.boardSize - 2]):
-        coords = [[this.boardSize - 5, this.boardSize], [this.boardSize - 5, this.boardSize]];
-        break;
+      case JSON.stringify([this.boardSize - 2,  this.boardSize - 2]): return [[2 * Math.floor(this.boardSize / 3), this.boardSize], [2 * Math.floor(this.boardSize / 3), this.boardSize]];
 
     }
 
@@ -265,7 +257,7 @@ class Game {
 
       case "Movement":
 
-        if (this.movementStep > 2) { this.phase = "Economic"; }
+        if (this.movementStep > 2) { this.phase = "Combat"; }
 
         break;
       case "Combat":

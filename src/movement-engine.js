@@ -28,7 +28,7 @@ class MovementEngine {
       // Units can only move like a king in chess
       // But it's repeated multiple times a movement phase and it's numerous rounds
 
-      let shipInSpace = this.isInSpace(unit.coords, translation);
+      let shipInSpace = this.isInSpace(game, unit.coords, translation);
       
       if (Math.abs(translation["x"]) + Math.abs(translation["y"]) <= 1 && shipInSpace) { // If moving only 1 space and ship in space after translation
         
@@ -45,16 +45,16 @@ class MovementEngine {
 
         }
 
-      } else { throw `Player ${player.playerIndex}'s ${unit.type}, ${unit.id} tried to cheat with an invalid move, it tried to move to (${unit.coords["x"] + translation["x"]}, ${unit.coords["y"] + translation["y"]}) from (${unit.coords["x"]}, ${unit.coords["y"]}).`; } // Else the wanted move is invalid, it throws an exception defined as such:
+      } else { throw `Player ${player.playerIndex}'s ${unit.type}, ${unit.id} tried to cheat with an invalid move, it tried to move to (${unit.coords[0] + translation[0]}, ${unit.coords[1] + translation[1]}) from (${unit.coords[0]}, ${unit.coords[1]}).`; } // Else the wanted move is invalid, it throws an exception defined as such:
     }
 
   }
 
-  isInSpace(unit, translation) {
+  isInSpace(game, unit, translation) {
 
     let x = unit[0] + translation["x"];
     let y = unit[1] + translation["y"];
-    return 0 <= x && x <= 12 && 0 <= y && y <= 12;
+    return 0 <= x && x <= game.boardSize && 0 <= y && y <= game.boardSize;
 
   }
 

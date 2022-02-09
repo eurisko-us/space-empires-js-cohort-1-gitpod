@@ -32,10 +32,10 @@ function updateBoard(gameState) {
   boardTable.id = "board";
   document.getElementById("board-div").appendChild(boardTable);
 
-  for (let y = 0; y < 13; y++) {
+  for (let y = 0; y < gameState.boardSize; y++) {
     let row = boardTable.insertRow();
 
-    for (let x = 0; x < 13; x++) {
+    for (let x = 0; x < gameState.boardSize; x++) {
 
       let hex = row.insertCell();
       hex.className = "boardHex";
