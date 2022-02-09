@@ -1,7 +1,10 @@
 const Unit = require("../../src/units/unit.js");
 class Scout extends Unit{
+  
   constructor(playerIndex, initialCoord, id, technology, turnCreated, homeBase) { // possibly dont need homeBase, need to experiment
+  
     super(playerIndex, initialCoord, id, technology, turnCreated, homeBase);
+  
     this.attack = 3;
     this.defense = 0;
     this.armor = 1;
@@ -9,7 +12,9 @@ class Scout extends Unit{
     this.cost = 6;
     this.maintenance = 1;
     this.type = "Scout";
+  
   }
+
 }
 
 module.exports = Scout;

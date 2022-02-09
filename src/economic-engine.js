@@ -46,10 +46,16 @@ class EconomicEngine {
         let coords = unit.coords[0] + ',' + unit.coords[1];
         let currentHex = game.board.grid[coords];
 
-        if (currentHex.planet != null && currentHex.planet.colony == null && unit.type == "ColonyShip") { 
+        if (currentHex.planet != null && currentHex.planet.colony == null && unit.type == "ColonyShip") { // if possible colonization then colonize
 
           this.colonize(game, currentHex, player, unit, coords);
   
+        }
+
+        if (currentHex.planet != null && currentHex.colony != null && unit.type == "MiningShip" && unit.asteroid != null) { // if colony and mining ship with asteroid then add money and delete asteroid
+
+          this.collectAsteroid(player, unit);
+
         }
 
       }
@@ -95,6 +101,13 @@ class EconomicEngine {
     player.colonies.push(newColony);
     currentHex.planet.colony = newColony.generateState(true);
     unit.destroy(game);
+
+  }
+
+  collectAsteroid(player, unit) {
+
+    player.creds += unit.asteroid.value;
+    unit.asteroid = null;
 
   }
 

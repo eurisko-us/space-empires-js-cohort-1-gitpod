@@ -51,7 +51,17 @@ class Board {
 
     let currentCoords = (currentUnit.coords[0] - translation["x"]) + ',' + (currentUnit.coords[1] - translation["y"]);
     let currentHex = this.grid[currentCoords];
+
+    if (currentHex.asteroid != null && currentUnit.type == "MiningShip" && currentUnit.asteroid == null) {
+
+      currentUnit.asteroid = currentHex.asteroid;
+      currentUnit.asteroid.coords = currentUnit.coords; // link asteroid coords and unit coords so no need to update asteroid coords it automatically do
+      currentHex.asteroid = null;
+
+    }
+
     currentHex.removeUnit(currentUnit);
+
     let newCoords = currentUnit.coords[0] + ',' + currentUnit.coords[1];
     let newHex = this.grid[newCoords];
     newHex.appendUnit(currentUnit);
@@ -92,7 +102,7 @@ class Hex {
     this.units = [];
 
     this.planet = null;
-    if (planet) { this.planet = new Planet(this.coords, ); }
+    if (planet) { this.planet = new Planet(this.coords); }
 
     this.asteroid = null;
     if (asteroid) { this.asteroid = new Asteroid(this.coords); }
@@ -103,12 +113,7 @@ class Hex {
 
   appendUnit(unit) { this.units.push(unit); }
 
-  removeUnit(unit) {
-
-    let unitIndex = this.units.indexOf(unit);
-    this.units.splice(unitIndex, 1);
-    let x=0;
-  }
+  removeUnit(unit) { this.units.splice(this.units.indexOf(unit), 1); }
 
   generateState() {
 
