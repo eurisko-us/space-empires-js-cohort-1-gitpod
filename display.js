@@ -57,15 +57,12 @@ class Display {
         this.logs = this.logs.replace(/\n/g, '<br><br>');
         this.logs = this.logs.replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;');
 
-        if (this.logs != undefined && this.logs != 'undefined') {
-          this.game.gameState['logs'] = this.logs;
-        }
+        if (this.logs != undefined && this.logs != 'undefined') { this.game.gameState['logs'] = this.logs; }
 
-        if (this.game.movementStep > 2) { 
-          this.logs += this.game.logger.endSimpleLogMovement(this.game.gameState);
-        }
+        if (this.game.movementStep > 2) { this.logs += this.game.logger.endSimpleLogMovement(this.game.gameState); }
         
         this.socketEmit(this.game.gameState);
+
         break;
       
       case 'Combat':
@@ -82,11 +79,10 @@ class Display {
         this.logs = this.logs.replace(/\n/g, '<br>');
         this.logs = this.logs.replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;');
 
-        if (this.logs != undefined && this.logs != 'undefined') {
-          this.game.gameState['logs'] = this.logs;
-        }
+        if (this.logs != undefined && this.logs != 'undefined') { this.game.gameState['logs'] = this.logs; }
 
         this.socketEmit(this.game.gameState);
+
         break;
       
       case 'Economic':
@@ -103,11 +99,10 @@ class Display {
         this.logs = this.logs.replace(/\n/g, '<br>');
         this.logs = this.logs.replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;'); // whitespace text equivalent to '    ' to replace \t since '    ' doesnt work in html
 
-        if (this.logs != undefined && this.logs != 'undefined') {
-          this.game.gameState['logs'] = this.logs;
-        }
+        if (this.logs != undefined && this.logs != 'undefined') { this.game.gameState['logs'] = this.logs; }
 
         this.socketEmit(this.game.gameState);
+
         break;
     }
 
@@ -116,17 +111,17 @@ class Display {
     let continuePlaying = this.game.next();
 
     if (continuePlaying) {
+
       if (prevPhase != this.game.phase) {
-        if (this.game.phase == 'Movement') {
-          this.game.movementStep = 0;
-        }
+
+        if (this.game.phase == 'Movement') { this.game.movementStep = 0; }
+
         this.logs = '';
+
       }
 
       let timeout = 4000;
-      if (prevPhase == 'Movement') {
-        timeout = 1500;
-      }
+      if (prevPhase == 'Movement') { timeout = 2500; }
 
       setTimeout(this.runPhase.bind(this), timeout); // 2 Second Delay for each Phase/Round
     }

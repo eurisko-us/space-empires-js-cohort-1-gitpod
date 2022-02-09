@@ -1,5 +1,5 @@
 class Board {
-  generateBoard(planetCoords, asteroidCoords, playerHomeBaseCoords, boardSize) {
+  generateBoard(planetCoords, asteroidCoords, boardSize) {
 
     this.grid = {};
 
@@ -11,20 +11,15 @@ class Board {
         let planetHere = false;
         let asteroidHere = false;
 
-        if (planetCoords.includes(currentCoords)) {
+        if (planetCoords.includes(currentCoords)) { planetHere = true; } 
+        else if (asteroidCoords.includes(currentCoords)) { asteroidHere = true; }
 
-          planetHere = true;
-
-        } else if (asteroidCoords.includes(currentCoords)) {
-
-          asteroidHere = true;
-
-        }
-
-        this.grid[currentCoords] = new Hex(x + ',' + y, planetHere, asteroidHere, playerHomeBaseCoords);
+        this.grid[currentCoords] = new Hex(x + ',' + y, planetHere, asteroidHere);
 
       }
+
     }
+
   }
 
   generateState() {
@@ -52,7 +47,7 @@ class Board {
 
  }
 
-  moveShip(game, currentUnit, translation) { // Move unit reference from one hex to another
+  moveShip(currentUnit, translation) { // Move unit reference from one hex to another
 
     let currentCoords = (currentUnit.coords[0] - translation["x"]) + ',' + (currentUnit.coords[1] - translation["y"]);
     let currentHex = this.grid[currentCoords];
@@ -67,32 +62,17 @@ class Board {
 
 function order (firstUnit,secondUnit) {
 
-  if (firstUnit.technology["tactics"] + firstUnit.fightingClass > secondUnit.technology["tactics"] + secondUnit.fightingClass) // If firstUnit has a tactical advantage
-    return 1;
-
+  if (firstUnit.technology["tactics"] + firstUnit.fightingClass > secondUnit.technology["tactics"] + secondUnit.fightingClass) { return 1; } // If firstUnit has a tactical advantage
   else if (firstUnit.technology["tactics"] + firstUnit.fightingClass == secondUnit.technology["tactics"] + secondUnit.fightingClass) { // If both units are tied
-
-    if (firstUnit.lastMoved["turn"] < secondUnit.lastMoved["turn"]) // If firstUnit moved first, last turn
-
-      return 1;
-
+    
+    if (firstUnit.lastMoved["turn"] < secondUnit.lastMoved["turn"]) { return 1; }// If firstUnit moved first, last turn
     else if (firstUnit.lastMoved["turn"] == secondUnit.lastMoved["turn"]) {  // If both units are tied
-
-      if (firstUnit.lastMoved["phase"] < secondUnit.lastMoved["phase"]) // If firstUnit moved first, last movement round
-
-        return 1;
-
-      else if (firstUnit.lastMoved["phase"] == secondUnit.lastMoved["phase"]) {  // If both units are tied
-
-        if (firstUnit.lastMoved["playerIndex"] < secondUnit.lastMoved["playerIndex"])// If firstUnit has a lower player index
-
-          return 1;
-          
-        else if (firstUnit.lastMoved["playerIndex"] == secondUnit.lastMoved["playerIndex"]) {  // If both units are fully tied which should be impossible
-
-          return 0;
-
-        }
+      
+      if (firstUnit.lastMoved["phase"] < secondUnit.lastMoved["phase"]) { return 1; } // If firstUnit moved first, last movement round
+      else if (firstUnit.lastMoved["phase"] == secondUnit.lastMoved["phase"]) { // If both units are tied
+        
+        if (firstUnit.lastMoved["playerIndex"] < secondUnit.lastMoved["playerIndex"]) { return 1; }// If firstUnit has a lower player index
+        else if (firstUnit.lastMoved["playerIndex"] == secondUnit.lastMoved["playerIndex"]) { return 0; }  // If both units are fully tied which should be impossible
 
       }
 
@@ -106,95 +86,42 @@ function order (firstUnit,secondUnit) {
 
 class Hex {
 
-  constructor(coords, planet, asteroid, playerHomeBaseCoords) {
+  constructor(coords, planet, asteroid) {
 
-    this.units = [];
     this.coords = coords;
-    let listCoords = JSON.parse("[" + coords + "]");
-    let temp = false;
+    this.units = [];
 
-    for (let coord of playerHomeBaseCoords) {
+    this.planet = null;
+    if (planet) { this.planet = new Planet(this.coords, ); }
 
-      if (coord[0] == listCoords[0] && coord[1] == listCoords[1]) {
-
-        temp = true;
-
-      }
+    this.asteroid = null;
+    if (asteroid) { this.asteroid = new Asteroid(this.coords); }
 
     }
 
-    if (planet) {
+  sortForCombat() { return this.units.sort(order).map(x => x); }
 
-      this.planet = new Planet(this.coords, temp);
-
-    } else {
-
-      this.planet = null;
-
-    }
-    if (asteroid) {
-
-      this.asteroid = new Asteroid(this.coords);
-
-    } else {
-
-      this.asteroid = null;
-
-    }
-
-  }
-
-  sortForCombat() {
-
-    this.units = this.units.sort(order);
-    return this.units.map(x => x);
-
-  }
-
-  appendUnit(unit) {
-
-    this.units.push(unit);
-
-  }
+  appendUnit(unit) { this.units.push(unit); }
 
   removeUnit(unit) {
 
-    this.units.splice(this.units.indexOf(unit), 1);
-
+    let unitIndex = this.units.indexOf(unit);
+    this.units.splice(unitIndex, 1);
+    let x=0;
   }
 
   generateState() {
 
     let planetState = null;
-
-    if (this.planet != null) {
-
-      planetState = this.planet.generateState();
-
-    }
+    if (this.planet != null) { planetState = this.planet.generateState(); }
 
     let asteroidState = null;
-
-    if (this.asteroid != null) {
-
-      asteroidState = this.asteroid.generateState();
-
-    }
+    if (this.asteroid != null) { asteroidState = this.asteroid.generateState(); }
 
     let unitState = [];
+    for (let unitIndex in this.units) { unitState.push(this.units[unitIndex].generateState()); }
 
-    for (let unitIndex in this.units) {
-
-      unitState.push(this.units[unitIndex].generateState());
-
-    }
-
-    return {
-      'coords': this.coords,
-      'planet': planetState,
-      'asteroid': asteroidState,
-      'units': unitState
-    };
+    return { 'coords': this.coords, 'planet': planetState, 'asteroid': asteroidState, 'units': unitState };
 
   }
 
@@ -211,17 +138,10 @@ class Planet {
 
   generateState() {
 
-    let colonyState = this.colony != null;
-      
     let status = 'habitable';
+    if (this.barren) { status = 'barren'; }
 
-    if (this.barren) {
-
-      status = 'barren';
-
-    }
-
-    return {'coords': this.coords, 'colony': colonyState, 'status': status};
+    return {'coords': this.coords, 'colony': this.colony, 'status': status};
     
   }
 
@@ -231,25 +151,12 @@ class Asteroid {
   constructor(coords, deepSpace = false) { // `deepSpace` is for later but simple
 
     this.coords = coords;
-
-    if (deepSpace) {
-
-      this.value = 10;
-
-    } else {
-      this.value = 5;
-
-    }
+    this.value = 5;
+    if (deepSpace) { this.value = 10; }
 
   }
 
-  generateState() {
-    return {
-      'coords': this.coords,
-      'value': this.value
-    }
-
-  }
+  generateState() { return { 'coords': this.coords, 'value': this.value }; }
 
 }
 

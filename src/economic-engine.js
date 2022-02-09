@@ -15,9 +15,7 @@ class EconomicEngine {
       let playerStartingCreds = player.creds;
       let newLine = '';
 
-      if (index > 0) {
-        newLine = '\n';
-      }
+      if (index > 0) { newLine = '\n'; }
 
       this.logs += newLine + game.logger.logSpecificText(`\nStarting Phase for Player ${player.playerIndex + 1}`);
 
@@ -48,11 +46,9 @@ class EconomicEngine {
         let coords = unit.coords[0] + ',' + unit.coords[1];
         let currentHex = game.board.grid[coords];
 
-        if (currentHex.planet != null && currentHex.planet.colony == null) {
+        if (currentHex.planet != null && currentHex.planet.colony == null && unit.type == "ColonyShip") { 
 
-          player.colonies.push(new Colony(player.playerIndex, coords, null, player.technology, null, true));
-          unit.destroy(game);
-          currentHex.planet.colony = true;
+          this.colonize(game, currentHex, player, unit, coords);
   
         }
 
@@ -72,22 +68,12 @@ class EconomicEngine {
         if (typeof(purchase) == "string") {
 
           result = this.buyTech(game, purchase, player);
+          if (result[0] == true) { correctedPurchases['technology'].push([purchase, result[1]]); }
 
-          if (result[0] == true) {
-
-            correctedPurchases['technology'].push([purchase, result[1]]);
-
-          }
-        }
-        else {
+        } else {
 
           result = this.buyUnit(game, purchase, player);
-
-          if (result[0] == true) {
-
-            correctedPurchases['units'].push([purchase, result[1]]);
-
-          }
+          if (result[0] == true) { correctedPurchases['units'].push([purchase, result[1]]); }
 
         }          
         
@@ -103,6 +89,15 @@ class EconomicEngine {
 
   }
 
+  colonize(game, currentHex, player, unit, coords) {
+
+    let newColony = new Colony(player.playerIndex, coords, null, player.technology, null, false)
+    player.colonies.push(newColony);
+    currentHex.planet.colony = newColony.generateState(true);
+    unit.destroy(game);
+
+  }
+
   buyTech(game, tech, player) {
 
     let techData = game.gameState["technologyData"][tech];
@@ -115,11 +110,7 @@ class EconomicEngine {
 
       return [true, techCost];
 
-    } else {
-
-      return [false, techCost];
-
-    }
+    } else { return [false, techCost]; }
 
   }
 
@@ -134,11 +125,7 @@ class EconomicEngine {
 
       return [true, unitCost];
       
-    } else {
-
-      return [false, unitCost];
-
-    }
+    } else { return [false, unitCost]; }
 
   }
 
@@ -150,11 +137,7 @@ class EconomicEngine {
 
     game.board.removeUnit(removalUnit, game);
 
-    if (player.units.length == 0) {
-
-      throw `Player ${player.playerIndex} loses!`;
-
-    }
+    if (player.units.length == 0) { console.log(`Player ${player.playerIndex} loses!`); }
 
     let maintenanceCost = removalUnit.maintenance;
 
@@ -167,11 +150,7 @@ class EconomicEngine {
     let income = 0
     income += player.homeBase.income;
 
-    for (let colony of player.colonies) {
-
-        income += colony.income;
-
-    }
+    for (let colony of player.colonies) { income += colony.income; }
 
     return income;
 
@@ -181,11 +160,7 @@ class EconomicEngine {
 
     let totalTaxes = 0;
 
-    for (let unit of player.units) {
-
-      totalTaxes += unit.maintenance;
-
-    }
+    for (let unit of player.units) { totalTaxes += unit.maintenance; }
 
     return totalTaxes;
 

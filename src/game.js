@@ -110,12 +110,10 @@ class Game {
 
           let temp = x + "," + y;
 
-          if (!planetCoords.includes(temp)) {
-
-            possibleCoords.push(temp);
-
-          }
+          if (!planetCoords.includes(temp)) { possibleCoords.push(temp); }
+          
         }
+
       }
 
       for (let index = 0; index < this.numPlanetsPerPlayer; index++) {
@@ -140,10 +138,10 @@ class Game {
 
     }
     
-    this.board.generateBoard(planetCoords, asteroidCoords, this.playerHomeBaseCoords, this.boardSize);
+    this.board.generateBoard(planetCoords, asteroidCoords, this.boardSize);
 
     for (let player of this.players) {
-      this.board.grid[player.startingCoords[0] + "," + player.startingCoords[1]].planet.colony = player.homeBase;
+      this.board.grid[player.startingCoords[0] + "," + player.startingCoords[1]].planet.colony = player.homeBase.generateState(true);
     }
 
   }
@@ -174,18 +172,23 @@ class Game {
     let coords = []
 
     switch (JSON.stringify(player.startingCoords)) {
+
       case JSON.stringify([1, 1]):
         coords = [[0, 5], [0, 5]];
         break;
+
       case JSON.stringify([this.boardSize - 2,  1]):
-        coords = [[this.boardSize - 4, this.boardSize - 1], [0, 5]];
+        coords = [[this.boardSize - 5, this.boardSize], [0, 5]];
         break;
+
       case JSON.stringify([1, this.boardSize - 2]):
-        coords = [[0, 5], [this.boardSize - 5, this.boardSize - 1]];
+        coords = [[0, 5], [this.boardSize - 5, this.boardSize]];
         break;
+
       case JSON.stringify([this.boardSize - 2,  this.boardSize - 2]):
-        coords = [[this.boardSize - 5, this.boardSize - 1], [this.boardSize - 5, this.boardSize - 1]];
+        coords = [[this.boardSize - 5, this.boardSize], [this.boardSize - 5, this.boardSize]];
         break;
+
     }
 
     return coords;
@@ -213,48 +216,69 @@ class Game {
     this.phaseValue = this.phaseStats[this.phase];
 
     switch (this.phase) {
+
       case "Movement":
+
         this.logger.logSpecificText(`\nBEGINNING OF TURN ${this.turn} MOVEMENT PHASE\n`);
+
         for (let round = 1; round <= this.phaseValue; round++) {
+
           this.oldGameState = JSON.parse(JSON.stringify(this.gameState));
           this.movementEngine.completeMovementRound(this, round);
           this.generateState(null, "Movement", round);
           this.logger.simpleLogMovement(this.oldGameState, this.gameState, round);
+
         }
+
         this.logger.endSimpleLogMovement(this.gameState);
+
         this.next();
+
         break;
+
       case "Combat":
+
         this.combatEngine.completeCombatPhase(this);
         this.generateState(null, "Combat");
+
         this.next();
+
         break;
+
       case "Economic":
+
         this.economicEngine.completeEconomicPhase(this);
         this.generateState(null, "Economic");
+
         this.next();
+
         break;
+
     }
     return true;
   }
 
   next() {
-    if (/*checkIfPlayerHasWon() && */ this.turn > this.maxTurns) {
-      return false;
-    } // check if keep playing (for display.js)
+    if (/*checkIfPlayerHasWon() && */ this.turn > this.maxTurns) {  return false; } // check if keep playing (for display.js)
 
     switch (this.phase) {
+
       case "Movement":
-        if (this.movementStep > 2) {
-          this.phase = "Combat";
-        }
+
+        if (this.movementStep > 2) { this.phase = "Economic"; }
+
         break;
       case "Combat":
+
         this.phase = "Economic";
+
         break;
+
       case "Economic":
+        
+        this.turn += 1;  
         this.phase = "Movement";
-        this.turn += 1;
+        
         break;
     }
 
@@ -382,25 +406,33 @@ class Game {
     };
 
     if (currentPlayer || currentPlayer == null) {
+
       let temp = {};
+      
       for (let playerNumber in this.players) {
+
         let player = this.players[playerNumber];
         temp[playerNumber] = player.generateState(true, phase_ == "Combat");
+
       }
+      
       this.gameState.players = temp;
+
     } else {
+
       let temp = {};
+
       for (let playerNumber in this.players) {
+
         let player = this.players[playerNumber];
-        temp[playerNumber] = player.generateState(
-          currentPlayer == player,
-          phase_ == "Combat"
-        );
+        temp[playerNumber] = player.generateState(currentPlayer == player, phase_ == "Combat");
+
       }
       this.gameState.players = temp;
     }
-    if (phase_ == "Combat")
-      this.gameState["combat"] = this.combatEngine.generateCombatArray(this);
+
+    if (phase_ == "Combat") { this.gameState["combat"] = this.combatEngine.generateCombatArray(this); }
+
     return this.gameState;
   }
 }

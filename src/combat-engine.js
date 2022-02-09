@@ -6,11 +6,8 @@ class CombatEngine {
 
     let possibleCombats = this.findPossibleCombats(game);
 
-    if (possibleCombats.length > 0) {
+    if (possibleCombats.length > 0) { this.logs += game.logger.simpleLogCombatInitialization(game.gameState); }
 
-      this.logs += game.logger.simpleLogCombatInitialization(game.gameState);
-
-    }
     for (let combatHex of possibleCombats) {
 
       // Gets all units that can fight
@@ -18,11 +15,7 @@ class CombatEngine {
 
       for (let unit of combatHex.units) {
 
-        if (unit.canFight) {
-
-          unitsInCombat.push(unit);
-
-        }
+        if (unit.canFight) { unitsInCombat.push(unit); }
 
       }
       
@@ -75,17 +68,8 @@ class CombatEngine {
         game.generateState(false, "Combat");
 
         // Move to the next attacking unit in the order or loop back to the begining
-        if (attackingUnitIndex >= (combatOrder.length - 1)) {
-
-          attackingUnitIndex = 0;
-          continue;
-
-        } else {
-
-          attackingUnitIndex += 1;
-          continue;
-
-        }
+        if (attackingUnitIndex >= (combatOrder.length - 1)) { attackingUnitIndex = 0; } 
+        else { attackingUnitIndex += 1; }
 
       }
 
@@ -109,11 +93,7 @@ class CombatEngine {
         game.board.removeUnit(defendingUnit, game);
         combatOrder.splice(combatOrder.indexOf(defendingUnit), 1);
 
-      } else { // If the attacker doesn't kill, but hits the defender
-
-        defendingUnit.damage += attackingUnit.attack; 
-
-      }
+      } else { defendingUnit.damage += attackingUnit.attack; } // If the attacker doesn't kill, but hits the defender
 
     }
 
@@ -125,11 +105,7 @@ class CombatEngine {
 
     for (let hex of Object.values(game.board.grid)) {
 
-      if (this.moreThanTwoPlayersInSpace(hex.units)) {
-
-        possibleCombats.push(hex);
-
-      }
+      if (this.moreThanTwoPlayersInSpace(hex.units)) { possibleCombats.push(hex); }
 
     }
 
@@ -167,11 +143,7 @@ class CombatEngine {
 
     for (let ship of ships) {
 
-      if (ship.playerIndex != ships[0].playerIndex) {
-
-        return true;
-
-      }
+      if (ship.playerIndex != ships[0].playerIndex) { return true; }
 
     }
 

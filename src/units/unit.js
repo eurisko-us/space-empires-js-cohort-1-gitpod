@@ -64,7 +64,11 @@ class Unit {
 
   destroy(game) {
     // Remove current unit's player's refernce from the player's `units` array
-    game.players[this.playerIndex].units.splice(game.players[this.playerIndex].units.indexOf(this));
+    let coords = this.coords[0] + "," + this.coords[1];
+    game.board.grid[coords].removeUnit(this);
+    let currentPlayerUnits = game.players[this.playerIndex].units;
+    currentPlayerUnits.splice(currentPlayerUnits.indexOf(this), 1);
+    
   }
 }
 
