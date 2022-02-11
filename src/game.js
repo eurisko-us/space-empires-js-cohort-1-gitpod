@@ -366,9 +366,18 @@ class Game {
           defense: 0,
           maintenance: 0,
         },
-        Colonyship: {
+        "Colony Ship": {
           cost: 8,
           hullSize: 1,
+          shipsizeNeeded: 1,
+          tactics: 0,
+          attack: 0,
+          defense: 0,
+          maintenance: 0,
+        },
+        "Mining Ship": {
+          cost: 6,
+          hullSize: 0,
           shipsizeNeeded: 1,
           tactics: 0,
           attack: 0,

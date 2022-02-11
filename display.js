@@ -1,7 +1,5 @@
 const Game = require('./src/game');
-const Strats = require('./src/strategies/game-testing-strategies.js');
-const StratOne = Strats.StratOne;
-const StratTwo = Strats.StratTwo;
+const RandomStrat = require('./src/strategies/random-strategy.js').RandomStrat;
 
 
 class Display {
@@ -22,7 +20,7 @@ class Display {
   }
 
   runGame() {
-    let strategies = [new StratOne(0), new StratTwo(1), new StratOne(2), new StratTwo(3)];
+    let strategies = [new RandomStrat(0), new RandomStrat(1), new RandomStrat(2), new RandomStrat(3)];
 
     this.game = new Game(strategies, 17, { 'Movement': 3, 'Combat': null, 'Economic': null }, 100, 5, 7);
 
@@ -120,8 +118,8 @@ class Display {
 
       }
 
-      let timeout = 4000;
-      if (prevPhase == 'Movement') { timeout = 2500; }
+      let timeout = 0;
+      if (prevPhase == 'Movement') { timeout = 500; }
 
       setTimeout(this.runPhase.bind(this), timeout); // 2 Second Delay for each Phase/Round
     }

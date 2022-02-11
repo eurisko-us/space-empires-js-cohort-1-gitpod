@@ -5,9 +5,9 @@ class MovementEngine {
 
       for (let unit of player.units) {
 
-        let immovableShipTypes = ['Shipyard', 'Base', 'Homeworld', 'Colony'];
+        let immovableShipTypes = ['ShipYard', 'Base', 'Homeworld', 'Colony'];
 
-        if (!immovableShipTypes.includes(unit.type) && !unit.homeBase && unit.canMove) { this.move(game, unit, round, player); }
+        if (unit.canMove && !immovableShipTypes.includes(unit.type)) { this.move(game, unit, round, player); }
 
       }
 
@@ -24,7 +24,8 @@ class MovementEngine {
     for (let tech = 0; tech < unitMovementTechnologyCurrentRound; tech++) {
 
       game.generateState(player, "Movement");
-      let translation = player.strategy.decideUnitMovement(unit.index, game.gameState);
+      let unitIndex = player.units.indexOf(unit);
+      let translation = player.strategy.decideUnitMovement(unitIndex, game.gameState);
       // Units can only move like a king in chess
       // But it's repeated multiple times a movement phase and it's numerous rounds
 
@@ -45,16 +46,16 @@ class MovementEngine {
 
         }
 
-      } else { throw `Player ${player.playerIndex}'s ${unit.type}, ${unit.id} tried to cheat with an invalid move, it tried to move to (${unit.coords[0] + translation[0]}, ${unit.coords[1] + translation[1]}) from (${unit.coords[0]}, ${unit.coords[1]}).`; } // Else the wanted move is invalid, it throws an exception defined as such:
+      } else { throw `Player ${player.playerIndex}'s ${unit.type}, ${unit.id} tried to cheat with an invalid move, it tried to move to (${unit.coords[0] + translation["x"]}, ${unit.coords[1] + translation["y"]}) from (${unit.coords[0]}, ${unit.coords[1]}).`; } // Else the wanted move is invalid, it throws an exception defined as such:
     }
 
   }
 
-  isInSpace(game, unit, translation) {
+  isInSpace(game, unitCoords, translation) {
 
-    let x = unit[0] + translation["x"];
-    let y = unit[1] + translation["y"];
-    return 0 <= x && x <= game.boardSize && 0 <= y && y <= game.boardSize;
+    let x = unitCoords[0] + translation["x"];
+    let y = unitCoords[1] + translation["y"];
+    return 0 <= x && x < game.boardSize && 0 <= y && y < game.boardSize;
 
   }
 

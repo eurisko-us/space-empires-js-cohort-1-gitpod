@@ -11,37 +11,46 @@ class CombatEngine {
     for (let combatHex of possibleCombats) {
 
       // Gets all units that can fight
-      let unitsInCombat = [];
+      let combatOrder = [];
+      let removeOrder = [];
+
 
       for (let unit of combatHex.units) {
 
-        if (unit.canFight) { unitsInCombat.push(unit); }
+        if (unit.canFight) { combatOrder.push(unit); }
+        else { removeOrder.push(unit); }
+
+      }
+
+      for (let unit of removeOrder) {
+
+        unit.destroy(game);
 
       }
       
+      if (combatOrder.length <= 1) { continue; } 
+
       this.logs += '\n';
       game.logger.logSpecificText(`\t`);
       let combatString = `Combat at (${combatHex.coords})\n`;
       this.logs += game.logger.logSpecificText(combatString) + '\n';
 
       // Takes the units in a certain space and sorts them
-      let combatOrder = combatHex.sortForCombat();
-
+      
       let attackingUnitIndex = 0;
 
-      while ((this.moreThanTwoPlayersInSpace(combatOrder)) && (combatOrder.length > 1)) {
+      combatOrder = combatHex.sortForCombat(combatOrder);
+
+      let i = 0
+
+      while (combatOrder.length > 1 && this.moreThanTwoPlayersInSpace(combatOrder)) {
+
+        if (i > 1000) { let x = 0; }
         
         //get our attacking unit
         let attackingUnit = combatOrder[attackingUnitIndex];
         // Set up an info-only combat order for strategies
-        let combatOrderGameState = [];
-        
-        for(let unit of combatOrder) {
-
-          let unitState = unit.generateState(game.players[unit.playerIndex], true);
-          combatOrderGameState.push(unitState);
-
-        }
+        let combatOrderGameState = combatOrder.map(unit => unit.generateState(game.players[unit.playerIndex], true));
         // the long winded process of getting the defending unit
         // Goes through the game to get the strategy
         // The strategy picks an a unit from the info only combat order and returns its index
@@ -72,6 +81,8 @@ class CombatEngine {
         else { attackingUnitIndex += 1; }
 
       }
+
+      i += 1;
 
     }
 
@@ -139,7 +150,7 @@ class CombatEngine {
 
   moreThanTwoPlayersInSpace(ships) {
 
-    if (ships.length == 0) { return false; }
+    if (ships.length <= 1) { return false; }
 
     for (let ship of ships) {
 

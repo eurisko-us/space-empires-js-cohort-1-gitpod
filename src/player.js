@@ -1,8 +1,16 @@
-const Colony = require("../src/units/colony.js")
-const MiningShip = require("../src/units/mining-ship")
-const Scout = require("../src/units/scout")
-const Destroyer = require("../src/units/destroyer")
-const ColonyShip = require("../src/units/colony-ship")
+const Colony = require("../src/units/colony.js");
+const MiningShip = require("../src/units/mining-ship.js");
+const Scout = require("../src/units/scout.js");
+const Destroyer = require("../src/units/destroyer.js");
+const Base = require("../src/units/base.js");
+const Cruiser = require("../src/units/cruiser.js");
+const Battleship = require("../src/units/battleship.js")
+const Battlecruiser = require("../src/units/battlecruiser.js");
+const Dreadnaught = require("../src/units/dreadnaught.js");
+const ColonyShip = require("../src/units/colony-ship.js");
+const Shipyard = require("../src/units/ship-yard.js");
+const Decoy = require("../src/units/decoy.js");
+
 
 class Player {
   constructor(strategy, coords, boardSize, playerIndex, playerColor) {
@@ -27,7 +35,7 @@ class Player {
 
   build(game, unit) { // Unit is formatted as ["string of ship type", (tuple of coords)]
 
-    let unitTypes = { "Mining Ship": MiningShip,  "Colony Ship": ColonyShip, "Scout": Scout, "Destroyer": Destroyer,/*, more fighting ships later */ };
+    let unitTypes = { "Mining Ship": MiningShip,  "Colony Ship": ColonyShip, "Scout": Scout, "Destroyer": Destroyer, "Cruiser": Cruiser, "Battlecruiser": Battlecruiser, "Battleship": Battleship, "Dreadnaught": Dreadnaught, "Decoy": Decoy, "Base": Base, "Shipyard": Shipyard/*, more fighting ships later */ };
     let possibleBuildPositions = this.getPossibleBuildCoords();
     let unitBuildCoords = unit[1][0] + ',' + unit[1][1];
 

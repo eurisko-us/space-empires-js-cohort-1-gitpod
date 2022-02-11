@@ -6,6 +6,7 @@ class ColonyShip extends Unit{
     super(playerIndex, initialCoord, id, technology, turnCreated, homeBase);
     this.cost = 8;
     this.type = "ColonyShip";
+    this.canFight = false;
   
   }
 

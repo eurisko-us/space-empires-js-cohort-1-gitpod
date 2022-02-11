@@ -12,6 +12,7 @@ class ShipYard extends Unit{
     this.cost = 6;
     this.maintenance = 0;
     this.type = "ShipYard";
+    this.canMove = false;
 
   }
   
