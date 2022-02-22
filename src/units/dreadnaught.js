@@ -4,7 +4,6 @@ class Dreadnaught extends Unit{
   constructor(playerIndex, initialCoord, id, technology, turnCreated, homeBase) {
 
     super(playerIndex, initialCoord, id, technology, turnCreated, homeBase);
-
     this.attack = 6;
     this.defense = 3;
     this.armor = 3;

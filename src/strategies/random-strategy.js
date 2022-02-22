@@ -2,11 +2,10 @@ const DefaultStrategy = require("../strategies/default-strategy.js")
 
 class RandomStrat extends DefaultStrategy {
   constructor(playerIndex) {
-
+    
     super(playerIndex);
-
     this.name = 'Random Strategy';
-
+    
   }
 
   decideUnitMovement(unitIndex, gameState) {

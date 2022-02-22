@@ -1,0 +1,176 @@
+
+GAME START
+
+
+BEGINNING OF TURN 1 MOVEMENT PHASE
+
+
+	Movement Round 1
+
+		Player 1 MiningShip 1: 1,1 -> 0,1
+
+		Player 1 MiningShip 2: 1,1 -> 1,0
+
+		Player 1 ColonyShip 3: 1,1 -> 1,2
+
+		Player 1 ColonyShip 4: 1,1 -> 1,0
+
+		Player 2 MiningShip 1: 1,15 -> 2,15
+
+		Player 2 MiningShip 2: 1,15 -> 2,15
+
+		Player 2 ColonyShip 3: 1,15 -> 1,16
+
+		Player 2 ColonyShip 4: 1,15 -> 2,15
+
+		Player 3 MiningShip 1: 15,1 -> 15,2
+
+		Player 3 MiningShip 2: 15,1 -> 16,1
+
+		Player 3 ColonyShip 3: 15,1 -> 14,1
+
+		Player 3 ColonyShip 4: 15,1 -> 15,0
+
+		Player 4 MiningShip 1: 15,15 -> 14,15
+
+		Player 4 MiningShip 2: 15,15 -> 15,14
+
+		Player 4 ColonyShip 3: 15,15 -> 14,15
+
+		Player 4 ColonyShip 4: 15,15 -> 15,14
+
+
+	Movement Round 2
+
+		Player 1 MiningShip 1: 0,1 -> 0,0
+
+		Player 1 MiningShip 2: 1,0 -> 0,0
+
+		Player 1 ColonyShip 3: 1,2 -> 1,1
+
+		Player 1 ColonyShip 4: 1,0 -> 2,0
+
+		Player 2 MiningShip 1: 2,15 -> 2,16
+
+		Player 2 MiningShip 2: 2,15 -> 2,14
+
+		Player 2 ColonyShip 3: 1,16 -> 2,16
+
+		Player 2 ColonyShip 4: 2,15 -> 3,15
+
+		Player 3 MiningShip 1: 15,2 -> 16,2
+
+		Player 3 MiningShip 2: 16,1 -> 16,2
+
+		Player 3 ColonyShip 3: 14,1 -> 14,2
+
+		Player 3 ColonyShip 4: 15,0 -> 16,0
+
+		Player 4 MiningShip 1: 14,15 -> 14,16
+
+		Player 4 MiningShip 2: 15,14 -> 14,14
+
+		Player 4 ColonyShip 3: 14,15 -> 14,14
+
+		Player 4 ColonyShip 4: 15,14 -> 15,14
+
+
+	Movement Round 3
+
+		Player 1 MiningShip 1: 0,0 -> 0,1
+
+		Player 1 MiningShip 2: 0,0 -> 0,1
+
+		Player 1 ColonyShip 3: 1,1 -> 2,1
+
+		Player 1 ColonyShip 4: 2,0 -> 1,0
+
+		Player 2 MiningShip 1: 2,16 -> 2,15
+
+		Player 2 MiningShip 2: 2,14 -> 2,15
+
+		Player 2 ColonyShip 3: 2,16 -> 2,15
+
+		Player 2 ColonyShip 4: 3,15 -> 3,15
+
+		Player 3 MiningShip 1: 16,2 -> 15,2
+
+		Player 3 MiningShip 2: 16,2 -> 16,1
+
+		Player 3 ColonyShip 3: 14,2 -> 14,3
+
+		Player 3 ColonyShip 4: 16,0 -> 16,0
+
+		Player 4 MiningShip 1: 14,16 -> 13,16
+
+		Player 4 MiningShip 2: 14,14 -> 13,14
+
+		Player 4 ColonyShip 3: 14,14 -> 14,15
+
+		Player 4 ColonyShip 4: 15,14 -> 15,14
+
+
+	Ending Unit Locations
+
+		Player 01
+
+			Homeworld: 1,1
+
+			MiningShip 1: 0,1
+
+			MiningShip 2: 0,1
+
+			ColonyShip 3: 2,1
+
+			ColonyShip 4: 1,0
+
+		Player 11
+
+			Homeworld: 1,15
+
+			MiningShip 1: 2,15
+
+			MiningShip 2: 2,15
+
+			ColonyShip 3: 2,15
+
+			ColonyShip 4: 3,15
+
+		Player 21
+
+			Homeworld: 15,1
+
+			MiningShip 1: 15,2
+
+			MiningShip 2: 16,1
+
+			ColonyShip 3: 14,3
+
+			ColonyShip 4: 16,0
+
+		Player 31
+
+			Homeworld: 15,15
+
+			MiningShip 1: 13,16
+
+			MiningShip 2: 13,14
+
+			ColonyShip 3: 14,15
+
+			ColonyShip 4: 15,14
+
+
+END OF TURN 1 MOVEMENT PHASE
+
+
+BEGINNING OF TURN 1 COMBAT PHASE
+
+
+END OF TURN 1 COMBAT PHASE
+
+
+BEGINNING OF TURN 1 ECONOMIC PHASE
+
+
+Starting Phase for Player 1

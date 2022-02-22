@@ -5,7 +5,6 @@ class DefaultStrategy {
   constructor(playerIndex) {
 
     this.playerIndex = playerIndex;
-
     this.name = 'Default Strategy';
 
   }

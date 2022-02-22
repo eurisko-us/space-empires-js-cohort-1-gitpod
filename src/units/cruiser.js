@@ -4,7 +4,6 @@ class Cruiser extends Unit{
   constructor(playerIndex, initialCoord, id, technology, turnCreated, homeBase) {
 
     super(playerIndex, initialCoord, id, technology, turnCreated, homeBase);
-
     this.attack = 4;
     this.defense = 1;
     this.armor = 2;

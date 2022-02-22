@@ -4,7 +4,6 @@ class Battleship extends Unit{
   constructor(playerIndex, initialCoord, id, technology, turnCreated, homeBase) {
   
     super(playerIndex, initialCoord, id, technology, turnCreated, homeBase);
-  
     this.attack = 5;
     this.defense = 2;
     this.armor = 3;

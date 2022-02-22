@@ -4,7 +4,6 @@ class Colony extends Unit {
   constructor(playerIndex, initialCoord, id, technology, turnCreated, homeBase) {
 
     super(playerIndex, initialCoord, id, technology, turnCreated, homeBase);
-
     this.type = 'Colony';
     this.income = 5;
     this.canMove = false;

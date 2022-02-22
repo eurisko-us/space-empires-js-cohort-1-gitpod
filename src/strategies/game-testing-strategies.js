@@ -5,7 +5,6 @@ class StratOne extends DefaultStrategy {
   constructor(playerIndex) {
 
     super(playerIndex);
-
     this.name = 'Strategy One';
 
   }
@@ -19,7 +18,6 @@ class StratOne extends DefaultStrategy {
   decidePurchases(hiddenGameState) {
 
     let homeCoords = hiddenGameState["players"][this.playerIndex]["homeworld"]["coords"];
-
     return ["attack", ["Scout", homeCoords], "tactics"];
 
   }
@@ -31,7 +29,6 @@ class StratTwo extends DefaultStrategy {
   constructor(playerIndex) {
 
     super(playerIndex);
-
     this.name = 'Strategy Two';
 
   }
@@ -45,7 +42,6 @@ class StratTwo extends DefaultStrategy {
   decidePurchases(hiddenGameState) {
 
     let homeCoords = hiddenGameState["players"][this.playerIndex]["homeworld"]["coords"];
-
     return ["defense", ["Scout", homeCoords], "movement"];
     
   }

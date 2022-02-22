@@ -69,7 +69,7 @@ class EconomicEngine {
 
       for (let purchase of purchases) {
 
-        let result;//buy, cost;
+        let result; //buy, cost;
 
         if (typeof(purchase) == "string") {
 
@@ -78,12 +78,18 @@ class EconomicEngine {
 
         } else {
 
+          let coords = purchase[1][0] + ',' + purchase[1][0];
+          let planet = game.board.grid[coords].planet;
+          if (planet == null && planet.colony == null && planet.colony.playerIndex != player.playerIndex) { continue; } // if planet/colony does not exist or placing on wrong teams colony
+          //if (this.shipyardRequirement(planet, player) < game.gameState.unitData[purchase[0]].maintenance) { continue; } // is shipyard requirement for ship not met on current planet
+          if (player.technology.shipsize < game.gameState.unitData[purchase[0]].shipsizeNeeded) { continue; } // if shipsize tech requirement for ship not met by player
           result = this.buyUnit(game, purchase, player);
           if (result[0] == true) { correctedPurchases['units'].push([purchase, result[1]]); }
 
         }          
         
       }
+      
       game.generateState(true, false);
       
       this.logs += game.logger.simpleLogEconomic(taxes, income, playerStartingCreds, player.creds, correctedPurchases)
@@ -108,6 +114,22 @@ class EconomicEngine {
 
     player.creds += unit.asteroid.value;
     unit.asteroid = null;
+
+  }
+
+  shipyardRequirement(planet, player) {
+
+    let requirement = 0;
+
+    console.log(`planet.units ${planet.units}`)
+
+    for (let unit of planet.units) {
+
+      if (unit.type == "Shipyard") { requirement += player.technology.shipyard; }
+
+    }
+
+    return requirement;
 
   }
 

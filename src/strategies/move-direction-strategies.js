@@ -5,9 +5,8 @@ class MoveRightStrat extends DefaultStrategy {
   constructor(playerIndex) {
 
     super(playerIndex);
-
     this.name = 'Move Right Strategy';
-
+    
   }
 
   decideUnitMovement(unitIndex, gameState) {
@@ -22,7 +21,6 @@ class MoveDownStrat extends DefaultStrategy {
   constructor(playerIndex) {
 
     super(playerIndex);
-
     this.name = 'Move Down Strategy';
 
   }
@@ -40,7 +38,6 @@ class MoveLeftStrat extends DefaultStrategy {
   constructor(playerIndex) {
 
     super(playerIndex);
-
     this.name = 'Move Left Strategy';
 
   }
@@ -58,7 +55,6 @@ class MoveUpStrat extends DefaultStrategy {
   constructor(playerIndex) {
 
     super(playerIndex);
-
     this.name = 'Move Up Strategy';
 
   }
