@@ -19,11 +19,9 @@ class RandomStrat extends DefaultStrategy {
       [ 0, -1 ]
     ];
 
-    if (unit.type == "MiningShip"){
-      if (unit.asteroid){
+    if (unit.type == "MiningShip" && unit.asteroid){
         let translation = this.bestMove(unit, gameState["players"][this.playerIndex]["homeworld"]["coords"]);
         return {"x": translation[0], "y": translation[1]};
-      }
     }
 
     while (true) {
@@ -53,45 +51,43 @@ class RandomStrat extends DefaultStrategy {
 
     let start = unit.coords;
 
-    let distances = possibleMoves.map(x => Math.sqrt((target[0]-(x[0]+start[0]))**2 + (target[1] - (x[1]+start[1]))**2));
+    let distances = possibleMoves.map(x => Math.sqrt((target[0] -(x[0] + start[0]))**2 + (target[1] - (x[1] + start[1]))**2));
     
     return possibleMoves[distances.indexOf(Math.min(...distances))];
   }
 
   decidePurchases(hiddenGameState) {
 
-    let homeCoords = hiddenGameState["players"][this.playerIndex]["homeworld"]["coords"];
-
-    let cp = JSON.parse(JSON.stringify(hiddenGameState["players"][this.playerIndex]["cp"]));
-
+    let player = hiddenGameState["players"][this.playerIndex];
+    let homeCoords = player["homeworld"]["coords"];
+    let cp = JSON.parse(JSON.stringify(player["cp"])); // copy of players cp
     let ships = [ 
-      [ "Dreadnaught", 24 ],
-      [ "Battleship", 20 ], 
-      [ "Battlecruiser", 15 ],
-      [ "Base", 12 ],
-      [ "Cruiser", 12 ],
-      [ "Destroyer" ,9 ],
-      [ "Colony Ship", 8 ],
+      //[ "Dreadnaught", 24 ],
+      //[ "Battleship", 20 ], 
+      //[ "Battlecruiser", 15 ],
+      //[ "Base", 12 ],
+      //[ "Cruiser", 12 ],
+      //[ "Destroyer" ,9 ],
+      //[ "Colony Ship", 8 ],
       [ "Scout", 6 ],
-      [ "Shipyard", 6],
-      [ "Mining Ship", 5 ],
-      [ "Decoy", 1 ]
-    ];
-      
+      [ "Shipyard", 6 ],
+      //[ "Mining Ship", 5 ],
+      //[ "Decoy", 1 ]
+    ];   
     let purchases = [];
 
-    while (true) {
+    while (true) { // add ships to cart
 
-      if ( cp <= 10) { break; }
+      if ( cp <= 10 ) { break; }
 
       let randomIndex = Math.floor(Math.random() * ships.length);
-
       let randomShip = ships[randomIndex];
 
-      if (cp < randomShip[1]) { continue; }
-      
-      purchases.push([ randomShip[0], homeCoords ]);
+      let currentShip = hiddenGameState.unitData[randomShip[0]];
 
+      if (cp < randomShip[1]) { continue; } // if can't buy skip
+      if (player.technology.shipsize < currentShip.shipsizeNeeded) { continue; } // tech no high enough skip
+      purchases.push([ randomShip[0], homeCoords ]);
       cp -= randomShip[1];
 
     }

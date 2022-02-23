@@ -52,7 +52,7 @@ class EconomicEngine {
   
         }
 
-        if (currentHex.planet != null && currentHex.colony != null && unit.type == "MiningShip" && unit.asteroid != null) { // if colony and mining ship with asteroid then add money and delete asteroid
+        if (currentHex.planet != null && currentHex.planet.colony != null && unit.type == "MiningShip" && unit.asteroid != null) { // if colony and mining ship with asteroid then add money and delete asteroid
 
           this.collectAsteroid(player, unit);
 
@@ -79,10 +79,19 @@ class EconomicEngine {
         } else {
 
           let coords = purchase[1][0] + ',' + purchase[1][0];
-          let planet = game.board.grid[coords].planet;
+          let hex = game.board.grid[coords];
+          let planet = hex.planet;
+          
           if (planet == null && planet.colony == null && planet.colony.playerIndex != player.playerIndex) { continue; } // if planet/colony does not exist or placing on wrong teams colony
-          //if (this.shipyardRequirement(planet, player) < game.gameState.unitData[purchase[0]].maintenance) { continue; } // is shipyard requirement for ship not met on current planet
+          
           if (player.technology.shipsize < game.gameState.unitData[purchase[0]].shipsizeNeeded) { continue; } // if shipsize tech requirement for ship not met by player
+          
+          if (purchase[1] != "Shipyard" && purchase[1] != "Base") { 
+
+            if (this.shipyardRequirement(hex, player) < game.gameState.unitData[purchase[0]].hullSize) { continue; } // if shipyard requirement for (non shipyard) ship not met on current planet
+          
+          } 
+          
           result = this.buyUnit(game, purchase, player);
           if (result[0] == true) { correctedPurchases['units'].push([purchase, result[1]]); }
 
@@ -117,13 +126,13 @@ class EconomicEngine {
 
   }
 
-  shipyardRequirement(planet, player) {
+  shipyardRequirement(hex, player) {
 
-    let requirement = 0;
+    if (!hex.units) { return 0; }
+    
+    let requirement = 1;
 
-    console.log(`planet.units ${planet.units}`)
-
-    for (let unit of planet.units) {
+    for (let unit of hex.units) {
 
       if (unit.type == "Shipyard") { requirement += player.technology.shipyard; }
 
@@ -166,14 +175,12 @@ class EconomicEngine {
 
   removeUnit(game, player) {
 
+    if (player.units.length == 0) { console.log(`Player ${player.playerIndex} loses!`); }
+
     game.generateState(player, "Economic");
     let removalIndex = player.strategy.decideRemoval(game.gameState);
     let removalUnit = player.units[removalIndex];
-
     game.board.removeUnit(removalUnit, game);
-
-    if (player.units.length == 0) { console.log(`Player ${player.playerIndex} loses!`); }
-
     let maintenanceCost = removalUnit.maintenance;
 
     return maintenanceCost;

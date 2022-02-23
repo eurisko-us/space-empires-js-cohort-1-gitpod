@@ -27,8 +27,10 @@ class Player {
 
     for (let id = 2; id < 4; id++) { this.units.push(new ColonyShip(playerIndex, JSON.parse(JSON.stringify(coords)), id, this.technology, 0, false)); }
 
+    for (let id = 4; id < 6; id++) { this.units.push(new Shipyard(playerIndex, JSON.parse(JSON.stringify(coords)), id, this.technology, 0, false)); }
+
     this.colonies = [];
-    this.idNumber = 4;
+    this.idNumber = 6;
     this.startingCoords = JSON.parse(JSON.stringify(coords));
 
   }
@@ -50,12 +52,11 @@ class Player {
 
   getPossibleBuildCoords() {
 
-    let temp = this.homeBase.coords[0] + "," + this.homeBase.coords[1];
-    let possibleBuildPositions = [this.homeBase.coords[0] + ',' + this.homeBase.coords[1]];
+    let possibleBuildPositions = [this.homeBase.coords[0] + "," + this.homeBase.coords[1]];
 
     for (let colony of this.colonies) {
 
-      temp = colony.coords[0] + "," + colony.coords[1];
+      let temp = colony.coords[0] + "," + colony.coords[1];
       possibleBuildPositions.push(temp)
 
     }
@@ -77,19 +78,16 @@ class Player {
   generateState(isCurrentPlayer, inCombat) {
 
     let state = {"name": this.strategy.type, "homeworld": this.homeBase.generateState(isCurrentPlayer, inCombat), "num": this.playerIndex };
-
     let units = [];
 
     for (let unit of this.units) { units.push(unit.generateState(isCurrentPlayer, inCombat)); }
 
     state["units"] = units;
-
     let colonies = [];
 
     for (let colony of this.colonies) { colonies.push(colony.generateState(isCurrentPlayer, inCombat)); }
 
     state["colonies"] = colonies;
-
     state["playerColor"] = this.playerColor;
     
     if (isCurrentPlayer || inCombat) {
