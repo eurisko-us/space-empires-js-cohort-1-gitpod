@@ -19,6 +19,13 @@ class RandomStrat extends DefaultStrategy {
       [ 0, -1 ]
     ];
 
+    if (unit.type == "MiningShip"){
+      if (unit.asteroid){
+        let translation = this.bestMove(unit, gameState["players"][this.playerIndex]["homeworld"]["coords"]);
+        return {"x": translation[0], "y": translation[1]};
+      }
+    }
+
     while (true) {
       
       let rand = Math.floor(Math.random() * possibleMoves.length);
@@ -34,6 +41,21 @@ class RandomStrat extends DefaultStrategy {
 
     }
 
+  }
+
+  bestMove(unit, target){
+    let possibleMoves = [
+      [ 0, 1 ], 
+      [ 1, 0 ],
+      [ -1, 0 ],
+      [ 0, -1 ]
+    ];
+
+    let start = unit.coords;
+
+    let distances = possibleMoves.map(x => Math.sqrt((target[0]-(x[0]+start[0]))**2 + (target[1] - (x[1]+start[1]))**2));
+    
+    return possibleMoves[distances.indexOf(Math.min(...distances))];
   }
 
   decidePurchases(hiddenGameState) {
