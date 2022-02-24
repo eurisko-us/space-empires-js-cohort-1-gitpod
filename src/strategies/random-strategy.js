@@ -20,20 +20,19 @@ class RandomStrat extends DefaultStrategy {
     ];
 
     if (unit.type == "MiningShip" && unit.asteroid){
+
         let translation = this.bestMove(unit, gameState["players"][this.playerIndex]["homeworld"]["coords"]);
         return {"x": translation[0], "y": translation[1]};
+
     }
 
     while (true) {
       
       let rand = Math.floor(Math.random() * possibleMoves.length);
       let translation = possibleMoves[rand];
-
       let newCoords = [ unit.coords[0] + translation[0], unit.coords[1] + translation[1] ]
 
-      if (newCoords[0] < 0 || newCoords[0] >= boardSize || newCoords[1] < 0 || newCoords[1] >= boardSize) {
-        continue; 
-      }
+      if (newCoords[0] < 0 || newCoords[0] >= boardSize || newCoords[1] < 0 || newCoords[1] >= boardSize) {  continue; }
 
       return {"x": translation[0], "y": translation[1]};
 
@@ -50,7 +49,6 @@ class RandomStrat extends DefaultStrategy {
     ];
 
     let start = unit.coords;
-
     let distances = possibleMoves.map(x => Math.sqrt((target[0] -(x[0] + start[0]))**2 + (target[1] - (x[1] + start[1]))**2));
     
     return possibleMoves[distances.indexOf(Math.min(...distances))];
@@ -82,11 +80,11 @@ class RandomStrat extends DefaultStrategy {
 
       let randomIndex = Math.floor(Math.random() * ships.length);
       let randomShip = ships[randomIndex];
-
       let currentShip = hiddenGameState.unitData[randomShip[0]];
 
       if (cp < randomShip[1]) { continue; } // if can't buy skip
       if (player.technology.shipsize < currentShip.shipsizeNeeded) { continue; } // tech no high enough skip
+      
       purchases.push([ randomShip[0], homeCoords ]);
       cp -= randomShip[1];
 

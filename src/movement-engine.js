@@ -55,6 +55,7 @@ class MovementEngine {
 
     let x = unitCoords[0] + translation["x"];
     let y = unitCoords[1] + translation["y"];
+    
     return 0 <= x && x < game.boardSize && 0 <= y && y < game.boardSize;
 
   }

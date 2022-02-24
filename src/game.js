@@ -187,24 +187,27 @@ class Game {
   }
 
   getRandomInteger(min, max) {
+    
     min = Math.ceil(min);
     max = Math.floor(max);
 
     return Math.floor(Math.random() * (max - min + 1) + min);
+  
   }
 
   play() {
+    
     let continuePlaying = true;
     while (continuePlaying) {
       continuePlaying = this.completePhase();
     }
+    
   }
 
   completePhase() {
     // Iterate through the phases
-    if (/*checkIfPlayerHasWon() && */ this.turn > this.maxTurns) {
-      return false;
-    } // check if keep playing
+    if (/*checkIfPlayerHasWon() && */ this.turn > this.maxTurns) { return false; } // check if keep playing
+    
     this.phaseValue = this.phaseStats[this.phase];
 
     switch (this.phase) {
@@ -284,8 +287,8 @@ class Game {
   }*/
 
   generateState(currentPlayer, phase_, movementRound = 0) {
-    let movementState =
-      this.movementEngine.generateMovementState(movementRound);
+    
+    let movementState = this.movementEngine.generateMovementState(movementRound);
     this.gameState = {
       turn: this.turn,
       winner: null,
@@ -429,6 +432,7 @@ class Game {
         temp[playerNumber] = player.generateState(currentPlayer == player, phase_ == "Combat");
 
       }
+      
       this.gameState.players = temp;
     }
 

@@ -74,6 +74,7 @@ class EconomicEngine {
         if (typeof(purchase) == "string") {
 
           result = this.buyTech(game, purchase, player);
+          
           if (result[0] == true) { correctedPurchases['technology'].push([purchase, result[1]]); }
 
         } else {
@@ -93,6 +94,7 @@ class EconomicEngine {
           } 
           
           result = this.buyUnit(game, purchase, player);
+
           if (result[0] == true) { correctedPurchases['units'].push([purchase, result[1]]); }
 
         }          
@@ -100,8 +102,8 @@ class EconomicEngine {
       }
       
       game.generateState(true, false);
-      
-      this.logs += game.logger.simpleLogEconomic(taxes, income, playerStartingCreds, player.creds, correctedPurchases)
+      this.logs += game.logger.simpleLogEconomic(taxes, income, playerStartingCreds, player.creds, correctedPurchases);
+
     }
 
     game.logger.logSpecificText(`\nEND OF TURN ${game.turn} ECONOMIC PHASE\n`);
