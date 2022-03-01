@@ -84,8 +84,29 @@ class RandomStrat extends DefaultStrategy {
 
       if (cp < randomShip[1]) { continue; } // if can't buy skip
       if (player.technology.shipsize < currentShip.shipsizeNeeded) { continue; } // tech no high enough skip
+
+      let possiblePositions = [homeCoords];
+
+      for (let unit of player.units) { 
+
+        if (unit.type != "Shipyard") { continue; }
+        
+        possiblePositions.push(JSON.parse("[" + unit.coords + "]"));
       
-      purchases.push([ randomShip[0], homeCoords ]);
+      }
+
+      for (let colony of player.colonies) { // if building a shipyard you can build on empty colony,
+
+        if (currentShip.type != "Shipyard" && possiblePositions.indexOf(JSON.parse("[" + colony.coords + "]")) !== -1) { continue; }
+
+        possiblePositions.push(JSON.parse("[" + colony.coords + "]"));        
+
+      }
+
+      randomIndex = Math.floor(Math.random() * possiblePositions.length);
+      let randomPosition = possiblePositions[randomIndex];
+      
+      purchases.push([ randomShip[0], randomPosition ]);
       cp -= randomShip[1];
 
     }
