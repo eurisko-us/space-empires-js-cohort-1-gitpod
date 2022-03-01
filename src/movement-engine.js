@@ -46,7 +46,7 @@ class MovementEngine {
 
         }
 
-      } else { throw `Player ${player.playerIndex}'s ${unit.type}, ${unit.id} tried to cheat with an invalid move, it tried to move to (${unit.coords[0] + translation["x"]}, ${unit.coords[1] + translation["y"]}) from (${unit.coords[0]}, ${unit.coords[1]}).`; } // Else the wanted move is invalid, it throws an exception defined as such:
+      } else { throw `Player ${player.playerIndex}'s ${unit.type}-${unit.id} tried to cheat with an invalid move, it tried to move to (${unit.coords[0] + translation["x"]}, ${unit.coords[1] + translation["y"]}) from (${unit.coords[0]}, ${unit.coords[1]}).`; } // Else the wanted move is invalid, it throws an exception defined as such:
     }
 
   }

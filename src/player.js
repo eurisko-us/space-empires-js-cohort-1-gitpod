@@ -38,26 +38,39 @@ class Player {
   build(game, unit) { // Unit is formatted as ["string of ship type", (tuple of coords)]
 
     let unitTypes = { "Mining Ship": MiningShip,  "Colony Ship": ColonyShip, "Scout": Scout, "Destroyer": Destroyer, "Cruiser": Cruiser, "Battlecruiser": Battlecruiser, "Battleship": Battleship, "Dreadnaught": Dreadnaught, "Decoy": Decoy, "Base": Base, "Shipyard": Shipyard/*, more fighting ships later */ };
-    let possibleBuildPositions = this.getPossibleBuildCoords();
-    let unitBuildCoords = unit[1][0] + ',' + unit[1][1];
+    let possibleBuildPositions = this.getPossibleBuildCoords(unit);
 
-    if (!possibleBuildPositions.includes(unitBuildCoords)) { throw `Player ${this.playerIndex} tried to cheat by building a ${unit[0]} in an invalid hex at ${unit[1]}`; }
+    const isEqual = (first, second) => {
+      return JSON.stringify(first) === JSON.stringify(second);
+    };
+
+    if (!possibleBuildPositions.some(e => isEqual(e, unit[1]))) { throw `Player ${this.playerIndex} tried to cheat by building a ${unit[0]} in an invalid hex at ${unit[1]}`; }
     
     let newShip = new unitTypes[unit[0]](this.playerIndex, JSON.parse(JSON.stringify(unit[1])), this.idNumber, this.technology, game.turn);
     this.idNumber += 1;
     this.units.push(newShip);
-    game.board.grid[unit[1][0] + ',' + unit[1][1]].appendUnit(newShip);
+    let unitBuildCoords = unit[1][0] + ',' + unit[1][1];
+    game.board.grid[unitBuildCoords].appendUnit(newShip);
 
   }
 
-  getPossibleBuildCoords() {
+  getPossibleBuildCoords(unit) {
 
-    let possibleBuildPositions = [this.homeBase.coords[0] + "," + this.homeBase.coords[1]];
+    let possibleBuildPositions = [this.homeBase.coords];
 
-    for (let colony of this.colonies) {
+    for (let unitTemp of this.units) { 
 
-      let temp = colony.coords[0] + "," + colony.coords[1];
-      possibleBuildPositions.push(temp)
+      if (unitTemp.type != "Shipyard") { continue; }
+      
+      possibleBuildPositions.push(JSON.parse("[" + unitTemp.coords + "]"));
+    
+    }
+
+    for (let colony of this.colonies) { // if building a shipyard you can build on empty colony,
+
+      if (unit.type != "Shipyard" && possibleBuildPositions.indexOf(JSON.parse("[" + colony.coords + "]")) !== -1) { continue; }
+
+      possibleBuildPositions.push(JSON.parse("[" + colony.coords + "]"));        
 
     }
 

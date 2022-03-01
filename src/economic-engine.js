@@ -66,10 +66,11 @@ class EconomicEngine {
       // The earlier the purchase is in the array the higher priority the player wants to purchase
       let purchases = player.strategy.decidePurchases(game.gameState);
       let correctedPurchases = {'technology': [], 'units': []};
+      let hullSizeBuilt = {};
 
       for (let purchase of purchases) {
 
-        let result; //buy, cost;
+        let result = (false, 0); //buy, cost;
 
         if (typeof(purchase) == "string") {
 
@@ -80,20 +81,42 @@ class EconomicEngine {
         } else {
 
           let coords = purchase[1][0] + ',' + purchase[1][0];
+
+          if (!hullSizeBuilt[coords]) { hullSizeBuilt[coords] = 0; } // create max hull size built check if it doesn't exist
+
           let hex = game.board.grid[coords];
+
+          if (!hex.planet) { continue; }
+
           let planet = hex.planet;
           
           if (planet == null && planet.colony == null && planet.colony.playerIndex != player.playerIndex) { continue; } // if planet/colony does not exist or placing on wrong teams colony
           
           if (player.technology.shipsize < game.gameState.unitData[purchase[0]].shipsizeNeeded) { continue; } // if shipsize tech requirement for ship not met by player
           
-          if (purchase[1] != "Shipyard" && purchase[1] != "Base") { 
+          if (this.shipyardRequirement(hex, player) < hullSizeBuilt[coords] + game.gameState.unitData[purchase[0]].hullSize) { continue; } // if shipyard requirement for (non shipyard) ship not met on current planet and max hull size built check is met
+          else { hullSizeBuilt[coords] += game.gameState.unitData[purchase[0]].hullSize; }
 
-            if (this.shipyardRequirement(hex, player) < game.gameState.unitData[purchase[0]].hullSize) { continue; } // if shipyard requirement for (non shipyard) ship not met on current planet
-          
-          } 
-          
-          result = this.buyUnit(game, purchase, player);
+          if (purchase[0] == "Base") {
+
+            if (!planet.base) { 
+              
+              result = this.buyUnit(game, hex, purchase, player);
+              planet.base = true;
+
+            } else  { continue; }
+
+          } else if (purchase[0] == "Shipyard") {
+            
+            if (hex.shipyardCount >= 4) { continue; } // no more than 4 shipyards per hex
+            else { 
+              
+              result = this.buyUnit(game, purchase, player);
+              hex.shipyardCount += 1;
+            
+            }
+
+          } else { result = this.buyUnit(game, purchase, player);}
 
           if (result[0] == true) { correctedPurchases['units'].push([purchase, result[1]]); }
 

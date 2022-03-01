@@ -100,11 +100,13 @@ class Hex {
 
     this.coords = coords;
     this.units = [];
-
     this.planet = null;
+    this.shipyardCount = 0;
+
     if (planet) { this.planet = new Planet(this.coords); }
 
     this.asteroid = null;
+
     if (asteroid) { this.asteroid = new Asteroid(this.coords); }
 
     }
@@ -133,10 +135,11 @@ class Hex {
 }
 
 class Planet {
-  constructor(coords, colony = null, barren = false) { // `barren` is for later but simple
+  constructor(coords, colony = null, base = null, barren = false) { // `barren` is for later but simple
 
     this.coords = coords;
     this.colony = colony;
+    this.base = base;
     this.barren = barren;
 
   } 
@@ -146,7 +149,7 @@ class Planet {
     let status = 'habitable';
     if (this.barren) { status = 'barren'; }
 
-    return {'coords': this.coords, 'colony': this.colony, 'status': status};
+    return {'coords': this.coords, 'colony': this.colony, 'base': this.base, 'status': status};
     
   }
 
