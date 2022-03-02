@@ -83,6 +83,7 @@ class RandomStrat extends DefaultStrategy {
       let currentShip = hiddenGameState.unitData[randomShip[0]];
 
       if (cp < randomShip[1]) { continue; } // if can't buy skip
+      
       if (player.technology.shipsize < currentShip.shipsizeNeeded) { continue; } // tech no high enough skip
       
       let possiblePositions = [homeCoords];
