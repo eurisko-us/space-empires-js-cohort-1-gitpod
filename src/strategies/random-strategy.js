@@ -72,48 +72,54 @@ class RandomStrat extends DefaultStrategy {
       //[ "Mining Ship", 5 ],
       //[ "Decoy", 1 ]
     ];   
+    let technology = ["attack", "defense", "movement", "shipsize", "shipyard", "terraform", "tactics", "exploration"];
+    let options = ships.concat(technology);
     let purchases = [];
+    while(cp> 10){
+      let randomIndex = Math.floor(Math.random() * options.length);
+      let randomPurchase = options[randomIndex];
+      if(Array.isArray(randomPurchase)){
+        let currentShip = hiddenGameState.unitData[randomPurchase[0]];
+        if (cp < randomPurchase[1]) { continue; } // if can't buy skip
+        if (player.technology.shipsize < currentShip.shipsizeNeeded) { continue; } // tech no high enough skip
+        let possiblePositions = [homeCoords];
 
-    while (true) { // add ships to cart
+        for (let unit of player.units) { 
 
-      if ( cp <= 10 ) { break; }
-
-      let randomIndex = Math.floor(Math.random() * ships.length);
-      let randomShip = ships[randomIndex];
-      let currentShip = hiddenGameState.unitData[randomShip[0]];
-
-      if (cp < randomShip[1]) { continue; } // if can't buy skip
-      if (player.technology.shipsize < currentShip.shipsizeNeeded) { continue; } // tech no high enough skip
-      let possiblePositions = [homeCoords];
-
-      for (let unit of player.units) { 
-
-        if (unit.type != "Shipyard") { continue; }
+          if (unit.type != "Shipyard") { continue; }
+          
+          possiblePositions.push(JSON.parse("[" + unit.coords + "]"));
         
-        possiblePositions.push(JSON.parse("[" + unit.coords + "]"));
-      
+        }
+
+        for (let colony of player.colonies) { // if building a shipyard you can build on empty colony,
+
+          if (currentShip.type != "Shipyard" && possiblePositions.indexOf(JSON.parse("[" + colony.coords + "]")) !== -1) { continue; }
+
+          possiblePositions.push(JSON.parse("[" + colony.coords + "]"));        
+
+        }
+
+        randomIndex = Math.floor(Math.random() * possiblePositions.length);
+        let randomPosition = possiblePositions[randomIndex];
+        
+        purchases.push([ randomPurchase[0], randomPosition ]);
+        cp -= randomPurchase[1];
+
+      }else{
+        let technology = randomPurchase;
+        let price = hiddenGameState["technologyData"][technology][player["technology"][technology]];
+        if(cp >= price){
+          purchases.push(technology);
+        }
       }
-
-      for (let colony of player.colonies) { // if building a shipyard you can build on empty colony,
-
-        if (currentShip.type != "Shipyard" && possiblePositions.indexOf(JSON.parse("[" + colony.coords + "]")) !== -1) { continue; }
-
-        possiblePositions.push(JSON.parse("[" + colony.coords + "]"));        
-
-      }
-
-      randomIndex = Math.floor(Math.random() * possiblePositions.length);
-      let randomPosition = possiblePositions[randomIndex];
-      
-      purchases.push([ randomShip[0], randomPosition ]);
-      cp -= randomShip[1];
-
     }
 
-    return purchases;
+    
+
+  return purchases;
 
   }
-
 }
 
 module.exports.RandomStrat = RandomStrat;
